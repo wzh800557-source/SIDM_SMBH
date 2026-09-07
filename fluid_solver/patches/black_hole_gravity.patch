@@ -1,0 +1,58 @@
+diff --git a/SourcePy/evolve.py b/SourcePy/evolve.py
+index 72b633f..fd87c98 100644
+--- a/SourcePy/evolve.py
++++ b/SourcePy/evolve.py
+@@ -197,7 +197,7 @@ class Halo:
+             'sigma_m_with_units': 5., # [cm^2/g]
+             'w_units': 1., # [km/s]
+             'n_shells': 400,
+-            'r_min': 0.01,
++            'r_min': 0.01, 'M_bh_with_units': 0., 'r_soft': 0.,
+             'r_max': 100.,
+             'p_rmax_factor': 10.,
+             'n_adjustment_fixed': -1,
+@@ -262,6 +262,7 @@ class Halo:
+         # convert dimensionful quantities to be dimensionless
+         self.sigma_m = (self.sigma_m_with_units*ut.cm**2/ut.g).to_value(self.scale_sigma_m)
+         self.w = (self.w_units*ut.km/ut.s).to_value(self.scale_v)
++        self.M_bh = (self.M_bh_with_units*ut.M_sun).to_value(self.scale_m)
+ 
+         ##### initialize quantities for evolution, saved in snapshot files
+         self.n_adjustment = 0  # counter for hydrostatic adjustment steps
+@@ -348,8 +349,10 @@ class Halo:
+             self.rho[1:] = self.get_initial_rho(r_mid[1:])
+ 
+             # set pressure
+-            self.p = self.get_initial_pressure(r_mid,numeric=False)
+-            self.p[0] = self.get_initial_pressure(self.r[0],numeric=False)
++            # BH present -> integrate initial pressure numerically with the BH
++            _bh_num = (getattr(self,"M_bh",0.0) > 0.0)
++            self.p = self.get_initial_pressure(r_mid,numeric=_bh_num)
++            self.p[0] = self.get_initial_pressure(self.r[0],numeric=_bh_num)
+ 
+             # with necessary quantities initialized, set derived quantities
+             self.update_derived_parameters()
+@@ -516,7 +519,10 @@ class Halo:
+         if numeric:
+             if xmax is None:
+                 xmax = self.p_rmax_factor*self.r_max
+-            p_integrand = lambda r: self.get_initial_mass(r)*self.get_initial_rho(r)/(r*r)
++            # include softened central BH in gravitating mass so the initial
++            # pressure is in hydrostatic equilibrium WITH the black hole
++            m_grav = lambda r: self.get_initial_mass(r) + self.M_bh*(r**3/(r**2+self.r_soft**2)**1.5)
++            p_integrand = lambda r: m_grav(r)*self.get_initial_rho(r)/(r*r)
+             it = np.nditer([x,None],flags=['buffered'],op_dtypes=np.float64)
+             for (xi,y) in it:
+                 y[...] = integrate.quad(p_integrand,xi,xmax)[0]
+@@ -730,9 +736,9 @@ class Halo:
+         """
+         # fill extended r and m arrays
+         self.r_ext[1:] = self.r
+-        self.m_ext[1:] = self.m
++        self.m_ext[1:] = self.m + self.M_bh*(self.r**3/(self.r**2+self.r_soft**2)**1.5)
+         self.r_ext[0] = 0
+-        self.m_ext[0] = 0
++        self.m_ext[0] = 0.0
+ 
+         r2 = self.r_ext * self.r_ext
+         r3 = r2 * self.r_ext

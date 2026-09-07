@@ -14,7 +14,9 @@ FORBIDDEN = ("/" + "Users/", "/home/" + "wzh557", "orcd" + "/pool")
 def main() -> int:
     readme = ROOT / "README.md"
     assert readme.is_file() and readme.stat().st_size == 0
-    files = [path for path in ROOT.rglob("*") if path.is_file()]
+    excluded = {".git", ".venv", "venv", "build", "dist", "results", "logs"}
+    files = [path for path in ROOT.rglob("*") if path.is_file()
+             and not excluded.intersection(path.relative_to(ROOT).parts)]
     assert files
     for path in files:
         relative = path.relative_to(ROOT)

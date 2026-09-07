@@ -1,0 +1,16 @@
+#mass bin(given) = number GIVEN 
+1  GIVEN  
+###########
+#each component consists of two lines 
+## the first line: 
+# m1 / mc / m2 / asymptotic num_of_particles (at bd) / Weight_n / Clone_factor / alpha_ini
+##where :
+## m1 / mc/ m2: the mass range of each bin, m1<=mc<=m2
+## Weight_n: the weighting of particles
+## clone_factor: the number of clones when pass through some boundary
+## alpha_ini: the power-law index for the initial distribution of a_c
+#the second line:
+#fraction of objects (sum=1): star / sbh / ns / wd / bd /
+   1.00   1.00    1.00    1.000  800 30 0.25
+   1.00   0.00    0.00    0.0  0.0
+###########

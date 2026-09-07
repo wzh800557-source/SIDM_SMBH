@@ -34,8 +34,7 @@ def main() -> int:
     args = parser.parse_args()
 
     sys.path.insert(0, str(args.production_package))
-    if not os.environ.get("GRAVOTHERMAL_ROOT"):
-        raise RuntimeError("set GRAVOTHERMAL_ROOT to the GravothermalSIDM checkout")
+    # The response adapter finds the bundled engine unless an override is set.
     from measured_fluid_feedback import (  # pylint: disable=import-error,import-outside-toplevel
         MeasuredBoundaryHalo,
         install_physical_profile,

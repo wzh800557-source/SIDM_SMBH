@@ -1,0 +1,375 @@
+{
+  "schema": "sidm-smbh-bundled-sources-v1",
+  "date": "2026-09-07",
+  "sources": [
+    {
+      "name": "GravothermalSIDM",
+      "upstream": "https://github.com/kboddy/GravothermalSIDM",
+      "upstream_commit": "fe5ed30436df46c08befb0999ec86f57385eb1ac",
+      "path": "fluid_solver/GravothermalSIDM",
+      "licence": "GPL-3.0-or-later",
+      "modifications": "Cluster BH-gravity patch, preserved separately."
+    },
+    {
+      "name": "GNC",
+      "upstream": "https://github.com/zhangfupeng-gzhu/GNC",
+      "upstream_commit": "44dffbb67fc89ab02a10e2afc9f5b4e3ed280029",
+      "path": "vendor/GNC",
+      "licence": "MIT",
+      "modifications": "Cluster SIDM sources; normalized line endings; portable HDF5 paths. Additional coupling patches applied during build preparation."
+    }
+  ],
+  "production_data_included": false,
+  "files": [
+    {
+      "path": "fluid_solver/GravothermalSIDM/LICENSE",
+      "sha256": "1b3782ccad7b8614100cda30d3faf42fc39f2e97932908c543005053b654ca68",
+      "bytes": 32473
+    },
+    {
+      "path": "fluid_solver/GravothermalSIDM/README.md",
+      "sha256": "7db6e180669af540f49d94e3ae5062f8179664c4e135714bf41953ee8e4e95fa",
+      "bytes": 2715
+    },
+    {
+      "path": "fluid_solver/GravothermalSIDM/SourcePy/evolve.py",
+      "sha256": "53360ae28d3d69d0ead49a123bc37d2202a06bc7fc5cd3a5ec9add16fc8ef68a",
+      "bytes": 39662
+    },
+    {
+      "path": "fluid_solver/GravothermalSIDM/SourcePy/record.py",
+      "sha256": "8a495fe094d12a18ffaa9f75378605ea94ed5d0d6a76e4da734292841dc0013c",
+      "bytes": 9780
+    },
+    {
+      "path": "fluid_solver/GravothermalSIDM/TERMS",
+      "sha256": "ada29c1463ef13b47fee40d0ed46b1faad237fbaa3532575e5146936bbd24546",
+      "bytes": 670
+    },
+    {
+      "path": "vendor/GNC/LICENSE",
+      "sha256": "cd6f7f09838b6fb0ca581382e1aaf556f1d6af92195f6fcc0de6c8e1338ee47d",
+      "bytes": 1108
+    },
+    {
+      "path": "vendor/GNC/README.md",
+      "sha256": "2074058627f3cfb2f63d65587893eaa14ef407772e07c1785d4685834fc1c0f1",
+      "bytes": 2811
+    },
+    {
+      "path": "vendor/GNC/examples/1comp_lc/mfrac.in",
+      "sha256": "44ef6a6106b890970c678e952532d9ec185cf981f235d7c35a37489d60885533",
+      "bytes": 619
+    },
+    {
+      "path": "vendor/GNC/examples/1comp_lc/model.in",
+      "sha256": "be1808ba2c48eb3ade081480794ee32cf6bcb2971045dff675bd7bb5e5387e97",
+      "bytes": 3447
+    },
+    {
+      "path": "vendor/GNC/main/Makefile",
+      "sha256": "68d4d13350d929da355cd940cc5e6aae53ef38f25949d50f0963963a9d4a2102",
+      "bytes": 1205
+    },
+    {
+      "path": "vendor/GNC/main/cfuns.f90",
+      "sha256": "9ec0accd5ababe8f7851883e4ac08f189eb688a4d9f76c5ce24a3c4a4f581806",
+      "bytes": 974
+    },
+    {
+      "path": "vendor/GNC/main/ini.f90",
+      "sha256": "c121c93537800729be98ef086c039db7756bfb2adb068bdf91e8b1eb475c6aed",
+      "bytes": 3474
+    },
+    {
+      "path": "vendor/GNC/main/main.f90",
+      "sha256": "1a0eea44fecc41c9cb2aede02a4aee557ec625bcbff32a015d7a4c52dd6475cb",
+      "bytes": 4619
+    },
+    {
+      "path": "vendor/GNC/main/pro.f90",
+      "sha256": "0bfbce926415fe694c530b31bb357e40bb7772c26a2495d4b5b25bd0efbe6bbc",
+      "bytes": 1176
+    },
+    {
+      "path": "vendor/GNC/output_directories.json",
+      "sha256": "77ef9facda76c67386444f206ea841996076c5f0627fe5cdd020a4072180f7cf",
+      "bytes": 1714
+    },
+    {
+      "path": "vendor/GNC/source/EJ_funcs_ba16.f90",
+      "sha256": "0f0d7f175fc716e71710054a359a7cae479fcc981d709dc09d02e4f339b1b404",
+      "bytes": 11013
+    },
+    {
+      "path": "vendor/GNC/source/MPI_comu.f90",
+      "sha256": "c77ffe755d86791edce6b44644807855d72b45181f21df0aac7dd2b0ccfde346",
+      "bytes": 18119
+    },
+    {
+      "path": "vendor/GNC/source/RR_mpi.f90",
+      "sha256": "dcfab62dba833fd6891f8fb3b702e8d05e3c23901a2f044607c6565ef5d281f0",
+      "bytes": 3209
+    },
+    {
+      "path": "vendor/GNC/source/Sigma_funcs.f90",
+      "sha256": "109132c430f49358186d5888127bde841a7cbbad7d84e1524ab1d157b298e509",
+      "bytes": 6161
+    },
+    {
+      "path": "vendor/GNC/source/ac_ec_evl_single.f90",
+      "sha256": "a2df55c7c6a98ec387eb9b142a4170c3de3621fa458bcaf47336833b19bc5eed",
+      "bytes": 13496
+    },
+    {
+      "path": "vendor/GNC/source/chain_pointer_type.f90",
+      "sha256": "d5ac48e4ce08aece5b211486ec0d6df59ed5a5bd42f7f87bf3685c1a429327e1",
+      "bytes": 16421
+    },
+    {
+      "path": "vendor/GNC/source/chain_type.f90",
+      "sha256": "c5ea70e3802d55edfa384c7c086799eac86c1a270706449905ce058ced88fcb1",
+      "bytes": 13672
+    },
+    {
+      "path": "vendor/GNC/source/clone.f90",
+      "sha256": "09b987846de996206453fa0811b902f75938d5f092a2d4a486839dc209a2f2e6",
+      "bytes": 4204
+    },
+    {
+      "path": "vendor/GNC/source/coeff.f90",
+      "sha256": "e84a030504141382d7434498dbabb16ddc2a9a42d999bb65daac2a0c8a66a589",
+      "bytes": 4337
+    },
+    {
+      "path": "vendor/GNC/source/com/APP_CONST.f90",
+      "sha256": "42ace414bc1e5813b7656eb47e54690aedc4e7b9e19e47756fe9389ccd2e67dd",
+      "bytes": 1303
+    },
+    {
+      "path": "vendor/GNC/source/com/FILE_STRING.f90",
+      "sha256": "7cdc90335ba110f2b4ca5413f2eae305e241139bcdc7c4bea3076a40cdc6fd78",
+      "bytes": 10745
+    },
+    {
+      "path": "vendor/GNC/source/com/FUN_RANDOM.f90",
+      "sha256": "6fca2bf836b91dff8288332c542d3ea8a9d83c58c23d995160ba24bb4ee5d454",
+      "bytes": 1316
+    },
+    {
+      "path": "vendor/GNC/source/com/app_celestial.f90",
+      "sha256": "de3f129fea5d34695f8d61a511cbf616362babd6414f875fbf920e78f6311c8c",
+      "bytes": 25702
+    },
+    {
+      "path": "vendor/GNC/source/com/file_md_hdf5.f90",
+      "sha256": "03f5b05436712258ae2fce7c0fcc8c0bd49b0ce59c484b88f60b461a07dee5bc",
+      "bytes": 1951
+    },
+    {
+      "path": "vendor/GNC/source/com/file_md_hdf5_file.f90",
+      "sha256": "16858bd1717ff6dbc4fafaafafcc8fafa85c0f17c0e24db5e16fc0a4c6f63ca0",
+      "bytes": 1865
+    },
+    {
+      "path": "vendor/GNC/source/com/file_md_hdf5_group.f90",
+      "sha256": "3271048b8050285fa9d80ba1117f15b493ba8f62701f86282e22e05390bb3b48",
+      "bytes": 831
+    },
+    {
+      "path": "vendor/GNC/source/com/file_md_hdf5_table.f90",
+      "sha256": "4353887340ccc88a8203026eda8108376f97bbb48b9e2fba83341b05f6caa448",
+      "bytes": 8760
+    },
+    {
+      "path": "vendor/GNC/source/com/fun_math.f90",
+      "sha256": "2a71615afcf64e708bc0a94c7fd936acdebb3b59bfc2f4efdc245d1402ac62e9",
+      "bytes": 444
+    },
+    {
+      "path": "vendor/GNC/source/com/gaussian.f90",
+      "sha256": "c5fce122947394beeb17bdcbdaa60a0564b45fdd7a9606efcee43ab3c8bc7409",
+      "bytes": 1175
+    },
+    {
+      "path": "vendor/GNC/source/com/ingl_dopri5.f",
+      "sha256": "38315f427dc70cf0ff10c69fbb74cfb0aa417ba29acc36dac1499b6583a4d0d4",
+      "bytes": 24445
+    },
+    {
+      "path": "vendor/GNC/source/com/intgl.f90",
+      "sha256": "8cd269a88f2bbed3b448f592ec0d0bd1576eca847bb64503129cc7738b7d2ed8",
+      "bytes": 3812
+    },
+    {
+      "path": "vendor/GNC/source/com/linear_interpolate.f90",
+      "sha256": "0f81a42fee8e86452efddc7d9b2d22cb5d83ffafd1d2c2362a5ff1893ec9b411",
+      "bytes": 3217
+    },
+    {
+      "path": "vendor/GNC/source/com/md_fc.f90",
+      "sha256": "9e5f0860d3067e321bf782e8d051e1f545a98a311861f02f905042799cb17a20",
+      "bytes": 26981
+    },
+    {
+      "path": "vendor/GNC/source/com/md_s1d_hst.f90",
+      "sha256": "ec2a248d7d7095ab9a3454020dde0ea50c982c3452ca3bef914938698d60353f",
+      "bytes": 7620
+    },
+    {
+      "path": "vendor/GNC/source/com/str.f90",
+      "sha256": "44aa1b6d637a3a712f4b2ddea0b35077c74e9733d5de5fc80633eb0a59677e4d",
+      "bytes": 2661
+    },
+    {
+      "path": "vendor/GNC/source/com/sts_basic_type.f90",
+      "sha256": "67bf7525e83a8037852eea52f292606d49aaf0e21345a33a5220eac8fb4be0d0",
+      "bytes": 9045
+    },
+    {
+      "path": "vendor/GNC/source/com/sts_fc.f90",
+      "sha256": "332ac9c86b1a52684b82b799247150da88f3ae12ff9414b8346bbbe7a21abc19",
+      "bytes": 7515
+    },
+    {
+      "path": "vendor/GNC/source/com/sts_type_com.f90",
+      "sha256": "82d721aa935d7a14e86f79d4b3b610e6e7e794e1dd9070f9c47bd594937c6f78",
+      "bytes": 288
+    },
+    {
+      "path": "vendor/GNC/source/com/sts_type_s1d_com.f90",
+      "sha256": "a19937cd84cd8eb0f56859b12331dd7701723a50b882fba4bed942959b1ce0e3",
+      "bytes": 4626
+    },
+    {
+      "path": "vendor/GNC/source/com/sts_type_s2d_com.f90",
+      "sha256": "de4fe93267402cba9d5fdfc48c53b415e957c4514d3e30ba5874a8d0a9ffa877",
+      "bytes": 16017
+    },
+    {
+      "path": "vendor/GNC/source/dms.f90",
+      "sha256": "c1fc8e1fb01e835341bec4b6365c45c73d2a12aa4e061864d1b59d3efe101b8f",
+      "bytes": 23540
+    },
+    {
+      "path": "vendor/GNC/source/events.f90",
+      "sha256": "a4683aad81c561f42cd8c371887a1b44caffdf675517dae27c8b4289dfd66c82",
+      "bytes": 14688
+    },
+    {
+      "path": "vendor/GNC/source/flux_diag.f90",
+      "sha256": "fe64c27a142cefe857941643c837f9b43f09e544da34eda494adf90e4082f4f1",
+      "bytes": 2483
+    },
+    {
+      "path": "vendor/GNC/source/gen_ge.f90",
+      "sha256": "dec78d4b7b1a4ec09114d0027358fb4ed5f359c2af189f7816c64c1345a8bee0",
+      "bytes": 25755
+    },
+    {
+      "path": "vendor/GNC/source/ini_single.f90",
+      "sha256": "843869247b72cf51d1521d092957263eca1d7b368f33a0c511135acf6127c75d",
+      "bytes": 9024
+    },
+    {
+      "path": "vendor/GNC/source/ini_single_user.f90",
+      "sha256": "d5bd086d2ca3f8b2fbc6046f77953fa7204785543454fa7d73d8c274f8965358",
+      "bytes": 2595
+    },
+    {
+      "path": "vendor/GNC/source/io_bin.f90",
+      "sha256": "36922397ee6110d099aa0238fd3f3c7d0f2a1daa258b6aa8423f028a449a3fe4",
+      "bytes": 1539
+    },
+    {
+      "path": "vendor/GNC/source/io_hdf5.f90",
+      "sha256": "40644474110ee4804e4749546227d682cd96e9759019c0be0d9a1eef4e8cd79b",
+      "bytes": 7998
+    },
+    {
+      "path": "vendor/GNC/source/io_txt.f90",
+      "sha256": "e1f0e975bff6dcd19e926274212f275b5bf45f1f4a45d6d5eac78276ec9fecb3",
+      "bytes": 3986
+    },
+    {
+      "path": "vendor/GNC/source/load_df_from_table.f90",
+      "sha256": "2c3d5efe97d1431a39ba1236c43d0d0289cb8c85ec9335b3b06fecf678a69b09",
+      "bytes": 2380
+    },
+    {
+      "path": "vendor/GNC/source/makefile",
+      "sha256": "1672eccd0a67af8e4164db26075070e5ed042e7e4ada75ce04d6a5e197a7d4b3",
+      "bytes": 3732
+    },
+    {
+      "path": "vendor/GNC/source/md_binary.f90",
+      "sha256": "b8e2f284f79308f0a0107a6e444f53b6f8465220e9ca2597eb0ce239db8225ee",
+      "bytes": 13641
+    },
+    {
+      "path": "vendor/GNC/source/md_bk_particle.f90",
+      "sha256": "6b6290d5f619e6dd6a6a0b5ff12f6aca4f7d458d0842e3491bb8344ea27dfe8a",
+      "bytes": 7914
+    },
+    {
+      "path": "vendor/GNC/source/md_cfuns.f90",
+      "sha256": "02bb94483682afd831a190ed0dbdbce23d243244f4fecd39e788ba36160ff93d",
+      "bytes": 9336
+    },
+    {
+      "path": "vendor/GNC/source/md_main_gw.f90",
+      "sha256": "0f9616147a7379d01bd9af068e957fd1f47f89acbc6cb8c69c0d9bb5d3705a92",
+      "bytes": 34562
+    },
+    {
+      "path": "vendor/GNC/source/md_particle_sample.f90",
+      "sha256": "f782878613df833b340c91cd988d948592593d96e262dcd0223be781eb34345a",
+      "bytes": 7598
+    },
+    {
+      "path": "vendor/GNC/source/modules.f90",
+      "sha256": "de96a1d195fc0482e6902a35541438f9945e8d8a858d2af048ff32b09a60610e",
+      "bytes": 8579
+    },
+    {
+      "path": "vendor/GNC/source/pro_single.f90",
+      "sha256": "c3fa45c4488e280b671bf47000023d6d4e63c0bab858917966af2403cad17758",
+      "bytes": 4683
+    },
+    {
+      "path": "vendor/GNC/source/read_ini_single.f90",
+      "sha256": "72666623e9c1571753feab0c3293048e536df517c5ff5e63820584c68bed89ee",
+      "bytes": 11477
+    },
+    {
+      "path": "vendor/GNC/source/sams_sts.f90",
+      "sha256": "9b486957c6032685e421f982e08b3e86393b5a3185cf3a8432569f4c54c6d883",
+      "bytes": 1514
+    },
+    {
+      "path": "vendor/GNC/source/sams_sts_single.f90",
+      "sha256": "3358c89eaa67f645469788b3ff25871616ec849f53e9684ab0099795c09ccdec",
+      "bytes": 6522
+    },
+    {
+      "path": "vendor/GNC/source/sams_sub.f90",
+      "sha256": "77ecd65a58f7d487029a82e64523e0aabe010aaf8597ff602ef75ef1a5655812",
+      "bytes": 12501
+    },
+    {
+      "path": "vendor/GNC/source/sams_sub_single.f90",
+      "sha256": "d9a18cf90b4a392a87dc31bcdb245a4ca0b141268aad7123bb67fc3dc29d732f",
+      "bytes": 17429
+    },
+    {
+      "path": "vendor/GNC/source/sidm_params.f90",
+      "sha256": "6993b1b52be08a55b81c3ede003ce24c3767dfa427cfc5e908c9f767f8ef814a",
+      "bytes": 3740
+    },
+    {
+      "path": "vendor/GNC/source/stellar_obj.f90",
+      "sha256": "885f1dbcb3280671b08f042ffb37dd0acbac1821b127e2ce08900b0315c1a7b5",
+      "bytes": 8751
+    }
+  ]
+}

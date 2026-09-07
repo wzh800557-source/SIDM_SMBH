@@ -30,9 +30,9 @@ from pathlib import Path
 import astropy.units as u
 import numpy as np
 
-sys.path.insert(0, os.environ.get("GRAVOTHERMAL_ROOT", "GravothermalSIDM"))
-import SourcePy.evolve as evolve
-import SourcePy.record as record
+from fluid_engine import load_fluid_engine
+
+evolve, record = load_fluid_engine()
 
 from fluid_bh_scaleheight import (
     bh_corrected_lmfp_inverse,

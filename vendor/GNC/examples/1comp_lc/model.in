@@ -1,0 +1,79 @@
+##number of threads to run ini and main===========================
+12
+##================================================================
+##Do not change the following two setting currently
+MODEL OF DE and DJ              = FAST
+interpolate method              = near
+##================================================================
+#the minimum and maximum dimensionless angular momentum 
+#jmin should be larger than the value set in generating the
+#auxiliary cfs file
+#jmin jmax
+5d-4 0.99999
+##================================================================
+##specify the directory and name of the auxiliary file
+cfs dir =../../common_data/cfuns_34
+##================================================================
+##-------mass of the massive black hole
+mbh			= 4d6
+##================================================================
+##-------the maximum and minium dimensional energy
+emin_factor =0.03d0
+emax_factor =1d5
+##-------the dimensional energy of the outer boundary
+eboundary   =0.05d0
+#jbin_type =LIN/LOG-------linear/logarithmic bin of angular momentum
+#LOG bin is strongly recommended
+jbin type   =LOG
+#isotropic boundary angular momentum distribution
+bd fj       =ISO
+##================================================================
+#random seed value
+SEED_VALUE						= 100
+#whether setting the same random seed (=1 the same; =0 not the same)
+#                    each time the program ``ini'' runs
+SAME_INI_SEED					= 1
+##================================================================
+#gx_bins: the number of bins for distribution function
+#         recommending gx_bins=24-48
+#dc_bins: the number of bins for diffusion coefficients
+#         recommending grid_bins=72-120
+#         Note that we require dc_bins/(number of threads)=Integer
+#gx_bins dc_bins
+24  72
+##================================================================
+##----------running parameter-------------------------------------
+#whether the random evolution seed is the same as SEED_VALUE
+#                    each time the program ``main'' runs
+SAME_EVL_SEED					= 1
+#Total number of ge update per snapshot
+num of ge update per snap		= 10
+#time step per snapshot in unit of two-body relaxation 
+#                                           time at rh
+timestep_snapshot (output)		= 0.1
+#time step unit TNR=two body relaxation time at rh
+timestep_unit(TNR)              = TNR
+#total number of snapshots
+num_of_snapshot					= 10
+##================================================================
+## alpha_ini: the power-law index for the initial distribution of a_c
+## usually alpha_ini=0.0~0.25
+alpha_ini                       =0.25
+##================================================================
+##whether loss cone is included
+Loss cone    					= 1
+##================================================================
+CLONE_SCHEME					= 1
+##if clone_scheme>=1, set the minimum x_0 below which 
+##clone scheme is implemented
+clone x0                        = 1
+##================================================================
+##chattery=0, quite, 
+##chattery=1, print outcome of particles except=exit_boundary_min
+##chattery=2, print outcome of all particle
+##chattery=3, print details of evolution of each particle
+##chattery>=4, pause the program when the simulation of each particle is done
+CHATTERY						= 0
+##================================================================
+consider_star_radius            = 0
+trace all samples               = 0

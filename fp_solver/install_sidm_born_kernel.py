@@ -22,7 +22,7 @@ def main() -> int:
     p.add_argument(
         "--module-template",
         type=Path,
-        default=Path(__file__).with_name("sidm_params_born_fixed.f90"),
+        default=Path(__file__).resolve().parent / "integration" / "sidm_params_born_fixed.f90",
     )
     args = p.parse_args()
     source = args.build_root / "source"
