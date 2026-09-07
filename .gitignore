@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.so
+.DS_Store
+.env
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+logs/
+results/
+output/
+slurm-*.out
+*.h5
+*.pkl
+*.npz

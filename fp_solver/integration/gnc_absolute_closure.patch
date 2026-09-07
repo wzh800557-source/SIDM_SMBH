@@ -1,0 +1,213 @@
+--- a/main/ini.f90
++++ b/main/ini.f90
+@@ -49,6 +49,7 @@
+ 	!print*, "get_ge_by_root",rid
+ 
+ 	call get_init_samples(bksams_arr_ini)
++	call load_absolute_xj_samples(bksams_arr_ini)
+     do i=1, bksams_arr_ini%n
+         if(bksams_arr_ini%sp(i)%exit_flag.ne.exit_normal)then
+             print*, "i=",i,bksams_arr_ini%sp(i)%exit_flag
+--- a/source/md_main_gw.f90
++++ b/source/md_main_gw.f90
+@@ -888,29 +888,70 @@
+         use constant
+         use sidm_params, only: use_sidm, n0_phys_pc3, use_gravothermal_n0, &
+                                use_spike_n0, spike_gamma, spike_mass_factor
++        use, intrinsic :: ieee_arithmetic
+         implicit none
+         real(8) mbh, rh, nh, vh
+-        real(8),parameter::rgc=8.32d3
+-        real(8),parameter::r0=3.1
++        real(8),parameter::r0=3.1d0
+         real(8),parameter::n0=2d4
+         real(8),parameter::PI_loc=3.14159265358979d0
+-        real(8) :: n0_use
++        real(8) rh_pc, n0_pc3, rb_pc, mpart, beta, rhob, sigb, asymp, n0_use
++        integer iu, ios
++        logical have_profile
+ 
+-        n0_use = n0
+-        if (use_sidm .and. use_gravothermal_n0) n0_use = n0_phys_pc3
+-        rh=r0*(Mbh/4d6)**0.55*pc
+-        vh=sqrt(mbh/rh)
+-        if (use_sidm .and. use_spike_n0) then
+-            nh = spike_mass_factor*mbh*(3d0-spike_gamma)/(4d0*PI_loc*rh**3)
++        inquire(file="profile_norm.in", exist=have_profile)
++        if(have_profile)then
++                open(newunit=iu,file="profile_norm.in",status="old",action="read",iostat=ios)
++                if(ios.ne.0) error stop "ABSOLUTE_CLOSURE: cannot open profile_norm.in"
++                read(iu,*,iostat=ios) rh_pc,n0_pc3,rb_pc,mpart,beta,rhob,sigb,asymp
++                close(iu)
++                if(ios.ne.0) error stop "ABSOLUTE_CLOSURE: malformed profile_norm.in"
++                if(.not.ieee_is_finite(rh_pc).or.rh_pc.le.0d0) &
++                        error stop "ABSOLUTE_CLOSURE: invalid R_h"
++                if(.not.ieee_is_finite(n0_pc3).or.n0_pc3.le.0d0) &
++                        error stop "ABSOLUTE_CLOSURE: invalid n0"
++                rh=rh_pc*pc
++                nh=n0_pc3/pc**3
++                vh=sqrt(mbh/rh)
++                print*, "ABSOLUTE_CLOSURE_UNITS",rh_pc,n0_pc3,rb_pc
+         else
+-            nh=n0_use/pc**3*(mbh/4e6)**(-0.65)
++                n0_use=n0
++                if(use_sidm.and.use_gravothermal_n0)n0_use=n0_phys_pc3
++                rh=r0*(Mbh/4d6)**0.55*pc
++                vh=sqrt(mbh/rh)
++                if(use_sidm.and.use_spike_n0)then
++                        nh=spike_mass_factor*mbh*(3d0-spike_gamma)/(4d0*PI_loc*rh**3)
++                else
++                        nh=n0_use/pc**3*(mbh/4e6)**(-0.65)
++                end if
++        end if
++end subroutine
++subroutine validate_absolute_boundary(rbd)
++        use constant
++        use, intrinsic :: ieee_arithmetic
++        implicit none
++        real(8),intent(in)::rbd
++        real(8) rh_pc,n0_pc3,rb_pc,mpart,beta,rhob,sigb,asymp,rel
++        integer iu,ios
++        logical have_profile
++        inquire(file="profile_norm.in",exist=have_profile)
++        if(.not.have_profile)return
++        open(newunit=iu,file="profile_norm.in",status="old",action="read",iostat=ios)
++        if(ios.ne.0) error stop "ABSOLUTE_CLOSURE: cannot validate boundary"
++        read(iu,*,iostat=ios) rh_pc,n0_pc3,rb_pc,mpart,beta,rhob,sigb,asymp
++        close(iu)
++        if(ios.ne.0.or.rb_pc.le.0d0) error stop "ABSOLUTE_CLOSURE: invalid boundary record"
++        rel=abs(rbd/pc-rb_pc)/rb_pc
++        if(.not.ieee_is_finite(rel).or.rel.gt.1d-10)then
++                print*,"ABSOLUTE_CLOSURE boundary mismatch",rbd/pc,rb_pc,rel
++                error stop "ABSOLUTE_CLOSURE: deck boundary is not r_in"
+         end if
+ end subroutine
+ subroutine init_model_ctl()
+ 	use com_main_gw
++	use, intrinsic :: ieee_arithmetic
+ 	implicit none
+ 	integer i
+-    real(8) ra
++    real(8) ra, guard_cells
+ 
+     !real(8),parameter::massfactor=0.36
+ 	!mbh=4d6
+@@ -958,10 +999,21 @@
+ 
+ 	call set_simu_time()
+ 	
++	if(.not.ieee_is_finite(ctl%x_boundary).or.ctl%x_boundary.le.emin_factor.or. &
++		ctl%x_boundary.ge.emax_factor) &
++		error stop "ABSOLUTE_CLOSURE: eboundary must lie strictly inside energy grid"
++	guard_cells=(log10(ctl%x_boundary)-log10(emin_factor))/ &
++		(log10(emax_factor)-log10(emin_factor))*dble(ctl%gx_bins-1)
++	if(guard_cells.lt.2d0) error stop "ABSOLUTE_CLOSURE: fewer than two low-x guard cells"
+ 	ctl%rbd=rh*0.5d0/ctl%x_boundary
++	call validate_absolute_boundary(ctl%rbd)
+ 	if(ctl%clone_scheme.ge.1)then
++		if(.not.ieee_is_finite(clone_e0_factor).or.clone_e0_factor.le.0d0) &
++			error stop "ABSOLUTE_CLOSURE: clone x0 must be finite and positive"
+ 		ctl%clone_e0=clone_e0_factor/10*ctl%energy0
+ 		clone_emax=ctl%energy_max/ctl%clone_e0
++		if(.not.ieee_is_finite(clone_emax).or.clone_emax.le.1d0) &
++			error stop "ABSOLUTE_CLOSURE: invalid clone energy range"
+         log10clone_emax=log10(clone_emax)
+ 	end if
+ 	do i=1, ctl%num_bk_comp
+@@ -995,7 +1047,9 @@
+     do i=1, ctl%num_bk_comp
+         ctl%cc(i)%alpha_ini=7d0/4d0
+     end do
+-	ctl%bin_mass_particle_number(1:ctl%m_bins)=mbh/ctl%ini_weight_n(1:ctl%m_bins)*ctl%asymptot(1,1:ctl%m_bins)
++	! Physical DF amplitude belongs in sample weights, not in Monte-Carlo resolution.
++	ctl%bin_mass_particle_number(1:ctl%m_bins)= &
++		nint(mbh/ctl%ini_weight_n(1:ctl%m_bins))
+     ctl%n_basic=minval(ctl%ini_weight_n(1:ctl%m_bins))
+ !    do i=1, ctl%num_bk_comp
+ !        ctl%n_basic=min(ctl%n_basic, ctl%cc(i)%N_pre_in)
+--- a/source/pro_single.f90
++++ b/source/pro_single.f90
+@@ -38,10 +38,11 @@
+ 	type(particle_samples_arr_type)::bksma_sg_source_emri, bksma_plunge
+ 	type(event_sets_comp)::eve_sets
+ 	character*(*) str_comp
+-	integer comp_type
++	integer comp_type, iu, k
+     !type(chain_type)::bksma_sel
+     integer jsp, isnap
+     character*(4) tmpspid
++	character*(256) plunge_file
+ 
+     call sams_get_weight_clone_single(bksams_arr)
+     call set_real_weight_arr_single(bksams_arr)
+@@ -59,6 +60,26 @@
+ 	print*, "get_sams_events_single finshed!"
+ 	call print_events(eve_sets%etot,eve_sets%enorm,isnap)
+ 	print*, "print finished"
++	! Preserve one row per actual plunge.  The event table contains the correctly
++	! averaged mass count, while these rows retain the capture-weighted orbital
++	! energy needed for an absolute energy current.  weight_real remains in its
++	! native per-realisation form; the analyzer divides by ntask_total exactly as
++	! sams_get_eve_num does.
++	write(unit=tmpspid,fmt="(I4)") isnap
++	plunge_file="output/pro/"//trim(adjustl(str_comp))// &
++		"/plunge_records_"//trim(adjustl(tmpspid))//".txt"
++	open(newunit=iu,file=trim(plunge_file),status="replace",action="write")
++	write(iu,'(A)') "# isnap x_final x_initial j_final j_initial weight_real m_msun exit_time_myr rp_AU"
++	do k=1,bksma_plunge%n
++		write(iu,'(I8,1X,8(ES25.16E3,1X))') isnap, &
++			abs(bksma_plunge%sp(k)%en)/ctl%energy0, &
++			abs(bksma_plunge%sp(k)%en0)/ctl%energy0, &
++			bksma_plunge%sp(k)%jm, bksma_plunge%sp(k)%jm0, &
++			bksma_plunge%sp(k)%weight_real, bksma_plunge%sp(k)%m, &
++			bksma_plunge%sp(k)%exit_time, bksma_plunge%sp(k)%rp
++	end do
++	close(iu)
++	print*, "ABSOLUTE_CLOSURE_PLUNGE_RECORDS",isnap,bksma_plunge%n,trim(plunge_file)
+ 	!call get_ge_profile_of_sample_single(sma_arr,isnap, exit_normal, ge_profile(isnap))
+ 	!print*, "sma:chain:"
+ 	!call sma%sp(1)%output()
+--- a/source/stellar_obj.f90
++++ b/source/stellar_obj.f90
+@@ -105,24 +105,25 @@
+     subroutine get_asymp_norm_factor_one(dso,  x_boundary, norm)
+         implicit none
+         class(dms_stellar_object)::dso
+-		type(s1d_type)::bg
+-        real(8) cnorm, cn, norm,x_boundary
++        real(8) cnorm, norm, x_boundary, logxb
+ 
+-        if(dso%n_real>0)then
+-            
+-			call dso%barge%get_value_l(log10(x_boundary),cnorm)
+-
+-            if( isnan(cnorm).or. cnorm.eq.0)then
+-                print*, "star:cnorm is nan or 0", cnorm
+-                call dso%barge%print("dso%barge")
+-                stop
+-            else
+-                norm=dso%asymp/cnorm
+-            end if
+-        else
+-            print*, "error! dso%n_real=", dso%n_real
+-            stop
++        if(dso%n_real.le.0d0) error stop &
++            "ABSOLUTE_CLOSURE: no weighted samples in DF constructor"
++        if(.not.ieee_is_finite(x_boundary).or.x_boundary.le.0d0) &
++            error stop "ABSOLUTE_CLOSURE: non-positive boundary energy"
++        logxb=log10(x_boundary)
++        if(logxb.le.dso%barge%xmin.or.logxb.ge.dso%barge%xmax) &
++            error stop "ABSOLUTE_CLOSURE: boundary energy outside barge grid"
++
++        call dso%barge%get_value_l(logxb,cnorm)
++        if(.not.ieee_is_finite(cnorm).or.cnorm.le.tiny(1d0))then
++            print*, "ABSOLUTE_CLOSURE bad boundary DF",x_boundary,cnorm, &
++                dso%barge%xmin,dso%barge%xmax
++            error stop "ABSOLUTE_CLOSURE: boundary DF is empty or non-finite"
+         end if
++        norm=dso%asymp/cnorm
++        if(.not.ieee_is_finite(norm).or.norm.le.0d0) &
++            error stop "ABSOLUTE_CLOSURE: invalid physical DF normalization"
+     end subroutine
+     subroutine normalize_barge_one(dso, norm)
+         implicit none
