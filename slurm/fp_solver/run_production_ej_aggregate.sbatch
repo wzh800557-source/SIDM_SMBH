@@ -31,14 +31,14 @@ for GROUP in "${RUN_GROUPS[@]}"; do
   grep -q EJ_OPERATOR_DONE "$B/STATUS.txt"
   OUT="$ROOT/steady/$GROUP"
   mkdir -p "$OUT"
-  python -u "$PKG/combine_ej_operators.py" \
+  "$PYTHON_BIN" -u "$PKG/combine_ej_operators.py" \
     "$A/operator.npz" "$B/operator.npz" \
     --out "$OUT/operator_combined.npz" --out-json "$OUT/operator_combined.json"
   for ITEM in s314159 s271828 combined; do
     if [ "$ITEM" = s314159 ]; then OP="$A/operator.npz"; fi
     if [ "$ITEM" = s271828 ]; then OP="$B/operator.npz"; fi
     if [ "$ITEM" = combined ]; then OP="$OUT/operator_combined.npz"; fi
-    python -u "$PKG/solve_ej_steady_state.py" \
+    "$PYTHON_BIN" -u "$PKG/solve_ej_steady_state.py" \
       --operator "$OP" --out-json "$OUT/steady_${ITEM}.json" \
       --out-csv "$OUT/steady_${ITEM}.csv" \
       --residual-tolerance 1.0e-7 --maximum-evaluations 10000
@@ -46,7 +46,7 @@ for GROUP in "${RUN_GROUPS[@]}"; do
   done
 done
 
-PRIMARY=$(python - "$ROOT/bridge/boundary_criteria.json" <<'PY'
+PRIMARY=$("$PYTHON_BIN" - "$ROOT/bridge/boundary_criteria.json" <<'PY'
 import json,sys
 print('%.16e'%json.load(open(sys.argv[1]))['criteria']['local_circular']['r_boundary_pc'])
 PY
@@ -69,4 +69,4 @@ grep -q '"status": "PRODUCTION_CONVERGENCE_PASS"' \
   --out "$ROOT/aggregate/absolute_closure.json"
 grep -q '"status": "ABSOLUTE_CLOSURE_MEASURED"' \
   "$ROOT/aggregate/absolute_closure.json"
-printf 'PRODUCTION_EJ_AGGREGATE_DONE %s ROOT=%s\n' "$(date -Is)" "$ROOT" | tee "$ROOT/AGGREGATE_STATUS.txt"
+printf 'PRODUCTION_EJ_AGGREGATE_DONE %s ROOT=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ROOT" | tee "$ROOT/AGGREGATE_STATUS.txt"

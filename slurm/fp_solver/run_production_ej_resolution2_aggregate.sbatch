@@ -48,7 +48,7 @@ for GROUP in "${RUN_GROUPS[@]}"; do
     : # Reuse the content-addressed two-seed combination.
   elif test ! -e "$OUT/operator_combined.npz" && \
        test ! -e "$OUT/operator_combined.json"; then
-    python -u "$PKG/combine_ej_operators.py" \
+    "$PYTHON_BIN" -u "$PKG/combine_ej_operators.py" \
       "$A/operator.npz" "$B/operator.npz" \
       --out "$OUT/operator_combined.npz" \
       --out-json "$OUT/operator_combined.json"
@@ -65,7 +65,7 @@ for GROUP in "${RUN_GROUPS[@]}"; do
       : # Preserve and verify an already completed steady solve.
     elif test ! -e "$OUT/steady_${ITEM}.json" && \
          test ! -e "$OUT/steady_${ITEM}.csv"; then
-      python -u "$PKG/solve_ej_steady_state.py" \
+      "$PYTHON_BIN" -u "$PKG/solve_ej_steady_state.py" \
         --operator "$OP" --out-json "$OUT/steady_${ITEM}.json" \
         --out-csv "$OUT/steady_${ITEM}.csv" \
         --residual-tolerance 1.0e-7 --maximum-evaluations 10000
@@ -79,7 +79,7 @@ for GROUP in "${RUN_GROUPS[@]}"; do
   done
 done
 
-PRIMARY=$(python - "$ROOT/bridge/boundary_criteria.json" <<'PY'
+PRIMARY=$("$PYTHON_BIN" - "$ROOT/bridge/boundary_criteria.json" <<'PY'
 import json,sys
 print('%.16e'%json.load(open(sys.argv[1]))['criteria']['local_circular']['r_boundary_pc'])
 PY
@@ -102,5 +102,5 @@ grep -q '"status": "PRODUCTION_CONVERGENCE_PASS"' \
 grep -q '"status": "ABSOLUTE_CLOSURE_MEASURED"' \
   "$AGGREGATE_ROOT/absolute_closure.json"
 printf 'PRODUCTION_EJ_AGGREGATE_DONE %s ROOT=%s AGGREGATE_DIR=%s\n' \
-  "$(date -Is)" "$ROOT" "$AGGREGATE_ROOT" | \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ROOT" "$AGGREGATE_ROOT" | \
   tee "$AGGREGATE_STATUS"

@@ -147,8 +147,36 @@ def main() -> int:
     assert "$ROOT/aggregate_v6" in resolution3_aggregate_text
     assert "$ROOT/AGGREGATE_V6_STATUS.txt" in resolution3_aggregate_text
     assert "V5_RESOLUTION_ONLY_FAILURE_CONFIRMED" in resolution3_aggregate_text
+    assert "group['numerical_solver_gate']" in resolution3_aggregate_text
+    assert "$ROOT/aggregate_v5_reaudit/ej_convergence.json" in (
+        resolution3_aggregate_text
+    )
     subprocess.run(
         ["bash", "-n", str(resolution3_aggregate)],
+        check=True, capture_output=True, text=True,
+    )
+    mass_reaudit = slurm / "run_production_mass_closure_reaudit.sbatch"
+    mass_reaudit_text = mass_reaudit.read_text()
+    assert "V6_MASS_ONLY_CONVERGENCE_CANDIDATE_CONFIRMED" in mass_reaudit_text
+    assert "PRODUCTION_OBSERVABLE_CONVERGENCE_PASS" in mass_reaudit_text
+    assert "diagnose_ej_capture_tail.py" in mass_reaudit_text
+    assert "assemble_fluid_mass_closure.py" in mass_reaudit_text
+    assert "FLUID_MASS_CLOSURE_MEASURED" in mass_reaudit_text
+    assert "PRODUCTION_MASS_CLOSURE_REAUDIT_DONE" in mass_reaudit_text
+    subprocess.run(
+        ["bash", "-n", str(mass_reaudit)],
+        check=True, capture_output=True, text=True,
+    )
+    mass_fluid = slurm / "run_production_fluid_mass_response.sbatch"
+    mass_fluid_text = mass_fluid.read_text()
+    assert "fluid_mass_closure.json" in mass_fluid_text
+    assert "--branches control,sink" in mass_fluid_text
+    assert "--tau-end 0.06" in mass_fluid_text
+    assert "--output-dtau 0.002" in mass_fluid_text
+    assert "mass_current_closure_only" in mass_fluid_text
+    assert "PRODUCTION_FLUID_MASS_RESPONSE_DONE" in mass_fluid_text
+    subprocess.run(
+        ["bash", "-n", str(mass_fluid)],
         check=True, capture_output=True, text=True,
     )
     bridge_text = (package / "hydrostatic_bridge.py").read_text()
@@ -159,18 +187,24 @@ def main() -> int:
     feedback_text = (package / "measured_fluid_feedback.py").read_text()
     assert "E_conduction_budget_scale_code" in feedback_text
     assert "np.dot(dm, np.abs(self.delta_uc))" in feedback_text
-    assert '"schema": "gnc-fluid-feedback-v4"' in feedback_text
+    assert '"schema": "gnc-fluid-feedback-v5"' in feedback_text
+    assert '"rho_inner_mean_msun_pc3"' in feedback_text
+    assert '"density_is_extrapolated_central_value": False' in feedback_text
     assert '"closure_json_sha256": sha256_file(args.diagnostics)' in feedback_text
     response_text = (package / "analyze_fluid_response.py").read_text()
     assert "value is not None" in response_text
     assert "math.isfinite(float(value))" in response_text
-    assert '"schema": "black-hole-aware-fluid-response-v2"' in response_text
+    assert '"schema": "black-hole-aware-fluid-response-v3"' in response_text
+    assert '"resolved_inner_density_definition_verified"' in response_text
     assert '"control_completed_physically"' in response_text
     assert 'set(rows) != {"control", "sink"}' in response_text
     assert '"summary_trajectory_endpoints_match"' in response_text
     measured_text = (package / "measured_fluid_feedback.py").read_text()
     assert 'closure_gates = diag.get("gates")' in measured_text
     assert 'accepted closure contains a missing or failed gate' in measured_text
+    assert 'input_status == "FLUID_MASS_CLOSURE_MEASURED"' in measured_text
+    assert '"gnc-fluid-mass-closure-v1"' in measured_text
+    assert '"MASS_CLOSURE_FLUID_RESPONSE_COMPLETE"' in measured_text
     fluid_script = (slurm / "run_production_fluid_response.sbatch").read_text()
     assert '--closure-json "$AGGREGATE_DIR/absolute_closure.json"' in fluid_script
     assert '--profile "$ROOT/remap/profile_bh.txt"' in fluid_script
@@ -233,6 +267,10 @@ def main() -> int:
         subprocess.run(command, check=True, capture_output=True, text=True)
         convergence_result = json.loads(convergence.read_text())
         assert convergence_result["status"] == "PRODUCTION_CONVERGENCE_PASS"
+        assert convergence_result["observable_gates"]["mass"]["pass"]
+        assert convergence_result["observable_gates"][
+            "capture_binding_energy"
+        ]["pass"]
         assert all(
             group["numerical_solver_gate"]
             for group in convergence_result["groups"]
@@ -253,6 +291,45 @@ def main() -> int:
             for values in convergence_result["selected_comparisons"].values()
             for item in values
         )
+
+        # Observable gates remain separate. A binding-energy failure must not
+        # erase a converged mass current, and the overall two-current status
+        # must still fail.
+        original_energy_results = {}
+        for result_path in results:
+            payload = json.loads(result_path.read_text())
+            if payload["operator_metadata"]["energy_bins"] != 64:
+                continue
+            original_energy_results[result_path] = result_path.read_text()
+            for model in ("direct", "immediate"):
+                payload["models"][model][
+                    "steady_capture_binding_energy_current_msun_kms2_per_myr"
+                ] *= 1.30
+            result_path.write_text(json.dumps(payload, indent=2) + "\n")
+        split_convergence = root / "split_convergence.json"
+        split = subprocess.run([
+            sys.executable, str(package / "assess_ej_convergence.py"),
+            *(str(path) for path in results),
+            "--out-json", str(split_convergence),
+            "--out-csv", str(root / "split_convergence.csv"),
+            "--primary-boundary-radius", "1.0",
+            "--require-capture-energy",
+        ], capture_output=True, text=True)
+        for result_path, text in original_energy_results.items():
+            result_path.write_text(text)
+        assert split.returncode == 2
+        split_result = json.loads(split_convergence.read_text())
+        assert split_result["status"] == "INCOMPLETE_OR_FAILED"
+        assert split_result["observable_gates"]["mass"]["status"] == (
+            "PRODUCTION_OBSERVABLE_CONVERGENCE_PASS"
+        )
+        assert split_result["observable_gates"]["mass"]["pass"]
+        assert not split_result["observable_gates"][
+            "capture_binding_energy"
+        ]["pass"]
+        assert not split_result["observable_gates"][
+            "capture_binding_energy"
+        ]["dimensions"]["energy"]["pass"]
         victim = results[0]
         original_victim = victim.read_text()
         failed_value = json.loads(original_victim)
@@ -351,6 +428,68 @@ def main() -> int:
         assert abs(result["thermal_sink_current_msun_kms2_per_myr"] / (
             -1.5 * result["measured_mdot_msun_per_myr"] * 30.0**2
         ) - 1.0) < 1.0e-14
+
+        # The hydrostatic bridge and the boundary scan reconstruct the same
+        # crossing independently, so an interpolation-level radius mismatch is
+        # expected in production.  The mass closure must use the exact GNC
+        # reporting surface while checking the bridge crossing at the declared
+        # interface tolerance.
+        mass_bridge = root / "mass_bridge.json"
+        mass_bridge_payload = json.loads(bridge.read_text())
+        mass_bridge_payload["r_in_pc"] = 1.0005
+        mass_bridge.write_text(json.dumps(mass_bridge_payload) + "\n")
+        mass_closure = root / "mass_closure.json"
+        subprocess.run([
+            sys.executable, str(package / "assemble_fluid_mass_closure.py"),
+            "--remap-json", str(remap),
+            "--bridge-json", str(mass_bridge),
+            "--normalization-json", str(norm),
+            "--convergence-json", str(split_convergence),
+            "--steady-json", str(selected),
+            "--out", str(mass_closure),
+        ], check=True, capture_output=True, text=True)
+        mass_result = json.loads(mass_closure.read_text())
+        assert mass_result["schema"] == "gnc-fluid-mass-closure-v1"
+        assert mass_result["status"] == "FLUID_MASS_CLOSURE_MEASURED"
+        assert mass_result["absolute_two_current_closure_status"] == (
+            "INCOMPLETE_OR_FAILED"
+        )
+        assert mass_result["capture_binding_energy_observable_status"] == (
+            "INCOMPLETE_OR_FAILED"
+        )
+        assert mass_result["capture_binding_energy_current_used_by_fluid"] is False
+        assert all(mass_result["gates"].values())
+        assert mass_result["identity"]["r_outer_pc"] == 1.0
+        assert mass_result["identity"]["bridge_r_in_pc"] == 1.0005
+        assert mass_result["identity"][
+            "closure_to_bridge_radius_relative_error"
+        ] < 1.0e-3
+        assert mass_result[
+            "validated_mass_sensitivity_envelope"
+        ]["maximum_fractional_sensitivity"] < 0.10
+        assert abs(mass_result["thermal_sink_current_msun_kms2_per_myr"] / (
+            -1.5 * mass_result["measured_mdot_msun_per_myr"] * 30.0**2
+        ) - 1.0) < 1.0e-14
+
+        far_bridge = root / "far_bridge.json"
+        far_bridge_payload = dict(mass_bridge_payload)
+        far_bridge_payload["r_in_pc"] = 1.01
+        far_bridge.write_text(json.dumps(far_bridge_payload) + "\n")
+        failed_mass_closure = root / "failed_mass_closure.json"
+        failed_mass = subprocess.run([
+            sys.executable, str(package / "assemble_fluid_mass_closure.py"),
+            "--remap-json", str(remap),
+            "--bridge-json", str(far_bridge),
+            "--normalization-json", str(norm),
+            "--convergence-json", str(split_convergence),
+            "--steady-json", str(selected),
+            "--out", str(failed_mass_closure),
+        ], capture_output=True, text=True)
+        assert failed_mass.returncode == 2
+        failed_mass_result = json.loads(failed_mass_closure.read_text())
+        assert not failed_mass_result["gates"][
+            "selected_reporting_surface_is_physical_crossing"
+        ]
     print("PASS: production EJ convergence and absolute-closure assembly")
     return 0
 

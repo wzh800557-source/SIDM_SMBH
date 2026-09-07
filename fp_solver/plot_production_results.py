@@ -25,9 +25,9 @@ import numpy as np
 MODELS = (("direct", "direct", "#275d95", "o"),
           ("immediate", "immediate", "#cc6b32", "s"))
 METRICS = {
-    "mass": (r"mass current / final direct mass current", "mass"),
+    "mass": ("mass current /\nfinal direct mass current", "mass"),
     "capture_binding_energy": (
-        r"binding-energy current / final direct binding current", "binding energy"
+        "binding current /\nfinal direct binding current", "binding energy"
     ),
 }
 
@@ -59,7 +59,7 @@ def require_all_true(mapping: dict, label: str) -> None:
         raise RuntimeError(f"{label} has failed gates: {', '.join(failed)}")
 
 
-def validate_convergence(convergence: dict) -> None:
+def validate_convergence(convergence: dict, closure_scope: str) -> None:
     tolerance = float(convergence.get("fractional_tolerance", math.nan))
     if not math.isfinite(tolerance) or not 0.0 < tolerance <= 0.1:
         raise RuntimeError("convergence ledger has an invalid production tolerance")
@@ -73,9 +73,24 @@ def validate_convergence(convergence: dict) -> None:
         raise RuntimeError("convergence ledger did not require all three dimensions")
     if set(convergence.get("required_metrics", ())) != set(METRICS):
         raise RuntimeError("convergence ledger did not require both currents")
+    if closure_scope == "mass_current_closure_only":
+        mass_gate = convergence.get("observable_gates", {}).get("mass", {})
+        binding_gate = convergence.get("observable_gates", {}).get(
+            "capture_binding_energy", {}
+        )
+        if (
+            mass_gate.get("status")
+            != "PRODUCTION_OBSERVABLE_CONVERGENCE_PASS"
+            or mass_gate.get("pass") is not True
+        ):
+            raise RuntimeError("mass current did not pass its observable gate")
+        if binding_gate.get("pass") not in (True, False):
+            raise RuntimeError("binding-energy observable status is absent")
     for dimension in ("energy", "angular", "boundary"):
         gate = convergence.get("dimension_gates", {}).get(dimension, {})
-        if gate.get("pass") is not True:
+        if closure_scope == "absolute_two_current_closure" and gate.get(
+            "pass"
+        ) is not True:
             raise RuntimeError(f"convergence dimension {dimension} did not pass")
         records = convergence.get("selected_comparisons", {}).get(dimension, [])
         observed = {(item.get("model"), item.get("metric")) for item in records}
@@ -83,14 +98,30 @@ def validate_convergence(convergence: dict) -> None:
             raise RuntimeError(
                 f"convergence dimension {dimension} lacks the four selected tests"
             )
-        if any(item.get("gate") is not True for item in records):
+        required_records = (
+            records
+            if closure_scope == "absolute_two_current_closure"
+            else [item for item in records if item.get("metric") == "mass"]
+        )
+        if any(item.get("gate") is not True for item in required_records):
             raise RuntimeError(
-                f"convergence dimension {dimension} contains a failed comparison"
+                f"required {dimension} comparison did not pass"
             )
 
 
-def validate_closure(closure: dict, tolerance: float) -> None:
-    require_all_true(closure.get("gates", {}), "absolute closure")
+def validate_closure(closure: dict, tolerance: float) -> str:
+    absolute = (
+        closure.get("schema") == "gnc-fluid-absolute-closure-v1"
+        and closure.get("status") == "ABSOLUTE_CLOSURE_MEASURED"
+    )
+    mass_only = (
+        closure.get("schema") == "gnc-fluid-mass-closure-v1"
+        and closure.get("status") == "FLUID_MASS_CLOSURE_MEASURED"
+        and closure.get("capture_binding_energy_current_used_by_fluid") is False
+    )
+    if not (absolute or mass_only):
+        raise RuntimeError("closure is neither an accepted absolute nor mass closure")
+    require_all_true(closure.get("gates", {}), "accepted closure")
     mdot = float(closure.get("measured_mdot_msun_per_myr", math.nan))
     cm = float(closure.get("C_M_measured", math.nan))
     ce = float(closure.get("C_E_thermal_sink", math.nan))
@@ -101,15 +132,23 @@ def validate_closure(closure: dict, tolerance: float) -> None:
         raise RuntimeError("closure currents have an unphysical sign")
     if not close(ce, -factor * cm):
         raise RuntimeError("thermal sink coefficient is inconsistent with mass current")
-    envelopes = closure.get("validated_sensitivity_envelope", {})
-    for name in ("mass_current", "capture_binding_energy_current"):
+    if absolute:
+        envelopes = closure.get("validated_sensitivity_envelope", {})
+        records = (
+            envelopes.get("mass_current", {}),
+            envelopes.get("capture_binding_energy_current", {}),
+        )
+    else:
+        records = (closure.get("validated_mass_sensitivity_envelope", {}),)
+    for record in records:
         value = float(
-            envelopes.get(name, {}).get(
-                "maximum_fractional_sensitivity", math.nan
-            )
+            record.get("maximum_fractional_sensitivity", math.nan)
         )
         if not math.isfinite(value) or value < 0.0 or value > tolerance:
-            raise RuntimeError(f"closure {name} exceeds the accepted envelope")
+            raise RuntimeError("closure current exceeds the accepted envelope")
+    return (
+        "absolute_two_current_closure" if absolute else "mass_current_closure_only"
+    )
 
 
 def primary_groups(convergence: dict) -> list[dict]:
@@ -198,7 +237,7 @@ def plot_convergence(convergence: dict, closure: dict, outdir: Path) -> list[str
         "axes.titlesize": 9, "legend.fontsize": 7.5,
         "xtick.labelsize": 8, "ytick.labelsize": 8, "axes.linewidth": 0.8,
     })
-    fig, axes = plt.subplots(1, 3, figsize=(7.15, 2.75), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(7.15, 3.05), constrained_layout=True)
     x = np.arange(len(groups), dtype=float)
     labels = [
         f"{int(group['energy_bins'])}/{int(group['angular_bins'])}"
@@ -223,8 +262,13 @@ def plot_convergence(convergence: dict, closure: dict, outdir: Path) -> list[str
         ax.set_xlabel(r"energy/angular bins, $N_E/N_J$")
         ax.set_ylabel(ylabel)
         ax.grid(axis="y", alpha=0.20)
-    axes[0].set_title("(a) Mass current", loc="left")
-    axes[1].set_title("(b) Binding-energy current", loc="left")
+    mass_only = closure.get("schema") == "gnc-fluid-mass-closure-v1"
+    axes[0].set_title("(a) Mass current\n(accepted)", loc="left", fontsize=9.0)
+    axes[1].set_title(
+        "(b) Binding current\n"
+        + ("(unresolved)" if mass_only else "(accepted)"),
+        loc="left", fontsize=9.0,
+    )
     axes[0].legend(frameon=False, loc="best")
 
     ax = axes[2]
@@ -267,22 +311,41 @@ def plot_convergence(convergence: dict, closure: dict, outdir: Path) -> list[str
     ax.axvline(1.0, color="0.5", lw=0.7, ls="--")
     ax.set_xlabel(r"reporting radius / $r_{\rm in}$")
     ax.set_ylabel(r"current / current at $r_{\rm in}$")
-    ax.set_title("(c) Reporting surface", loc="left")
-    ax.legend(frameon=False)
+    ax.set_title("(c) Reporting surface\n(final grid)", loc="left", fontsize=9.0)
+    ax.legend(frameon=False, loc="upper left")
     ax.grid(axis="y", alpha=0.20)
 
-    mass_env = 100.0 * float(
-        closure["validated_sensitivity_envelope"]["mass_current"][
-            "maximum_fractional_sensitivity"
+    if mass_only:
+        mass_env = 100.0 * float(
+            closure["validated_mass_sensitivity_envelope"][
+                "maximum_fractional_sensitivity"
+            ]
+        )
+        energy_changes = [
+            float(item["full_range_fraction_of_mean"] if dimension == "boundary"
+                  else item["fractional_difference"])
+            for dimension in ("energy", "angular", "boundary")
+            for item in convergence["selected_comparisons"][dimension]
+            if item["metric"] == "capture_binding_energy"
         ]
-    )
-    energy_env = 100.0 * float(
-        closure["validated_sensitivity_envelope"]["capture_binding_energy_current"][
-            "maximum_fractional_sensitivity"
-        ]
-    )
+        binding_pass = convergence["observable_gates"]["capture_binding_energy"]["pass"]
+        energy_text = (f"binding energy: {100.0 * max(energy_changes):.1f}% "
+                       f"({'passes' if binding_pass else 'fails'})")
+    else:
+        mass_env = 100.0 * float(
+            closure["validated_sensitivity_envelope"]["mass_current"][
+                "maximum_fractional_sensitivity"
+            ]
+        )
+        energy_env = 100.0 * float(
+            closure["validated_sensitivity_envelope"][
+                "capture_binding_energy_current"
+            ]["maximum_fractional_sensitivity"]
+        )
+        energy_text = f"binding: {energy_env:.1f}%"
     axes[2].text(
-        0.04, 0.05, f"accepted envelopes\nmass: {mass_env:.1f}%\nenergy: {energy_env:.1f}%",
+        0.04, 0.05,
+        f"mass envelope: {mass_env:.1f}%\n{energy_text}",
         transform=axes[2].transAxes, fontsize=7.5, va="bottom",
         bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.82,
               "pad": 1.5},
@@ -303,18 +366,21 @@ def validate_response_rows(analysis: dict, rows: list[dict[str, float]]) -> None
         raise RuntimeError("fluid comparison needs at least two output times")
     required = {
         "tau_relax",
-        "control_rho_c_msun_pc3", "sink_rho_c_msun_pc3",
-        "control_sigma_c_kms", "sink_sigma_c_kms",
-        "control_r0_pc", "sink_r0_pc",
-        "sink_over_control_rho_c_msun_pc3",
-        "sink_over_control_sigma_c_kms", "sink_over_control_r0_pc",
+        "control_rho_inner_mean_msun_pc3", "sink_rho_inner_mean_msun_pc3",
+        "control_sigma_inner_1d_kms", "sink_sigma_inner_1d_kms",
+        "control_r_inner_pc", "sink_r_inner_pc",
+        "sink_over_control_rho_inner_mean_msun_pc3",
+        "sink_over_control_sigma_inner_1d_kms",
+        "sink_over_control_r_inner_pc",
     }
     for row in rows:
         if not required <= row.keys():
             raise RuntimeError("fluid comparison is missing a required column")
         if any(not math.isfinite(float(row[key])) for key in required):
             raise RuntimeError("fluid comparison contains a non-finite value")
-        for field in ("rho_c_msun_pc3", "sigma_c_kms", "r0_pc"):
+        for field in (
+            "rho_inner_mean_msun_pc3", "sigma_inner_1d_kms", "r_inner_pc"
+        ):
             control = float(row[f"control_{field}"])
             sink = float(row[f"sink_{field}"])
             ratio = float(row[f"sink_over_control_{field}"])
@@ -329,42 +395,54 @@ def validate_response_rows(analysis: dict, rows: list[dict[str, float]]) -> None
         raise RuntimeError("fluid comparison does not end at the common time")
     final = rows[-1]
     expected_endpoints = {
-        "density_sink_over_control_at_common_end":
-            final["sink_over_control_rho_c_msun_pc3"],
-        "dispersion_sink_over_control_at_common_end":
-            final["sink_over_control_sigma_c_kms"],
+        "inner_mean_density_sink_over_control_at_common_end":
+            final["sink_over_control_rho_inner_mean_msun_pc3"],
+        "inner_dispersion_sink_over_control_at_common_end":
+            final["sink_over_control_sigma_inner_1d_kms"],
         "inner_radius_sink_over_control_at_common_end":
-            final["sink_over_control_r0_pc"],
+            final["sink_over_control_r_inner_pc"],
     }
     for key, value in expected_endpoints.items():
         if not close(analysis[key], value):
             raise RuntimeError(f"fluid analysis does not match {key}")
     density_max = max(
-        abs(float(row["sink_over_control_rho_c_msun_pc3"]) - 1.0)
+        abs(float(row["sink_over_control_rho_inner_mean_msun_pc3"]) - 1.0)
         for row in rows
     )
-    if not close(analysis["density_max_abs_fractional_difference"], density_max):
+    if not close(
+        analysis["inner_mean_density_max_abs_fractional_difference"], density_max
+    ):
         raise RuntimeError("fluid analysis does not match the density history")
 
 
 def plot_response(analysis: dict, rows: list[dict[str, float]], outdir: Path) -> list[str]:
     validate_response_rows(analysis, rows)
     tau = np.asarray([row["tau_relax"] for row in rows])
-    control_rho = np.asarray([row["control_rho_c_msun_pc3"] for row in rows])
-    sink_rho = np.asarray([row["sink_rho_c_msun_pc3"] for row in rows])
+    control_rho = np.asarray([
+        row["control_rho_inner_mean_msun_pc3"] for row in rows
+    ])
+    sink_rho = np.asarray([
+        row["sink_rho_inner_mean_msun_pc3"] for row in rows
+    ])
     fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.75), constrained_layout=True)
     axes[0].semilogy(tau, control_rho, color="#444444", lw=1.5, label="control")
     axes[0].semilogy(tau, sink_rho, color="#b44b3c", lw=1.5, label="capture sink")
     axes[0].set_xlabel(r"time [$t_{\rm relax}$]")
-    axes[0].set_ylabel(r"core density [$M_\odot\,{\rm pc}^{-3}$]")
-    axes[0].set_title("(a) Core-density evolution", loc="left")
+    axes[0].set_ylabel(r"mean density inside $r_0$ [$M_\odot\,{\rm pc}^{-3}$]")
+    axes[0].set_title("(a) Innermost resolved density", loc="left")
     axes[0].legend(frameon=False)
     axes[0].grid(alpha=0.20)
 
     fields = (
-        ("sink_over_control_rho_c_msun_pc3", r"$\rho_c$", "#b44b3c"),
-        ("sink_over_control_sigma_c_kms", r"$\sigma_c$", "#275d95"),
-        ("sink_over_control_r0_pc", r"$r_0$", "#4c956c"),
+        (
+            "sink_over_control_rho_inner_mean_msun_pc3",
+            r"$\bar{\rho}(<r_0)$", "#b44b3c",
+        ),
+        (
+            "sink_over_control_sigma_inner_1d_kms",
+            r"$\sigma_{1{\rm D},0}$", "#275d95",
+        ),
+        ("sink_over_control_r_inner_pc", r"$r_0$", "#4c956c"),
     )
     for field, label, colour in fields:
         axes[1].plot(
@@ -376,9 +454,11 @@ def plot_response(analysis: dict, rows: list[dict[str, float]], outdir: Path) ->
     axes[1].set_title("(b) Black-hole-aware response", loc="left")
     axes[1].legend(frameon=False)
     axes[1].grid(alpha=0.20)
-    density_max = 100.0 * float(analysis["density_max_abs_fractional_difference"])
+    density_max = 100.0 * float(
+        analysis["inner_mean_density_max_abs_fractional_difference"]
+    )
     axes[1].text(
-        0.04, 0.06, f"maximum density difference: {density_max:.2f}%",
+        0.04, 0.06, f"maximum inner-density difference: {density_max:.2f}%",
         transform=axes[1].transAxes, fontsize=7.7,
         bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.82,
               "pad": 1.5},
@@ -394,25 +474,39 @@ def main() -> int:
     parser.add_argument("--fluid-comparison-csv", type=Path, required=True)
     parser.add_argument("--outdir", type=Path, required=True)
     args = parser.parse_args()
-    convergence = load_json(
-        args.convergence_json, "PRODUCTION_CONVERGENCE_PASS",
-        "finite-angle-ej-convergence-v3",
+    convergence = json.loads(args.convergence_json.read_text())
+    if convergence.get("schema") != "finite-angle-ej-convergence-v3":
+        raise RuntimeError("convergence ledger schema is stale")
+    closure = json.loads(args.closure_json.read_text())
+    closure_scope = validate_closure(
+        closure, float(convergence.get("fractional_tolerance", math.nan))
     )
-    closure = load_json(
-        args.closure_json, "ABSOLUTE_CLOSURE_MEASURED",
-        "gnc-fluid-absolute-closure-v1",
+    allowed_convergence_status = (
+        {"PRODUCTION_CONVERGENCE_PASS"}
+        if closure_scope == "absolute_two_current_closure"
+        else {"PRODUCTION_CONVERGENCE_PASS", "INCOMPLETE_OR_FAILED"}
     )
+    if convergence.get("status") not in allowed_convergence_status:
+        raise RuntimeError(
+            "convergence status is inconsistent with the closure scope"
+        )
     analysis = load_json(
         args.fluid_analysis_json,
         "BLACK_HOLE_AWARE_RESPONSE_COMPLETE",
-        "black-hole-aware-fluid-response-v2",
+        "black-hole-aware-fluid-response-v3",
     )
     rows = read_csv(args.fluid_comparison_csv)
     require_all_true(analysis.get("gates", {}), "fluid response")
-    validate_convergence(convergence)
-    validate_closure(
-        closure, float(convergence["fractional_tolerance"])
-    )
+    validate_convergence(convergence, closure_scope)
+    if analysis.get("closure_scope") != closure_scope:
+        raise RuntimeError("fluid analysis and closure report different scopes")
+    if (
+        closure_scope == "mass_current_closure_only"
+        and analysis.get("capture_binding_energy_current_used_by_fluid") is not False
+    ):
+        raise RuntimeError(
+            "mass-current figure input uses the unresolved binding-energy current"
+        )
     closure_identity = closure.get("identity", {})
     path = convergence["production_resolution_path"]
     if closure_identity.get("convergence_json_sha256") != sha256(
@@ -437,8 +531,12 @@ def main() -> int:
     outputs = plot_convergence(convergence, closure, args.outdir)
     outputs.extend(plot_response(analysis, rows, args.outdir))
     report = {
-        "schema": "gnc-production-figure-ledger-v2",
+        "schema": "gnc-production-figure-ledger-v3",
         "status": "PRODUCTION_FIGURES_COMPLETE",
+        "closure_scope": closure_scope,
+        "capture_binding_energy_current_accepted": (
+            closure_scope == "absolute_two_current_closure"
+        ),
         "sources": {
             "convergence_sha256": sha256(args.convergence_json),
             "closure_sha256": sha256(args.closure_json),
@@ -452,8 +550,8 @@ def main() -> int:
         "measured_mdot_msun_per_myr": closure["measured_mdot_msun_per_myr"],
         "C_M_measured": closure["C_M_measured"],
         "C_E_thermal_sink": closure["C_E_thermal_sink"],
-        "density_max_abs_fractional_difference": analysis[
-            "density_max_abs_fractional_difference"
+        "inner_mean_density_max_abs_fractional_difference": analysis[
+            "inner_mean_density_max_abs_fractional_difference"
         ],
         "plotted_resolution_path": [
             f"{int(group['energy_bins'])}/{int(group['angular_bins'])}"

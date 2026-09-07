@@ -38,7 +38,7 @@ case "$SLURM_ARRAY_TASK_ID" in
   7) CRIT=orbit_e0p9;              E=64; GRID=j257;  SEED=271828 ;;
   *) exit 2 ;;
 esac
-RB=$(python - "$ROOT/bridge/boundary_criteria.json" "$CRIT" <<'PY'
+RB=$("$PYTHON_BIN" - "$ROOT/bridge/boundary_criteria.json" "$CRIT" <<'PY'
 import json,sys
 print('%.16e'%json.load(open(sys.argv[1]))['criteria'][sys.argv[2]]['r_boundary_pc'])
 PY
@@ -51,7 +51,7 @@ if test -s "$OUT/STATUS.txt" && grep -q EJ_OPERATOR_DONE "$OUT/STATUS.txt"; then
   exit 2
 fi
 printf 'EJ_RESOLUTION3_OPERATOR_START %s tag=%s r=%s pairs_per_bin=%s\n' \
-  "$(date -Is)" "$TAG" "$RB" "$PAIRS_PER_BIN"
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$TAG" "$RB" "$PAIRS_PER_BIN"
 "$PYTHON_BIN" -u "$PKG/finite_angle_capture.py" \
   --profile "$ROOT/bridge/bridged_profile.txt" \
   --df-table "$ROOT/normalized/f_evolved_normalized.txt" \
@@ -77,4 +77,4 @@ expected={'hyper':129,'j257':257}[sys.argv[4]]
 assert x['angular_bins'] == expected
 print('MASS_AND_CAPTURE_ENERGY_ROUNDTRIP_PASS')
 PY
-printf 'EJ_OPERATOR_DONE %s tag=%s\n' "$(date -Is)" "$TAG" | tee "$OUT/STATUS.txt"
+printf 'EJ_OPERATOR_DONE %s tag=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$TAG" | tee "$OUT/STATUS.txt"

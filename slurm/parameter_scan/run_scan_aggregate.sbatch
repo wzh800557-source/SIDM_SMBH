@@ -27,4 +27,4 @@ mkdir -p "$SCAN_ROOT/aggregate"
   --outdir "$SCAN_ROOT/aggregate"
 
 printf 'SIDM_SMBH_PARAMETER_SCAN_COMPLETE %s ROOT=%s\n' \
-  "$(date -Is)" "$SCAN_ROOT" | tee "$SCAN_ROOT/SCAN_STATUS.txt"
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$SCAN_ROOT" | tee "$SCAN_ROOT/SCAN_STATUS.txt"

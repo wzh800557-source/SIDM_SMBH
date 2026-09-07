@@ -1,0 +1,2145 @@
+{
+  "comparisons": {
+    "angular": [
+      {
+        "fixed_energy_bins": 16,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.03527791932719153,
+        "gate": true,
+        "lower_angular_bins": 17,
+        "lower_value": 10.036722691623671,
+        "metric": "mass",
+        "model": "direct",
+        "upper_angular_bins": 33,
+        "upper_value": 9.688785252650678
+      },
+      {
+        "fixed_energy_bins": 32,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.032968576637569975,
+        "gate": true,
+        "lower_angular_bins": 33,
+        "lower_value": 12.262727819306399,
+        "metric": "mass",
+        "model": "direct",
+        "upper_angular_bins": 65,
+        "upper_value": 11.86499940722722
+      },
+      {
+        "fixed_energy_bins": 48,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.009509616609006635,
+        "gate": true,
+        "lower_angular_bins": 65,
+        "lower_value": 13.57556994071878,
+        "metric": "mass",
+        "model": "direct",
+        "upper_angular_bins": 129,
+        "upper_value": 13.447082408917026
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.0006660021517483903,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 14.051444592357138,
+        "metric": "mass",
+        "model": "direct",
+        "upper_angular_bins": 257,
+        "upper_value": 14.06080600205032
+      },
+      {
+        "fixed_energy_bins": 16,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.2753014306931455,
+        "gate": false,
+        "lower_angular_bins": 17,
+        "lower_value": 134849392.3387084,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_angular_bins": 33,
+        "upper_value": 102217029.75311619
+      },
+      {
+        "fixed_energy_bins": 32,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.23425400864567147,
+        "gate": false,
+        "lower_angular_bins": 33,
+        "lower_value": 142445709.3324425,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_angular_bins": 65,
+        "upper_value": 112575803.49686776
+      },
+      {
+        "fixed_energy_bins": 48,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.14758028795500905,
+        "gate": false,
+        "lower_angular_bins": 65,
+        "lower_value": 141458975.44949737,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_angular_bins": 129,
+        "upper_value": 122017042.17440975
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.0531421168967368,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 140640053.37221467,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_angular_bins": 257,
+        "upper_value": 133359592.76000325
+      },
+      {
+        "fixed_energy_bins": 16,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.03272334872204471,
+        "gate": true,
+        "lower_angular_bins": 17,
+        "lower_value": 11.030320382506572,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_angular_bins": 33,
+        "upper_value": 10.675182020348666
+      },
+      {
+        "fixed_energy_bins": 32,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.031136353190829358,
+        "gate": true,
+        "lower_angular_bins": 33,
+        "lower_value": 13.35718306770836,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_angular_bins": 65,
+        "upper_value": 12.947664554608656
+      },
+      {
+        "fixed_energy_bins": 48,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.008633674847115283,
+        "gate": true,
+        "lower_angular_bins": 65,
+        "lower_value": 14.72170636243498,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_angular_bins": 129,
+        "upper_value": 14.595150258632085
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.0008959283398125037,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 15.211779181538516,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_angular_bins": 257,
+        "upper_value": 15.225413953495528
+      },
+      {
+        "fixed_energy_bins": 16,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.2750736682987962,
+        "gate": false,
+        "lower_angular_bins": 17,
+        "lower_value": 134501328.62015557,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_angular_bins": 33,
+        "upper_value": 101976866.33997506
+      },
+      {
+        "fixed_energy_bins": 32,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.23313448302540934,
+        "gate": false,
+        "lower_angular_bins": 33,
+        "lower_value": 142131496.17123237,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_angular_bins": 65,
+        "upper_value": 112455045.30507898
+      },
+      {
+        "fixed_energy_bins": 48,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.14630359571130394,
+        "gate": false,
+        "lower_angular_bins": 65,
+        "lower_value": 141282174.63633227,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_angular_bins": 129,
+        "upper_value": 122021068.98426114
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.052672306799211734,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 140520516.05775324,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_angular_bins": 257,
+        "upper_value": 133308902.4856688
+      }
+    ],
+    "boundary": [
+      {
+        "fixed_angular_bins": 33,
+        "fixed_energy_bins": 16,
+        "full_range_fraction_of_mean": 0.0346987283643619,
+        "gate": true,
+        "metric": "mass",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          9.688785252650678,
+          9.866251471882656,
+          10.030984355597932
+        ]
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_energy_bins": 32,
+        "full_range_fraction_of_mean": 0.06490383210482509,
+        "gate": true,
+        "metric": "mass",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          11.86499940722722,
+          12.266971144255077,
+          12.6610010238141
+        ]
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_energy_bins": 48,
+        "full_range_fraction_of_mean": 0.02630804748390601,
+        "gate": true,
+        "metric": "mass",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          13.447082408917026,
+          13.585584740415394,
+          13.80520395967617
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.05341512555666146,
+        "gate": true,
+        "metric": "mass",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          14.06080600205032,
+          14.540245121619177,
+          14.834171967040954
+        ]
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_energy_bins": 16,
+        "full_range_fraction_of_mean": 0.030014568388853063,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          102217029.75311619,
+          103790827.68034181,
+          100722039.19393227
+        ]
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_energy_bins": 32,
+        "full_range_fraction_of_mean": 0.04621929343684909,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          112575803.49686776,
+          117931149.8096773,
+          117097645.20122248
+        ]
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_energy_bins": 48,
+        "full_range_fraction_of_mean": 0.06515825225299679,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          122017042.17440975,
+          130191514.2155949,
+          124158446.64647679
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.06309923998236475,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          133359592.76000325,
+          142051045.64557624,
+          137817138.41085014
+        ]
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_energy_bins": 16,
+        "full_range_fraction_of_mean": 0.036171024405212984,
+        "gate": true,
+        "metric": "mass",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          10.675182020348666,
+          10.876927880711573,
+          11.06848884479837
+        ]
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_energy_bins": 32,
+        "full_range_fraction_of_mean": 0.06533941715005206,
+        "gate": true,
+        "metric": "mass",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          12.947664554608656,
+          13.385941705686726,
+          13.822251331341334
+        ]
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_energy_bins": 48,
+        "full_range_fraction_of_mean": 0.027218011951113723,
+        "gate": true,
+        "metric": "mass",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          14.595150258632085,
+          14.752156379052158,
+          14.99747586534441
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.053465563911945034,
+        "gate": true,
+        "metric": "mass",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          15.225413953495528,
+          15.731463779763837,
+          16.063402553776896
+        ]
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_energy_bins": 16,
+        "full_range_fraction_of_mean": 0.029422303539846432,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          101976866.33997506,
+          103539826.25402032,
+          100538212.81178437
+        ]
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_energy_bins": 32,
+        "full_range_fraction_of_mean": 0.04598885473472406,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          112455045.30507898,
+          117778238.70827666,
+          117015637.5288269
+        ]
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_energy_bins": 48,
+        "full_range_fraction_of_mean": 0.063956595099681,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          122021068.98426114,
+          130041758.28426538,
+          124162140.03172214
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.06259900574569305,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          133308902.4856688,
+          141927100.490921,
+          137783240.8240267
+        ]
+      }
+    ],
+    "energy": [
+      {
+        "fixed_angular_bins": 17,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.1096030985445639,
+        "gate": false,
+        "lower_energy_bins": 12,
+        "lower_value": 8.993819496237364,
+        "metric": "mass",
+        "model": "direct",
+        "upper_energy_bins": 16,
+        "upper_value": 10.036722691623671
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.06987552966427538,
+        "gate": true,
+        "lower_energy_bins": 24,
+        "lower_value": 11.434789531015355,
+        "metric": "mass",
+        "model": "direct",
+        "upper_energy_bins": 32,
+        "upper_value": 12.262727819306399
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.1344758059535855,
+        "gate": false,
+        "lower_energy_bins": 32,
+        "lower_value": 11.86499940722722,
+        "metric": "mass",
+        "model": "direct",
+        "upper_energy_bins": 48,
+        "upper_value": 13.57556994071878
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.043955967780536585,
+        "gate": true,
+        "lower_energy_bins": 48,
+        "lower_value": 13.447082408917026,
+        "metric": "mass",
+        "model": "direct",
+        "upper_energy_bins": 64,
+        "upper_value": 14.051444592357138
+      },
+      {
+        "fixed_angular_bins": 17,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.14204576577044387,
+        "gate": false,
+        "lower_energy_bins": 12,
+        "lower_value": 116964820.95884217,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_energy_bins": 16,
+        "upper_value": 134849392.3387084
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.11748975340846615,
+        "gate": false,
+        "lower_energy_bins": 24,
+        "lower_value": 126638396.70047025,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_energy_bins": 32,
+        "upper_value": 142445709.3324425
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.22739541469420432,
+        "gate": false,
+        "lower_energy_bins": 32,
+        "lower_value": 112575803.49686776,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_energy_bins": 48,
+        "upper_value": 141458975.44949737
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.14180474476844387,
+        "gate": false,
+        "lower_energy_bins": 48,
+        "lower_value": 122017042.17440975,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_energy_bins": 64,
+        "upper_value": 140640053.37221467
+      },
+      {
+        "fixed_angular_bins": 17,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.10408020404865727,
+        "gate": false,
+        "lower_energy_bins": 12,
+        "lower_value": 9.939071109855938,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_energy_bins": 16,
+        "upper_value": 11.030320382506572
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.06513763624313201,
+        "gate": true,
+        "lower_energy_bins": 24,
+        "lower_value": 12.514570627135052,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_energy_bins": 32,
+        "upper_value": 13.35718306770836
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.1282314522542007,
+        "gate": false,
+        "lower_energy_bins": 32,
+        "lower_value": 12.947664554608656,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_energy_bins": 48,
+        "upper_value": 14.72170636243498
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.04137487050748703,
+        "gate": true,
+        "lower_energy_bins": 48,
+        "lower_value": 14.595150258632085,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_energy_bins": 64,
+        "upper_value": 15.211779181538516
+      },
+      {
+        "fixed_angular_bins": 17,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.14241695567364593,
+        "gate": false,
+        "lower_energy_bins": 12,
+        "lower_value": 116619403.53044292,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_energy_bins": 16,
+        "upper_value": 134501328.62015557
+      },
+      {
+        "fixed_angular_bins": 33,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.11731327279401968,
+        "gate": false,
+        "lower_energy_bins": 24,
+        "lower_value": 126381431.03235479,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_energy_bins": 32,
+        "upper_value": 142131496.17123237
+      },
+      {
+        "fixed_angular_bins": 65,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.22722034503183702,
+        "gate": false,
+        "lower_energy_bins": 32,
+        "lower_value": 112455045.30507898,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_energy_bins": 48,
+        "upper_value": 141282174.63633227
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.1409258428186273,
+        "gate": false,
+        "lower_energy_bins": 48,
+        "lower_value": 122021068.98426114,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_energy_bins": 64,
+        "upper_value": 140520516.05775324
+      }
+    ]
+  },
+  "dimension_gates": {
+    "angular": {
+      "comparison_count": 4,
+      "expected_comparison_count": 4,
+      "pass": true,
+      "present": true
+    },
+    "boundary": {
+      "comparison_count": 4,
+      "expected_comparison_count": 4,
+      "pass": true,
+      "present": true
+    },
+    "energy": {
+      "comparison_count": 4,
+      "expected_comparison_count": 4,
+      "pass": false,
+      "present": true
+    }
+  },
+  "fractional_tolerance": 0.1,
+  "groups": [
+    {
+      "angular_bins": 17,
+      "angular_grid": "default",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 8,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 110684462.21368538,
+            "seed_full_range_fraction_of_mean": 0.06954690948698529,
+            "seed_gate": true,
+            "seed_values": [
+              106925120.1063721,
+              114629333.88547689
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 8.223767118835065,
+            "seed_full_range_fraction_of_mean": 0.03500656318909135,
+            "seed_gate": true,
+            "seed_values": [
+              8.080562143801947,
+              8.368474259935496
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 110246504.23800606,
+            "seed_full_range_fraction_of_mean": 0.06905358006106703,
+            "seed_gate": true,
+            "seed_values": [
+              106527979.70935982,
+              114147184.77858867
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 9.132194691757139,
+            "seed_full_range_fraction_of_mean": 0.03322939503857118,
+            "seed_gate": true,
+            "seed_values": [
+              8.98120091228081,
+              9.284683049223576
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 17,
+      "angular_grid": "default",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 12,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 116964820.95884217,
+            "seed_full_range_fraction_of_mean": 0.04112709562974229,
+            "seed_gate": true,
+            "seed_values": [
+              114588631.42951135,
+              119400273.46342662
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 8.993819496237364,
+            "seed_full_range_fraction_of_mean": 0.03274449482383149,
+            "seed_gate": true,
+            "seed_values": [
+              8.847899672929325,
+              9.142441997787193
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 116619403.53044292,
+            "seed_full_range_fraction_of_mean": 0.040901914370830426,
+            "seed_gate": true,
+            "seed_values": [
+              114262773.03453816,
+              119033913.58407465
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 9.939071109855938,
+            "seed_full_range_fraction_of_mean": 0.03135804715399285,
+            "seed_gate": true,
+            "seed_values": [
+              9.78457861592688,
+              10.096291243179
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 17,
+      "angular_grid": "default",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 16,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 134849392.3387084,
+            "seed_full_range_fraction_of_mean": 0.025122692719743947,
+            "seed_gate": true,
+            "seed_values": [
+              133151362.499384,
+              136539037.0176497
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 10.036722691623671,
+            "seed_full_range_fraction_of_mean": 0.026283624074732254,
+            "seed_gate": true,
+            "seed_values": [
+              9.90561098144345,
+              10.169433441896762
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 134501328.62015557,
+            "seed_full_range_fraction_of_mean": 0.02494181851086979,
+            "seed_gate": true,
+            "seed_values": [
+              132819786.30813676,
+              136174388.24928296
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 11.030320382506572,
+            "seed_full_range_fraction_of_mean": 0.02551162788505418,
+            "seed_gate": true,
+            "seed_values": [
+              10.890400918649311,
+              11.171822536197798
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 33,
+      "angular_grid": "fine",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 16,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 102217029.75311619,
+            "seed_full_range_fraction_of_mean": 0.027301851504572854,
+            "seed_gate": true,
+            "seed_values": [
+              100788890.47534293,
+              103578697.2414386
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 9.688785252650678,
+            "seed_full_range_fraction_of_mean": 0.028506916355146288,
+            "seed_gate": true,
+            "seed_values": [
+              9.551487418414709,
+              9.827707969389799
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 101976866.33997506,
+            "seed_full_range_fraction_of_mean": 0.026890792046822785,
+            "seed_gate": true,
+            "seed_values": [
+              100573067.27575307,
+              103314415.22215378
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 10.675182020348666,
+            "seed_full_range_fraction_of_mean": 0.02772146972405181,
+            "seed_gate": true,
+            "seed_values": [
+              10.52813388219382,
+              10.824091415763043
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 33,
+      "angular_grid": "fine",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 16,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 103790827.68034181,
+            "seed_full_range_fraction_of_mean": 0.024574014090050063,
+            "seed_gate": true,
+            "seed_values": [
+              102605416.2197815,
+              105158209.35086802
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 9.866251471882656,
+            "seed_full_range_fraction_of_mean": 0.01047708826605785,
+            "seed_gate": true,
+            "seed_values": [
+              9.815087433849747,
+              9.918462506111565
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 103539826.25402032,
+            "seed_full_range_fraction_of_mean": 0.024120386109479593,
+            "seed_gate": true,
+            "seed_values": [
+              102379396.60243425,
+              104878972.54658191
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 10.876927880711573,
+            "seed_full_range_fraction_of_mean": 0.010244421262165184,
+            "seed_gate": true,
+            "seed_values": [
+              10.821691163229614,
+              10.933123908266065
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.377343015078,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 33,
+      "angular_grid": "fine",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 16,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 100722039.19393227,
+            "seed_full_range_fraction_of_mean": 0.005494950934224996,
+            "seed_gate": true,
+            "seed_values": [
+              100384361.81564476,
+              100937488.66082254
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 10.030984355597932,
+            "seed_full_range_fraction_of_mean": 0.01717513161934701,
+            "seed_gate": true,
+            "seed_values": [
+              10.118858697793462,
+              9.9465457168847
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 100538212.81178437,
+            "seed_full_range_fraction_of_mean": 0.004973828966895975,
+            "seed_gate": true,
+            "seed_values": [
+              100228788.6365335,
+              100728552.35840902
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 11.06848884479837,
+            "seed_full_range_fraction_of_mean": 0.015805026734315088,
+            "seed_gate": true,
+            "seed_values": [
+              11.157833004721391,
+              10.982865836173014
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.447927911662,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 33,
+      "angular_grid": "fine",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 24,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 126638396.70047025,
+            "seed_full_range_fraction_of_mean": 0.05508874953524298,
+            "seed_gate": true,
+            "seed_values": [
+              123154974.37617654,
+              130131594.55440548
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 11.434789531015355,
+            "seed_full_range_fraction_of_mean": 0.03928611030943353,
+            "seed_gate": true,
+            "seed_values": [
+              11.212012682281555,
+              11.661314713896576
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 126381431.03235479,
+            "seed_full_range_fraction_of_mean": 0.05465938711614729,
+            "seed_gate": true,
+            "seed_values": [
+              122931704.84986992,
+              129839874.65801054
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 12.514570627135052,
+            "seed_full_range_fraction_of_mean": 0.0376227681553544,
+            "seed_gate": true,
+            "seed_values": [
+              12.281059128296134,
+              12.751964959028543
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 33,
+      "angular_grid": "fine",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 32,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 142445709.3324425,
+            "seed_full_range_fraction_of_mean": 0.014781422882807344,
+            "seed_gate": true,
+            "seed_values": [
+              141271271.4487893,
+              143375009.97768092
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 12.262727819306399,
+            "seed_full_range_fraction_of_mean": 0.030870575676246258,
+            "seed_gate": true,
+            "seed_values": [
+              12.077003798368006,
+              12.455672721897875
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 142131496.17123237,
+            "seed_full_range_fraction_of_mean": 0.014577787370436177,
+            "seed_gate": true,
+            "seed_values": [
+              140975574.03134364,
+              143045775.45206034
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.35718306770836,
+            "seed_full_range_fraction_of_mean": 0.029795060325515623,
+            "seed_gate": true,
+            "seed_values": [
+              13.161853668990922,
+              13.559942432414676
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 65,
+      "angular_grid": "ultra",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 32,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 112575803.49686776,
+            "seed_full_range_fraction_of_mean": 0.02939592585859473,
+            "seed_gate": true,
+            "seed_values": [
+              114241632.19485493,
+              110932037.93857987
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 11.86499940722722,
+            "seed_full_range_fraction_of_mean": 0.03144772156674667,
+            "seed_gate": true,
+            "seed_values": [
+              11.682296572458371,
+              12.055547122007631
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 112455045.30507898,
+            "seed_full_range_fraction_of_mean": 0.028854905988536808,
+            "seed_gate": true,
+            "seed_values": [
+              114089303.94855757,
+              110844088.00924502
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 12.947664554608656,
+            "seed_full_range_fraction_of_mean": 0.030368312540996575,
+            "seed_gate": true,
+            "seed_values": [
+              12.75523905091431,
+              13.148566482128633
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 65,
+      "angular_grid": "ultra",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 32,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 117931149.8096773,
+            "seed_full_range_fraction_of_mean": 0.003302232644912442,
+            "seed_gate": true,
+            "seed_values": [
+              117877275.4064473,
+              118267177.36687884
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 12.266971144255077,
+            "seed_full_range_fraction_of_mean": 0.0027665382993710633,
+            "seed_gate": true,
+            "seed_values": [
+              12.286161394696911,
+              12.252218211204795
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 117778238.70827666,
+            "seed_full_range_fraction_of_mean": 0.003182433978389634,
+            "seed_gate": true,
+            "seed_values": [
+              117730072.05304475,
+              118105337.36316153
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.385941705686726,
+            "seed_full_range_fraction_of_mean": 0.0018367274666715836,
+            "seed_gate": true,
+            "seed_values": [
+              13.400723051000496,
+              13.376132158283506
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.377343015078,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 65,
+      "angular_grid": "ultra",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 32,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 117097645.20122248,
+            "seed_full_range_fraction_of_mean": 0.038126231279127024,
+            "seed_gate": true,
+            "seed_values": [
+              119516300.93531567,
+              115044834.87874487
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 12.6610010238141,
+            "seed_full_range_fraction_of_mean": 0.010363371489230914,
+            "seed_gate": true,
+            "seed_values": [
+              12.731633910260932,
+              12.600371419361903
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 117015637.5288269,
+            "seed_full_range_fraction_of_mean": 0.038105680822389125,
+            "seed_gate": true,
+            "seed_values": [
+              119429704.11738253,
+              114963841.30307251
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.822251331341334,
+            "seed_full_range_fraction_of_mean": 0.008884609700325384,
+            "seed_gate": true,
+            "seed_values": [
+              13.8891014202742,
+              13.766247927732605
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.447927911662,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 65,
+      "angular_grid": "ultra",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 48,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 141458975.44949737,
+            "seed_full_range_fraction_of_mean": 0.04434453394452461,
+            "seed_gate": true,
+            "seed_values": [
+              144863228.96478987,
+              138578679.30353704
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.57556994071878,
+            "seed_full_range_fraction_of_mean": 0.03500275387351494,
+            "seed_gate": true,
+            "seed_values": [
+              13.34429433568078,
+              13.819701668864909
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 141282174.63633227,
+            "seed_full_range_fraction_of_mean": 0.043650009344627094,
+            "seed_gate": true,
+            "seed_values": [
+              144629771.79794025,
+              138451521.25442776
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.72170636243498,
+            "seed_full_range_fraction_of_mean": 0.03369378351324797,
+            "seed_gate": true,
+            "seed_values": [
+              14.48017770794647,
+              14.976429989339993
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 129,
+      "angular_grid": "hyper",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 48,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 122017042.17440975,
+            "seed_full_range_fraction_of_mean": 0.031397452867558386,
+            "seed_gate": true,
+            "seed_values": [
+              124166591.59418216,
+              120328332.6638084
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.447082408917026,
+            "seed_full_range_fraction_of_mean": 0.038458634148538194,
+            "seed_gate": true,
+            "seed_values": [
+              13.201754266660311,
+              13.71943025993716
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 122021068.98426114,
+            "seed_full_range_fraction_of_mean": 0.030817976802848795,
+            "seed_gate": true,
+            "seed_values": [
+              124131740.51074448,
+              120364303.79976963
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.595150258632085,
+            "seed_full_range_fraction_of_mean": 0.03713822863042602,
+            "seed_gate": true,
+            "seed_values": [
+              14.338174690201678,
+              14.880744134015496
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 129,
+      "angular_grid": "hyper",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 48,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 130191514.2155949,
+            "seed_full_range_fraction_of_mean": 0.047279234378284886,
+            "seed_gate": true,
+            "seed_values": [
+              127388174.72452587,
+              133556814.37424578
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.585584740415394,
+            "seed_full_range_fraction_of_mean": 0.013349332802622951,
+            "seed_gate": true,
+            "seed_values": [
+              13.50511713787917,
+              13.686612864519715
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 130041758.28426538,
+            "seed_full_range_fraction_of_mean": 0.046582312227351236,
+            "seed_gate": true,
+            "seed_values": [
+              127283130.02246943,
+              133353662.24002278
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.752156379052158,
+            "seed_full_range_fraction_of_mean": 0.013206949833719811,
+            "seed_gate": true,
+            "seed_values": [
+              14.665457332772784,
+              14.860430794418704
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.377343015078,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 129,
+      "angular_grid": "hyper",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 48,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 124158446.64647679,
+            "seed_full_range_fraction_of_mean": 0.005502057806135603,
+            "seed_gate": true,
+            "seed_values": [
+              124580568.47868721,
+              123896999.50739351
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 13.80520395967617,
+            "seed_full_range_fraction_of_mean": 0.0038665072434100737,
+            "seed_gate": true,
+            "seed_values": [
+              13.794807501308005,
+              13.84824853951392
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 124162140.03172214,
+            "seed_full_range_fraction_of_mean": 0.00556642273232719,
+            "seed_gate": true,
+            "seed_values": [
+              124587480.35875799,
+              123895898.59415351
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.99747586534441,
+            "seed_full_range_fraction_of_mean": 0.004273135645278348,
+            "seed_gate": true,
+            "seed_values": [
+              14.982576990553234,
+              15.046736655826027
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.447927911662,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 129,
+      "angular_grid": "hyper",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 64,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 140640053.37221467,
+            "seed_full_range_fraction_of_mean": 0.06093281329883959,
+            "seed_gate": true,
+            "seed_values": [
+              145137983.36717412,
+              136555786.42604584
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.051444592357138,
+            "seed_full_range_fraction_of_mean": 0.036390940171508415,
+            "seed_gate": true,
+            "seed_values": [
+              13.808095168344941,
+              14.319897212278905
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 140520516.05775324,
+            "seed_full_range_fraction_of_mean": 0.060206042729404004,
+            "seed_gate": true,
+            "seed_values": [
+              144962019.19713387,
+              136489478.74155805
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 15.211779181538516,
+            "seed_full_range_fraction_of_mean": 0.035420341864218975,
+            "seed_gate": true,
+            "seed_values": [
+              14.955361272660268,
+              15.494635927965607
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 257,
+      "angular_grid": "j257",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 64,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 133359592.76000325,
+            "seed_full_range_fraction_of_mean": 0.013531115637548654,
+            "seed_gate": true,
+            "seed_values": [
+              134457295.9952175,
+              132650165.02386688
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.06080600205032,
+            "seed_full_range_fraction_of_mean": 0.03671240523533659,
+            "seed_gate": true,
+            "seed_values": [
+              13.829373819895883,
+              14.346577287366303
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 133308902.4856688,
+            "seed_full_range_fraction_of_mean": 0.013378560005132382,
+            "seed_gate": true,
+            "seed_values": [
+              134393246.4618783,
+              132607205.6767115
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 15.225413953495528,
+            "seed_full_range_fraction_of_mean": 0.03561277641854009,
+            "seed_gate": true,
+            "seed_values": [
+              14.982430695747674,
+              15.525669776280013
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.295141053175,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 257,
+      "angular_grid": "j257",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 64,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 142051045.64557624,
+            "seed_full_range_fraction_of_mean": 0.025874947124835675,
+            "seed_gate": true,
+            "seed_values": [
+              140477758.12251383,
+              144160254.89073184
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.540245121619177,
+            "seed_full_range_fraction_of_mean": 0.009264238152959764,
+            "seed_gate": true,
+            "seed_values": [
+              14.62776857042107,
+              14.492878266687466
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 141927100.490921,
+            "seed_full_range_fraction_of_mean": 0.025379312917355318,
+            "seed_gate": true,
+            "seed_values": [
+              140386685.21709993,
+              143995396.13242918
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 15.731463779763837,
+            "seed_full_range_fraction_of_mean": 0.008078684901285726,
+            "seed_gate": true,
+            "seed_values": [
+              15.816115146125117,
+              15.688855779658331
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.377343015078,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    },
+    {
+      "angular_bins": 257,
+      "angular_grid": "j257",
+      "combined_result": "steady_combined.json",
+      "energy_bins": 64,
+      "independent_seeds": [
+        271828,
+        314159
+      ],
+      "models": {
+        "direct": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 137817138.41085014,
+            "seed_full_range_fraction_of_mean": 0.05481209927167184,
+            "seed_gate": true,
+            "seed_values": [
+              141879510.4961145,
+              134310240.47216856
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 14.834171967040954,
+            "seed_full_range_fraction_of_mean": 0.001398475618528319,
+            "seed_gate": true,
+            "seed_values": [
+              14.861495436829022,
+              14.8407265202175
+            ]
+          }
+        },
+        "immediate": {
+          "capture_binding_energy": {
+            "available": true,
+            "combined_value": 137783240.8240267,
+            "seed_full_range_fraction_of_mean": 0.05414392947357672,
+            "seed_gate": true,
+            "seed_values": [
+              141795100.87123907,
+              134320119.36569425
+            ]
+          },
+          "mass": {
+            "available": true,
+            "combined_value": 16.063402553776896,
+            "seed_full_range_fraction_of_mean": 0.0009852352285002212,
+            "seed_gate": true,
+            "seed_values": [
+              16.089682670255204,
+              16.073838353262715
+            ]
+          }
+        }
+      },
+      "numerical_solver_gate": true,
+      "reservoir_radius_pc": 1.447927911662,
+      "seed_results": [
+        "steady_s314159.json",
+        "steady_s271828.json"
+      ]
+    }
+  ],
+  "identity": {
+    "df_table_sha256": "54b8f8a322ce4c5c24de69c35105d4db1090fdd4bb99a9a215f7b64ff91fcb25",
+    "mbh_msun": 4000000.0,
+    "profile_sha256": "f7efa9d086530e4b86e824cc638555754ad2cf55652c6cb5cd07e8a91492f709",
+    "sigma0_over_m_cm2_g": 100.0,
+    "w_kms": 80.0
+  },
+  "minimum_independent_seeds": 2,
+  "minimum_reporting_surfaces": 3,
+  "note": "The pass applies to the production collapse snapshot and the sampled finite-angle operator. It is not a statement that the capture binding energy is returned to the halo.",
+  "observable_gates": {
+    "capture_binding_energy": {
+      "dimensions": {
+        "angular": {
+          "comparison_count": 2,
+          "expected_comparison_count": 2,
+          "pass": true,
+          "present": true
+        },
+        "boundary": {
+          "comparison_count": 2,
+          "expected_comparison_count": 2,
+          "pass": true,
+          "present": true
+        },
+        "energy": {
+          "comparison_count": 2,
+          "expected_comparison_count": 2,
+          "pass": false,
+          "present": true
+        }
+      },
+      "independent_seed_gate": true,
+      "note": "This observable-specific gate does not override a failed gate for another reported current.",
+      "numerical_solver_gate": true,
+      "pass": false,
+      "status": "INCOMPLETE_OR_FAILED"
+    },
+    "mass": {
+      "dimensions": {
+        "angular": {
+          "comparison_count": 2,
+          "expected_comparison_count": 2,
+          "pass": true,
+          "present": true
+        },
+        "boundary": {
+          "comparison_count": 2,
+          "expected_comparison_count": 2,
+          "pass": true,
+          "present": true
+        },
+        "energy": {
+          "comparison_count": 2,
+          "expected_comparison_count": 2,
+          "pass": true,
+          "present": true
+        }
+      },
+      "independent_seed_gate": true,
+      "note": "This observable-specific gate does not override a failed gate for another reported current.",
+      "numerical_solver_gate": true,
+      "pass": true,
+      "status": "PRODUCTION_OBSERVABLE_CONVERGENCE_PASS"
+    }
+  },
+  "production_resolution_path": {
+    "energy_ladder_angular_bins": 129,
+    "final_angular_bins": 257,
+    "final_energy_bins": 64,
+    "previous_angular_bins": 129,
+    "previous_energy_bins": 48,
+    "primary_boundary_radius_pc": 1.295141053175,
+    "primary_boundary_source": "command-line"
+  },
+  "required_dimensions": [
+    "energy",
+    "angular",
+    "boundary"
+  ],
+  "required_metrics": [
+    "mass",
+    "capture_binding_energy"
+  ],
+  "schema": "finite-angle-ej-convergence-v3",
+  "selected_comparisons": {
+    "angular": [
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.0006660021517483903,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 14.051444592357138,
+        "metric": "mass",
+        "model": "direct",
+        "upper_angular_bins": 257,
+        "upper_value": 14.06080600205032
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.0531421168967368,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 140640053.37221467,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_angular_bins": 257,
+        "upper_value": 133359592.76000325
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.0008959283398125037,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 15.211779181538516,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_angular_bins": 257,
+        "upper_value": 15.225413953495528
+      },
+      {
+        "fixed_energy_bins": 64,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.052672306799211734,
+        "gate": true,
+        "lower_angular_bins": 129,
+        "lower_value": 140520516.05775324,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_angular_bins": 257,
+        "upper_value": 133308902.4856688
+      }
+    ],
+    "boundary": [
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.05341512555666146,
+        "gate": true,
+        "metric": "mass",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          14.06080600205032,
+          14.540245121619177,
+          14.834171967040954
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.06309923998236475,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          133359592.76000325,
+          142051045.64557624,
+          137817138.41085014
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.053465563911945034,
+        "gate": true,
+        "metric": "mass",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          15.225413953495528,
+          15.731463779763837,
+          16.063402553776896
+        ]
+      },
+      {
+        "fixed_angular_bins": 257,
+        "fixed_energy_bins": 64,
+        "full_range_fraction_of_mean": 0.06259900574569305,
+        "gate": true,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "radii_pc": [
+          1.295141053175,
+          1.377343015078,
+          1.447927911662
+        ],
+        "values": [
+          133308902.4856688,
+          141927100.490921,
+          137783240.8240267
+        ]
+      }
+    ],
+    "energy": [
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.043955967780536585,
+        "gate": true,
+        "lower_energy_bins": 48,
+        "lower_value": 13.447082408917026,
+        "metric": "mass",
+        "model": "direct",
+        "upper_energy_bins": 64,
+        "upper_value": 14.051444592357138
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.14180474476844387,
+        "gate": false,
+        "lower_energy_bins": 48,
+        "lower_value": 122017042.17440975,
+        "metric": "capture_binding_energy",
+        "model": "direct",
+        "upper_energy_bins": 64,
+        "upper_value": 140640053.37221467
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.04137487050748703,
+        "gate": true,
+        "lower_energy_bins": 48,
+        "lower_value": 14.595150258632085,
+        "metric": "mass",
+        "model": "immediate",
+        "upper_energy_bins": 64,
+        "upper_value": 15.211779181538516
+      },
+      {
+        "fixed_angular_bins": 129,
+        "fixed_reservoir_radius_pc": 1.295141053175,
+        "fractional_difference": 0.1409258428186273,
+        "gate": false,
+        "lower_energy_bins": 48,
+        "lower_value": 122021068.98426114,
+        "metric": "capture_binding_energy",
+        "model": "immediate",
+        "upper_energy_bins": 64,
+        "upper_value": 140520516.05775324
+      }
+    ]
+  },
+  "status": "INCOMPLETE_OR_FAILED"
+}

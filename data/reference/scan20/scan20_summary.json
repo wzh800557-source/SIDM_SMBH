@@ -1,0 +1,22 @@
+{
+  "case_count": 1200,
+  "fluid_complete_count": 1200,
+  "fluid_status_counts": {
+    "ALL_HALO_FLUX_COMPLETE": 1200
+  },
+  "fp_geometric_admissible_count": 676,
+  "grid_shape": [
+    3,
+    20,
+    20
+  ],
+  "interface_complete_count": 1200,
+  "preparation_status_counts": {
+    "INTERFACE_COMPLETE": 1200
+  },
+  "results_csv": "scan20_results.csv",
+  "schema": "sidm-smbh-interface-fluid-scan-20x20-aggregate-v1",
+  "scope": "Exact black-hole remap, interface, and fluid luminosity. No high-resolution FP capture current is inferred.",
+  "status": "SCAN20_COMPLETE",
+  "updated_at": "2026-09-04T17:13:26.689415+00:00"
+}

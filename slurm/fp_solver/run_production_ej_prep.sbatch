@@ -19,8 +19,9 @@ SIGMA0=${SIGMA0:-100.0}
 W_KMS=${W_KMS:-80.0}
 BH_FORCE_STEP=${BH_FORCE_STEP:-0.02}
 EXPECTED_PROFILE_SHA=${EXPECTED_PROFILE_SHA:-}
+test ! -e "$ROOT" || { echo "refusing existing production root: $ROOT" >&2; exit 2; }
 mkdir -p "$ROOT/input" "$ROOT/remap" "$ROOT/bridge" "$ROOT/normalized" "$ROOT/operators" "$ROOT/steady" "$ROOT/aggregate" "$ROOT/fluid"
-printf 'PRODUCTION_PREP_START %s ROOT=%s\n' "$(date -Is)" "$ROOT"
+printf 'PRODUCTION_PREP_START %s ROOT=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ROOT"
 
 for f in prepare_bh_remapped_profile.py measured_fluid_feedback.py \
          fluid_bh_scaleheight.py interface_bridge.py hydrostatic_bridge.py \
@@ -28,7 +29,7 @@ for f in prepare_bh_remapped_profile.py measured_fluid_feedback.py \
   test -s "$PKG/$f"
 done
 test -s "$PROFILE"
-PROFILE_SHA=$(sha256sum "$PROFILE" | awk '{print $1}')
+PROFILE_SHA=$("$PYTHON_BIN" -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest())' "$PROFILE")
 if [[ -n "$EXPECTED_PROFILE_SHA" ]]; then
   test "$PROFILE_SHA" = "$EXPECTED_PROFILE_SHA"
 fi
@@ -65,7 +66,7 @@ for key in ('local_circular','orbit_thermal_e_lt_0p99','orbit_e0p9'):
     assert x['criteria'][key]['r_boundary_pc'] > 0
 print('NONLOCAL_OPERATOR_GATE_CONFIRMED')
 PY
-RB=$(python - "$ROOT/bridge/boundary_criteria.json" <<'PY'
+RB=$("$PYTHON_BIN" - "$ROOT/bridge/boundary_criteria.json" <<'PY'
 import json,sys
 print('%.16e'%json.load(open(sys.argv[1]))['criteria']['local_circular']['r_boundary_pc'])
 PY
@@ -111,4 +112,4 @@ out={
 (root/'prep_manifest.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
 print(json.dumps(out,indent=2,sort_keys=True))
 PY
-printf 'PRODUCTION_PREP_DONE %s ROOT=%s\n' "$(date -Is)" "$ROOT" | tee "$ROOT/PREP_STATUS.txt"
+printf 'PRODUCTION_PREP_DONE %s ROOT=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ROOT" | tee "$ROOT/PREP_STATUS.txt"

@@ -362,6 +362,54 @@ def main() -> int:
         }
         for dimension in comparisons
     }
+    observable_gates = {}
+    for metric in required_metrics:
+        metric_seed_gates = [
+            bool(group["models"][model][metric]["seed_gate"])
+            for group in group_reports
+            for model in MODELS
+        ]
+        metric_dimensions = {}
+        for dimension in comparisons:
+            selected = [
+                item for item in selected_comparisons[dimension]
+                if item.get("metric") == metric
+            ]
+            metric_dimensions[dimension] = {
+                "present": len(selected) == len(MODELS),
+                "comparison_count": len(selected),
+                "expected_comparison_count": len(MODELS),
+                "pass": (
+                    len(selected) == len(MODELS)
+                    and all(bool(item["gate"]) for item in selected)
+                ),
+            }
+        metric_pass = bool(
+            numerical_gates and all(numerical_gates)
+            and metric_seed_gates and all(metric_seed_gates)
+            and all(
+                metric_dimensions[dimension]["pass"]
+                for dimension in args.require_dimensions
+            )
+        )
+        observable_gates[metric] = {
+            "status": (
+                "PRODUCTION_OBSERVABLE_CONVERGENCE_PASS"
+                if metric_pass else "INCOMPLETE_OR_FAILED"
+            ),
+            "pass": metric_pass,
+            "numerical_solver_gate": bool(
+                numerical_gates and all(numerical_gates)
+            ),
+            "independent_seed_gate": bool(
+                metric_seed_gates and all(metric_seed_gates)
+            ),
+            "dimensions": metric_dimensions,
+            "note": (
+                "This observable-specific gate does not override a failed "
+                "gate for another reported current."
+            ),
+        }
     required_dimensions_pass = all(
         dimension_gates[dimension]["pass"]
         for dimension in args.require_dimensions
@@ -382,6 +430,7 @@ def main() -> int:
         "minimum_reporting_surfaces": args.minimum_boundaries,
         "required_dimensions": list(args.require_dimensions),
         "required_metrics": required_metrics,
+        "observable_gates": observable_gates,
         "identity": {key: reference[key] for key in invariant_keys},
         "dimension_gates": dimension_gates,
         "production_resolution_path": {

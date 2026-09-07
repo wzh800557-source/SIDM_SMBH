@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import subprocess
 import sys
 import tempfile
@@ -58,6 +59,11 @@ def main() -> int:
             },
         })
 
+        inner_shell_mass = 8.0 * math.pi / 3.0
+
+        def mean_density(radius: float) -> float:
+            return 3.0 * inner_shell_mass / (4.0 * math.pi * radius**3)
+
         branch = {
             "stop_reason": "tau_end",
             "conduction_energy_budget_relative_error": 1.0e-14,
@@ -70,7 +76,9 @@ def main() -> int:
             "L_inner_msun_kms2_per_myr": 0.0,
             "final_tau_relax": 1.0,
             "final_time_myr": 2.0,
-            "final_rho_c_msun_pc3": 4.0,
+            "final_rho_inner_mean_msun_pc3": mean_density(0.8),
+            "final_rho_c_msun_pc3": mean_density(0.8),
+            "inner_shell_mass_msun": inner_shell_mass,
             "captured_mass_msun": 0.0,
             "n_conduction": 1,
         }
@@ -80,15 +88,30 @@ def main() -> int:
             "captured_mass_fraction_of_GNC_owned_domain": 0.10,
             "Mdot_msun_per_myr": 10.0,
             "L_inner_msun_kms2_per_myr": -13500.0,
-            "final_rho_c_msun_pc3": 4.04,
+            "final_rho_inner_mean_msun_pc3": mean_density(0.79),
+            "final_rho_c_msun_pc3": mean_density(0.79),
             "captured_mass_msun": 20.0,
         })
         summary = {
-            "schema": "gnc-fluid-feedback-v4",
+            "schema": "gnc-fluid-feedback-v5",
             "status": "MEASURED_FLUID_FEEDBACK_COMPLETE",
             "input_closure_accepted": True,
             "closure_update_mode": "fixed_at_matched_snapshot",
             "M_bh_msun": 4.0e6,
+            "resolved_diagnostics": {
+                "density_field": "rho_inner_mean_msun_pc3",
+                "density_definition": (
+                    "mean density inside the innermost resolved Lagrangian shell, "
+                    "3*M(<r_inner)/(4*pi*r_inner^3)"
+                ),
+                "density_is_extrapolated_central_value": False,
+                "dispersion_field": "sigma_inner_1d_kms",
+                "dispersion_definition": (
+                    "one-dimensional velocity dispersion in the innermost "
+                    "resolved Lagrangian shell"
+                ),
+                "radius_field": "r_inner_pc",
+            },
             "input_identity": {
                 "closure_json_sha256": sha(closure),
                 "fluid_profile_sha256": sha(profile),
@@ -106,21 +129,46 @@ def main() -> int:
         write_json(root / "summary.json", summary)
 
         fields = [
-            "branch", "tau_relax", "rho_c_msun_pc3", "sigma_c_kms",
-            "r0_pc", "M_bh_msun", "lmfp_scaleheight_factor_inner",
+            "branch", "tau_relax", "rho_inner_mean_msun_pc3",
+            "sigma_inner_1d_kms", "r_inner_pc", "inner_shell_mass_msun",
+            "rho_c_msun_pc3", "sigma_c_kms", "r0_pc",
+            "M_bh_msun", "lmfp_scaleheight_factor_inner",
             "lmfp_scaleheight_factor_min", "time_myr",
             "captured_mass_msun", "L_inner_msun_kms2_per_myr",
             "E_boundary_msun_kms2", "E_total_code", "n_conduction",
         ]
+
+        def trajectory_row(
+            branch_name: str, tau: float, radius: float, sigma: float,
+            scaleheight_inner: float, scaleheight_min: float, time_myr: float,
+            captured_mass: float, luminosity: float, boundary_energy: float,
+            total_energy: float, n_conduction: int,
+        ) -> list:
+            density = mean_density(radius)
+            return [
+                branch_name, tau, density, sigma, radius, inner_shell_mass,
+                density, sigma, radius, 4.0e6, scaleheight_inner,
+                scaleheight_min, time_myr, captured_mass, luminosity,
+                boundary_energy, total_energy, n_conduction,
+            ]
+
         rows = [
-            ["control", 0.0, 2.0, 30.0, 1.0, 4.0e6, 0.2, 0.1,
-             0.0, 0.0, 0.0, 0.0, -10.0, 0],
-            ["control", 1.0, 4.0, 31.0, 0.8, 4.0e6, 0.18, 0.09,
-             2.0, 0.0, 0.0, 0.0, -9.0, 1],
-            ["sink", 0.0, 2.0, 30.0, 1.0, 4.0e6, 0.2, 0.1,
-             0.0, 0.0, -13500.0, 0.0, -10.0, 0],
-            ["sink", 1.0, 4.04, 31.1, 0.79, 4.0e6, 0.18, 0.09,
-             2.0, 20.0, -13500.0, -27000.0, -9.1, 1],
+            trajectory_row(
+                "control", 0.0, 1.0, 30.0, 0.2, 0.1,
+                0.0, 0.0, 0.0, 0.0, -10.0, 0,
+            ),
+            trajectory_row(
+                "control", 1.0, 0.8, 31.0, 0.18, 0.09,
+                2.0, 0.0, 0.0, 0.0, -9.0, 1,
+            ),
+            trajectory_row(
+                "sink", 0.0, 1.0, 30.0, 0.2, 0.1,
+                0.0, 0.0, -13500.0, 0.0, -10.0, 0,
+            ),
+            trajectory_row(
+                "sink", 1.0, 0.79, 31.1, 0.18, 0.09,
+                2.0, 20.0, -13500.0, -27000.0, -9.1, 1,
+            ),
         ]
         with (root / "trajectories.csv").open("w", newline="") as stream:
             writer = csv.writer(stream)
@@ -130,13 +178,88 @@ def main() -> int:
         passed = run_analyzer(package, root, "pass")
         assert passed.returncode == 0, passed.stdout + passed.stderr
         accepted = json.loads((root / "analysis_pass.json").read_text())
-        assert accepted["schema"] == "black-hole-aware-fluid-response-v2"
+        assert accepted["schema"] == "black-hole-aware-fluid-response-v3"
         assert accepted["status"] == "BLACK_HOLE_AWARE_RESPONSE_COMPLETE"
         assert all(accepted["gates"].values())
         assert accepted["identity"]["closure_json_sha256"] == sha(closure)
         assert accepted["identity"]["fluid_comparison_csv_sha256"] == sha(
             root / "comparison_pass.csv"
         )
+
+        rows[-1][6] *= 1.01
+        with (root / "trajectories.csv").open("w", newline="") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(fields)
+            writer.writerows(rows)
+        ambiguous_density = run_analyzer(package, root, "ambiguous_density")
+        assert ambiguous_density.returncode != 0
+        assert "inconsistent rho_inner_mean_msun_pc3 aliases" in (
+            ambiguous_density.stderr
+        )
+        rows[-1][6] /= 1.01
+        with (root / "trajectories.csv").open("w", newline="") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(fields)
+            writer.writerows(rows)
+
+        rows[-1][2] *= 1.01
+        rows[-1][6] *= 1.01
+        with (root / "trajectories.csv").open("w", newline="") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(fields)
+            writer.writerows(rows)
+        wrong_mean_density = run_analyzer(package, root, "wrong_mean_density")
+        assert wrong_mean_density.returncode != 0
+        assert "does not satisfy the innermost-shell mean-density definition" in (
+            wrong_mean_density.stderr
+        )
+        rows[-1][2] /= 1.01
+        rows[-1][6] /= 1.01
+        with (root / "trajectories.csv").open("w", newline="") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(fields)
+            writer.writerows(rows)
+
+        # A converged mass-current closure may drive the physical thermal sink
+        # even when the capture-binding-energy moment remains unresolved. The
+        # latter must be absent from the applied fluid currents.
+        absolute_closure_value = json.loads(closure.read_text())
+        mass_closure_value = dict(absolute_closure_value)
+        mass_closure_value.update({
+            "schema": "gnc-fluid-mass-closure-v1",
+            "status": "FLUID_MASS_CLOSURE_MEASURED",
+            "capture_binding_energy_current_used_by_fluid": False,
+        })
+        write_json(closure, mass_closure_value)
+        summary.update({
+            "status": "MASS_CLOSURE_FLUID_RESPONSE_COMPLETE",
+            "absolute_two_current_closure": False,
+            "mass_current_closure": True,
+        })
+        summary["applied_currents"][
+            "source_luminosity_msun_kms2_per_myr"
+        ] = None
+        summary["input_identity"]["closure_json_sha256"] = sha(closure)
+        write_json(root / "summary.json", summary)
+        mass_passed = run_analyzer(package, root, "mass_pass")
+        assert mass_passed.returncode == 0, mass_passed.stdout + mass_passed.stderr
+        mass_analysis = json.loads((root / "analysis_mass_pass.json").read_text())
+        assert mass_analysis["status"] == "BLACK_HOLE_AWARE_RESPONSE_COMPLETE"
+        assert mass_analysis["closure_scope"] == "mass_current_closure_only"
+        assert mass_analysis["capture_binding_energy_current_used_by_fluid"] is False
+        assert all(mass_analysis["gates"].values())
+
+        write_json(closure, absolute_closure_value)
+        summary.update({
+            "status": "MEASURED_FLUID_FEEDBACK_COMPLETE",
+            "absolute_two_current_closure": True,
+            "mass_current_closure": False,
+        })
+        summary["applied_currents"][
+            "source_luminosity_msun_kms2_per_myr"
+        ] = 0.0
+        summary["input_identity"]["closure_json_sha256"] = sha(closure)
+        write_json(root / "summary.json", summary)
 
         closure_value = json.loads(closure.read_text())
         closure_value["gates"]["all_scientific_gates"] = False
@@ -151,28 +274,40 @@ def main() -> int:
         # must interpolate both branches at the actual common endpoint rather
         # than report the preceding sink output as that endpoint.
         staggered_rows = [
-            ["control", 0.0, 2.0, 30.0, 1.0, 4.0e6, 0.2, 0.1,
-             0.0, 0.0, 0.0, 0.0, -10.0, 0],
-            ["control", 0.75, 7.0, 31.0, 0.82, 4.0e6, 0.18, 0.09,
-             1.5, 0.0, 0.0, 0.0, -8.5, 1],
-            ["sink", 0.0, 2.0, 30.0, 1.0, 4.0e6, 0.2, 0.1,
-             0.0, 0.0, -13500.0, 0.0, -10.0, 0],
-            ["sink", 0.5, 4.0, 30.5, 0.90, 4.0e6, 0.19, 0.095,
-             1.0, 10.0, -13500.0, -13500.0, -9.5, 1],
-            ["sink", 1.0, 8.0, 31.5, 0.80, 4.0e6, 0.17, 0.085,
-             2.0, 20.0, -13500.0, -27000.0, -8.8, 2],
+            trajectory_row(
+                "control", 0.0, 1.0, 30.0, 0.2, 0.1,
+                0.0, 0.0, 0.0, 0.0, -10.0, 0,
+            ),
+            trajectory_row(
+                "control", 0.75, 0.82, 31.0, 0.18, 0.09,
+                1.5, 0.0, 0.0, 0.0, -8.5, 1,
+            ),
+            trajectory_row(
+                "sink", 0.0, 1.0, 30.0, 0.2, 0.1,
+                0.0, 0.0, -13500.0, 0.0, -10.0, 0,
+            ),
+            trajectory_row(
+                "sink", 0.5, 0.90, 30.5, 0.19, 0.095,
+                1.0, 10.0, -13500.0, -13500.0, -9.5, 1,
+            ),
+            trajectory_row(
+                "sink", 1.0, 0.80, 31.5, 0.17, 0.085,
+                2.0, 20.0, -13500.0, -27000.0, -8.8, 2,
+            ),
         ]
         summary["branches"]["control"].update({
             "final_tau_relax": 0.75,
             "final_time_myr": 1.5,
-            "final_rho_c_msun_pc3": 7.0,
+            "final_rho_inner_mean_msun_pc3": mean_density(0.82),
+            "final_rho_c_msun_pc3": mean_density(0.82),
             "captured_mass_msun": 0.0,
             "n_conduction": 1,
         })
         summary["branches"]["sink"].update({
             "final_tau_relax": 1.0,
             "final_time_myr": 2.0,
-            "final_rho_c_msun_pc3": 8.0,
+            "final_rho_inner_mean_msun_pc3": mean_density(0.80),
+            "final_rho_c_msun_pc3": mean_density(0.80),
             "captured_mass_msun": 20.0,
             "n_conduction": 2,
         })
@@ -191,22 +326,26 @@ def main() -> int:
         assert float(staggered_comparison[-1]["tau_relax"]) == 0.75
         assert abs(
             float(staggered_comparison[-1][
-                "sink_over_control_rho_c_msun_pc3"
+                "sink_over_control_rho_inner_mean_msun_pc3"
             ])
-            - staggered_analysis["density_sink_over_control_at_common_end"]
+            - staggered_analysis[
+                "inner_mean_density_sink_over_control_at_common_end"
+            ]
         ) < 1.0e-12
 
         summary["branches"]["control"].update({
             "final_tau_relax": 1.0,
             "final_time_myr": 2.0,
-            "final_rho_c_msun_pc3": 4.0,
+            "final_rho_inner_mean_msun_pc3": mean_density(0.8),
+            "final_rho_c_msun_pc3": mean_density(0.8),
             "captured_mass_msun": 0.0,
             "n_conduction": 1,
         })
         summary["branches"]["sink"].update({
             "final_tau_relax": 1.0,
             "final_time_myr": 2.0,
-            "final_rho_c_msun_pc3": 4.04,
+            "final_rho_inner_mean_msun_pc3": mean_density(0.79),
+            "final_rho_c_msun_pc3": mean_density(0.79),
             "captured_mass_msun": 20.0,
             "n_conduction": 1,
         })
@@ -217,7 +356,7 @@ def main() -> int:
             writer.writerow(fields)
             writer.writerows(rows)
 
-        rows[-1][10] = -13000.0
+        rows[-1][14] = -13000.0
         with (root / "trajectories.csv").open("w", newline="") as stream:
             writer = csv.writer(stream)
             writer.writerow(fields)
@@ -226,7 +365,7 @@ def main() -> int:
         assert varying_current.returncode == 2, varying_current.stderr
         varying = json.loads((root / "analysis_varying_current.json").read_text())
         assert not varying["gates"]["fixed_boundary_currents_in_trajectories"]
-        rows[-1][10] = -13500.0
+        rows[-1][14] = -13500.0
         with (root / "trajectories.csv").open("w", newline="") as stream:
             writer = csv.writer(stream)
             writer.writerow(fields)

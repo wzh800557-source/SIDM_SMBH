@@ -1,0 +1,144 @@
+{
+  "bridge_json_sha256": "68789f3655070d93308eb4fc10eccdd5d8bd029963872de86cab448fc4f19940",
+  "collision_kernel": "yukawa-tchannel",
+  "controls": {
+    "Knudsen_equals_1": {
+      "all_roots_pc": [
+        0.017909397251366033,
+        224.3792055416828
+      ],
+      "note": "conductivity transition, not a loss-cone validity boundary"
+    },
+    "influence_radius": {
+      "N_local_at_boundary": 5.957187708211613,
+      "note": "common geometric hand-off, but invalid wherever N_local>1",
+      "r_boundary_pc": 11.434998173403924
+    }
+  },
+  "criteria": {
+    "local_circular": {
+      "N_local_at_boundary": 0.9999999999999999,
+      "all_roots_pc": [
+        1.295141053175499
+      ],
+      "fp_angular_kernel_status": "ANGULAR_JUMP_CORRECTION_REQUIRED",
+      "large_angle_cross_section_fraction_of_viscosity": 0.2914972086656782,
+      "orbit_large_angle_fraction_of_viscosity_current": 0.2914972086656782,
+      "orbit_large_angle_probability": 0.29149720866567813,
+      "r_boundary_pc": 1.295141053175499,
+      "vrel_kms": 179.71388141588213,
+      "vrel_over_w": 2.2464235176985268,
+      "x_boundary": 4.414576368097883
+    },
+    "orbit_e0p7": {
+      "N_local_at_boundary": 1.046373342265508,
+      "all_roots_pc": [
+        1.3707819133090973
+      ],
+      "fp_angular_kernel_status": "ANGULAR_JUMP_CORRECTION_REQUIRED",
+      "large_angle_cross_section_fraction_of_viscosity": 0.29801790589928995,
+      "orbit_large_angle_fraction_of_viscosity_current": 0.31717621441935656,
+      "orbit_large_angle_probability": 0.3171762144193565,
+      "r_boundary_pc": 1.3707819133090973,
+      "vrel_kms": 175.1693522862216,
+      "vrel_over_w": 2.18961690357777,
+      "x_boundary": 4.170976455984742
+    },
+    "orbit_e0p9": {
+      "N_local_at_boundary": 1.0928362227523876,
+      "all_roots_pc": [
+        1.4479279116621266
+      ],
+      "fp_angular_kernel_status": "ANGULAR_JUMP_CORRECTION_REQUIRED",
+      "large_angle_cross_section_fraction_of_viscosity": 0.304376399289766,
+      "orbit_large_angle_fraction_of_viscosity_current": 0.3390977580471129,
+      "orbit_large_angle_probability": 0.33909775804711284,
+      "r_boundary_pc": 1.4479279116621266,
+      "vrel_kms": 170.91804642797413,
+      "vrel_over_w": 2.1364755803496767,
+      "x_boundary": 3.9487456803969243
+    },
+    "orbit_thermal_e_lt_0p99": {
+      "N_local_at_boundary": 1.0503559618145657,
+      "all_roots_pc": [
+        1.3773430150784913
+      ],
+      "fp_angular_kernel_status": "ANGULAR_JUMP_CORRECTION_REQUIRED",
+      "large_angle_cross_section_fraction_of_viscosity": 0.29856988617986374,
+      "orbit_large_angle_fraction_of_viscosity_current": 0.31876233367370027,
+      "orbit_large_angle_probability": 0.31876233367370016,
+      "r_boundary_pc": 1.3773430150784913,
+      "vrel_kms": 174.79343782840002,
+      "vrel_over_w": 2.184917972855,
+      "x_boundary": 4.151107621057007
+    }
+  },
+  "fp_angular_kernel_gate": {
+    "critical_points": [
+      {
+        "N_orb_at_J_lc": 0.0012244752021176347,
+        "R_lc": 0.0012244752021186357,
+        "e_lc": 0.9993875748666687,
+        "events_per_loss_cone_diffusion_time": 0.09108084831931575,
+        "large_angle_fraction_of_viscosity_current": 0.05050858169592218,
+        "large_angle_probability_per_orbit": 6.184650578078938e-05,
+        "over_local_handoff_radius": 0.0019312204817856136,
+        "q_estimate": 0.9999999999991825,
+        "rms_single_event_transport_kick_over_loss_cone_width": 3.3134961211123684,
+        "semimajor_axis_pc": 0.002501202928693914,
+        "total_collision_probability_per_orbit": 0.09108084831924129,
+        "total_to_transport_cross_section_orbit_average": 74.38357931767344,
+        "x_energy": 2285.899724932572
+      }
+    ],
+    "definition": "diffusive loss-cone validity at q=N_transport/R_lc=1: a small large-angle tail and many physical collisions per loss-cone diffusion time are both required",
+    "handoff_q_estimate": 374580.589433317,
+    "large_angle_tail_status": "PASS",
+    "many_small_events_status": "FAIL",
+    "maximum_allowed_fraction": 0.1,
+    "minimum_events_per_loss_cone_diffusion_time": 10.0,
+    "note": "The theta>pi/2 tail alone is insufficient. If fewer than many collisions occur while diffusion crosses J_lc, the FP sink misses direct finite-angle transitions and a non-local Boltzmann or Monte-Carlo jump operator is required.",
+    "status": "NONLOCAL_JUMP_OPERATOR_REQUIRED"
+  },
+  "fp_boundary_angular_kernel_diagnostic": {
+    "definition": "fraction of the handoff-orbit viscosity current supplied by individual deflections theta>pi/2",
+    "maximum_allowed_fraction": 0.1,
+    "maximum_measured_fraction": 0.3390977580471129,
+    "role": "conservative diagnostic for general phase-space diffusion; it is not the loss-cone capture gate when q is already much greater than unity at the handoff",
+    "status": "ANGULAR_JUMP_CORRECTION_REQUIRED"
+  },
+  "fp_loss_cone_angular_kernel_gate": {
+    "critical_points": [
+      {
+        "N_orb_at_J_lc": 0.0012244752021176347,
+        "R_lc": 0.0012244752021186357,
+        "e_lc": 0.9993875748666687,
+        "events_per_loss_cone_diffusion_time": 0.09108084831931575,
+        "large_angle_fraction_of_viscosity_current": 0.05050858169592218,
+        "large_angle_probability_per_orbit": 6.184650578078938e-05,
+        "over_local_handoff_radius": 0.0019312204817856136,
+        "q_estimate": 0.9999999999991825,
+        "rms_single_event_transport_kick_over_loss_cone_width": 3.3134961211123684,
+        "semimajor_axis_pc": 0.002501202928693914,
+        "total_collision_probability_per_orbit": 0.09108084831924129,
+        "total_to_transport_cross_section_orbit_average": 74.38357931767344,
+        "x_energy": 2285.899724932572
+      }
+    ],
+    "definition": "diffusive loss-cone validity at q=N_transport/R_lc=1: a small large-angle tail and many physical collisions per loss-cone diffusion time are both required",
+    "handoff_q_estimate": 374580.589433317,
+    "large_angle_tail_status": "PASS",
+    "many_small_events_status": "FAIL",
+    "maximum_allowed_fraction": 0.1,
+    "minimum_events_per_loss_cone_diffusion_time": 10.0,
+    "note": "The theta>pi/2 tail alone is insufficient. If fewer than many collisions occur while diffusion crosses J_lc, the FP sink misses direct finite-angle transitions and a non-local Boltzmann or Monte-Carlo jump operator is required.",
+    "status": "NONLOCAL_JUMP_OPERATOR_REQUIRED"
+  },
+  "mbh_msun": 4000000.0,
+  "profile": "bridged_profile.txt",
+  "profile_sha256": "f7efa9d086530e4b86e824cc638555754ad2cf55652c6cb5cd07e8a91492f709",
+  "rh_pc": 11.434998173403924,
+  "schema": "gnc-fluid-boundary-criterion-scan-v4",
+  "sigma_over_m_cm2_g": 100.0,
+  "yukawa_w_kms": 80.0
+}

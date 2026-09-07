@@ -1,0 +1,277 @@
+{
+  "schema": "sidm-production-operator-plan-v1",
+  "scope": "Fixed-snapshot population operator with a separate energy audit. Passing a population solve is not a two-current closure.",
+  "pairs_per_radial_bin": 1600000,
+  "radial_bins": 16,
+  "mbh_msun": 4000000.0,
+  "sigma0_over_m_cm2_g": 100.0,
+  "w_kms": 80.0,
+  "tasks": [
+    {
+      "criterion": "local_circular",
+      "energy_bins": 8,
+      "angular_grid": "default",
+      "seed": 314159,
+      "group": "local_circular_e8_default"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 8,
+      "angular_grid": "default",
+      "seed": 271828,
+      "group": "local_circular_e8_default"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 12,
+      "angular_grid": "default",
+      "seed": 314159,
+      "group": "local_circular_e12_default"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 12,
+      "angular_grid": "default",
+      "seed": 271828,
+      "group": "local_circular_e12_default"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 16,
+      "angular_grid": "default",
+      "seed": 314159,
+      "group": "local_circular_e16_default"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 16,
+      "angular_grid": "default",
+      "seed": 271828,
+      "group": "local_circular_e16_default"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 16,
+      "angular_grid": "fine",
+      "seed": 314159,
+      "group": "local_circular_e16_fine"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 16,
+      "angular_grid": "fine",
+      "seed": 271828,
+      "group": "local_circular_e16_fine"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 16,
+      "angular_grid": "fine",
+      "seed": 314159,
+      "group": "orbit_thermal_e_lt_0p99_e16_fine"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 16,
+      "angular_grid": "fine",
+      "seed": 271828,
+      "group": "orbit_thermal_e_lt_0p99_e16_fine"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 16,
+      "angular_grid": "fine",
+      "seed": 314159,
+      "group": "orbit_e0p9_e16_fine"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 16,
+      "angular_grid": "fine",
+      "seed": 271828,
+      "group": "orbit_e0p9_e16_fine"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 24,
+      "angular_grid": "fine",
+      "seed": 314159,
+      "group": "local_circular_e24_fine"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 24,
+      "angular_grid": "fine",
+      "seed": 271828,
+      "group": "local_circular_e24_fine"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 32,
+      "angular_grid": "fine",
+      "seed": 314159,
+      "group": "local_circular_e32_fine"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 32,
+      "angular_grid": "fine",
+      "seed": 271828,
+      "group": "local_circular_e32_fine"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 32,
+      "angular_grid": "ultra",
+      "seed": 314159,
+      "group": "local_circular_e32_ultra"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 32,
+      "angular_grid": "ultra",
+      "seed": 271828,
+      "group": "local_circular_e32_ultra"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 32,
+      "angular_grid": "ultra",
+      "seed": 314159,
+      "group": "orbit_thermal_e_lt_0p99_e32_ultra"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 32,
+      "angular_grid": "ultra",
+      "seed": 271828,
+      "group": "orbit_thermal_e_lt_0p99_e32_ultra"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 32,
+      "angular_grid": "ultra",
+      "seed": 314159,
+      "group": "orbit_e0p9_e32_ultra"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 32,
+      "angular_grid": "ultra",
+      "seed": 271828,
+      "group": "orbit_e0p9_e32_ultra"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 48,
+      "angular_grid": "ultra",
+      "seed": 314159,
+      "group": "local_circular_e48_ultra"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 48,
+      "angular_grid": "ultra",
+      "seed": 271828,
+      "group": "local_circular_e48_ultra"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 48,
+      "angular_grid": "hyper",
+      "seed": 314159,
+      "group": "local_circular_e48_hyper"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 48,
+      "angular_grid": "hyper",
+      "seed": 271828,
+      "group": "local_circular_e48_hyper"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 48,
+      "angular_grid": "hyper",
+      "seed": 314159,
+      "group": "orbit_thermal_e_lt_0p99_e48_hyper"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 48,
+      "angular_grid": "hyper",
+      "seed": 271828,
+      "group": "orbit_thermal_e_lt_0p99_e48_hyper"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 48,
+      "angular_grid": "hyper",
+      "seed": 314159,
+      "group": "orbit_e0p9_e48_hyper"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 48,
+      "angular_grid": "hyper",
+      "seed": 271828,
+      "group": "orbit_e0p9_e48_hyper"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 64,
+      "angular_grid": "hyper",
+      "seed": 314159,
+      "group": "local_circular_e64_hyper"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 64,
+      "angular_grid": "hyper",
+      "seed": 271828,
+      "group": "local_circular_e64_hyper"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 64,
+      "angular_grid": "j257",
+      "seed": 314159,
+      "group": "local_circular_e64_j257"
+    },
+    {
+      "criterion": "local_circular",
+      "energy_bins": 64,
+      "angular_grid": "j257",
+      "seed": 271828,
+      "group": "local_circular_e64_j257"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 64,
+      "angular_grid": "j257",
+      "seed": 314159,
+      "group": "orbit_thermal_e_lt_0p99_e64_j257"
+    },
+    {
+      "criterion": "orbit_thermal_e_lt_0p99",
+      "energy_bins": 64,
+      "angular_grid": "j257",
+      "seed": 271828,
+      "group": "orbit_thermal_e_lt_0p99_e64_j257"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 64,
+      "angular_grid": "j257",
+      "seed": 314159,
+      "group": "orbit_e0p9_e64_j257"
+    },
+    {
+      "criterion": "orbit_e0p9",
+      "energy_bins": 64,
+      "angular_grid": "j257",
+      "seed": 271828,
+      "group": "orbit_e0p9_e64_j257"
+    }
+  ]
+}

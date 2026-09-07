@@ -87,6 +87,166 @@ def population_rate(
     return dot, flux
 
 
+def capture_spectra(
+    arrays: Dict[str, np.ndarray],
+    occupation: np.ndarray,
+    model: str,
+    flux: np.ndarray,
+) -> dict:
+    """Resolve the accepted capture current by the captured particle's source cell.
+
+    The steady solve represents one depletion factor per ``(E,J,domain)``
+    state.  A converged total can nevertheless hide a poorly resolved
+    high-binding-energy tail.  These spectra preserve the exact total mass and
+    binding-energy currents while exposing which source-energy and source-J
+    cells carry them.  They are diagnostics only and do not alter the solve.
+    """
+
+    source1 = np.asarray(arrays["source1"], np.int64)
+    source2 = np.asarray(arrays["source2"], np.int64)
+    pre = np.asarray(arrays["pre"], np.int64)
+    post = np.asarray(arrays["post"], np.int64)
+    x_edges = np.asarray(arrays["x_edges"], float)
+    j_edges = np.asarray(arrays["j_over_jlc_edges"], float)
+    n_energy = x_edges.size - 1
+    n_angular = j_edges.size - 1
+    nstates = occupation.size
+    if n_energy <= 0 or n_angular <= 0 or nstates != 2 * n_energy * n_angular:
+        raise RuntimeError("EJ state count is inconsistent with the recorded grids")
+
+    rate_key = {
+        "direct": "rate_direct_msun_per_myr",
+        "immediate": "rate_immediate_msun_per_myr",
+    }.get(model)
+    energy_key = {
+        "direct": "rate_direct_binding_msun_kms2_per_myr",
+        "immediate": "rate_immediate_binding_msun_kms2_per_myr",
+    }.get(model)
+    if rate_key is None:
+        raise ValueError("model must be direct or immediate")
+    capture = post == POST_CAPTURE
+    pair_occupation = occupation[source1] * occupation[source2]
+    mass_weights = np.asarray(flux, float)[capture]
+    captured_pre = pre[capture]
+    energy_weights = None
+    if energy_key in arrays:
+        energy_weights = (
+            np.asarray(arrays[energy_key], float)[capture]
+            * pair_occupation[capture]
+        )
+
+    mass_by_state = np.bincount(
+        captured_pre, weights=mass_weights, minlength=nstates
+    )
+    energy_by_state = (
+        np.bincount(captured_pre, weights=energy_weights, minlength=nstates)
+        if energy_weights is not None else None
+    )
+    cell = np.arange(nstates, dtype=np.int64) // 2
+    energy_index = cell // n_angular
+    angular_index = cell % n_angular
+    mass_by_energy = np.bincount(
+        energy_index, weights=mass_by_state, minlength=n_energy
+    )
+    mass_by_angular = np.bincount(
+        angular_index, weights=mass_by_state, minlength=n_angular
+    )
+    energy_by_energy = (
+        np.bincount(energy_index, weights=energy_by_state, minlength=n_energy)
+        if energy_by_state is not None else None
+    )
+    energy_by_angular = (
+        np.bincount(angular_index, weights=energy_by_state, minlength=n_angular)
+        if energy_by_state is not None else None
+    )
+    total_mass = float(np.sum(mass_by_energy))
+    total_energy = (
+        float(np.sum(energy_by_energy)) if energy_by_energy is not None else None
+    )
+
+    def fraction(value: float, total: float | None) -> float | None:
+        if total is None:
+            return None
+        return float(value / max(total, 1.0e-300))
+
+    energy_rows = []
+    cumulative_mass = np.cumsum(mass_by_energy[::-1])[::-1]
+    cumulative_energy = (
+        np.cumsum(energy_by_energy[::-1])[::-1]
+        if energy_by_energy is not None else None
+    )
+    for index in range(n_energy):
+        energy_value = (
+            float(energy_by_energy[index])
+            if energy_by_energy is not None else None
+        )
+        energy_rows.append({
+            "energy_bin": index,
+            "x_lo": float(x_edges[index]),
+            "x_hi": float(x_edges[index + 1]),
+            "capture_mass_current_msun_per_myr": float(mass_by_energy[index]),
+            "capture_mass_fraction": fraction(
+                float(mass_by_energy[index]), total_mass
+            ),
+            "capture_binding_energy_current_msun_kms2_per_myr": energy_value,
+            "capture_binding_energy_fraction": fraction(
+                energy_value, total_energy
+            ) if energy_value is not None else None,
+            "mean_capture_binding_energy_kms2": (
+                energy_value / mass_by_energy[index]
+                if energy_value is not None and mass_by_energy[index] > 0.0
+                else None
+            ),
+            "cumulative_mass_fraction_from_this_bin_upward": fraction(
+                float(cumulative_mass[index]), total_mass
+            ),
+            "cumulative_binding_energy_fraction_from_this_bin_upward": (
+                fraction(float(cumulative_energy[index]), total_energy)
+                if cumulative_energy is not None else None
+            ),
+        })
+
+    angular_rows = []
+    for index in range(n_angular):
+        energy_value = (
+            float(energy_by_angular[index])
+            if energy_by_angular is not None else None
+        )
+        angular_rows.append({
+            "angular_bin": index,
+            "j_over_jlc_lo": float(j_edges[index]),
+            "j_over_jlc_hi": (
+                float(j_edges[index + 1])
+                if np.isfinite(j_edges[index + 1]) else "inf"
+            ),
+            "capture_mass_current_msun_per_myr": float(mass_by_angular[index]),
+            "capture_mass_fraction": fraction(
+                float(mass_by_angular[index]), total_mass
+            ),
+            "capture_binding_energy_current_msun_kms2_per_myr": energy_value,
+            "capture_binding_energy_fraction": fraction(
+                energy_value, total_energy
+            ) if energy_value is not None else None,
+        })
+
+    return {
+        "source_coordinate": (
+            "pre-collision state of the particle subsequently captured"
+        ),
+        "mass_current_roundtrip_msun_per_myr": total_mass,
+        "binding_energy_current_roundtrip_msun_kms2_per_myr": total_energy,
+        "highest_energy_bin_mass_fraction": fraction(
+            float(mass_by_energy[-1]), total_mass
+        ),
+        "highest_energy_bin_binding_energy_fraction": (
+            fraction(float(energy_by_energy[-1]), total_energy)
+            if energy_by_energy is not None else None
+        ),
+        "by_source_energy": energy_rows,
+        "by_source_angular_momentum": angular_rows,
+    }
+
+
 def solve_model(
     arrays: Dict[str, np.ndarray],
     metadata: dict,
@@ -286,6 +446,21 @@ def solve_model(
         float(np.sum(capture_energy_rate[capture_selector]))
         if capture_energy_rate is not None else None
     )
+    spectra = capture_spectra(arrays, occupation, model, flux)
+    spectrum_mass_error = abs(
+        float(spectra["mass_current_roundtrip_msun_per_myr"]) - capture
+    ) / max(abs(capture), 1.0e-300)
+    spectrum_energy_roundtrip = spectra[
+        "binding_energy_current_roundtrip_msun_kms2_per_myr"
+    ]
+    spectrum_energy_error = (
+        abs(float(spectrum_energy_roundtrip) - capture_energy)
+        / max(abs(capture_energy), 1.0e-300)
+        if capture_energy is not None and spectrum_energy_roundtrip is not None
+        else 0.0
+        if capture_energy is None and spectrum_energy_roundtrip is None
+        else math.inf
+    )
     outer_exchange = float(np.sum(flux[post == POST_RESERVOIR]))
     connected_population_rate = float(np.sum(dot[connected]))
     internal_population_rate = float(np.sum(dot[~connected]))
@@ -315,6 +490,12 @@ def solve_model(
         "no_upper_occupation_bound_hit": not bool(np.any(at_upper)),
         "positive_capture_current": capture > 0.0,
         "mass_identity_le_1e_10": abs(mass_identity) / normalization <= 1.0e-10,
+        "capture_spectrum_mass_roundtrip_le_1e_12": (
+            spectrum_mass_error <= 1.0e-12
+        ),
+        "capture_spectrum_binding_roundtrip_le_1e_12": (
+            spectrum_energy_error <= 1.0e-12
+        ),
     }
     result = {
         "model": model,
@@ -354,6 +535,11 @@ def solve_model(
         "steady_capture_mean_binding_energy_kms2": (
             capture_energy / capture
             if capture_energy is not None and capture > 0.0 else None
+        ),
+        "capture_spectra": spectra,
+        "capture_spectrum_mass_roundtrip_relative_error": spectrum_mass_error,
+        "capture_spectrum_binding_roundtrip_relative_error": (
+            spectrum_energy_error
         ),
         "isotropic_capture_binding_energy_current_msun_kms2_per_myr": (
             isotropic_capture_energy

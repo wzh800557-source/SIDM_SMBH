@@ -1,0 +1,21 @@
+{
+  "M_bh_msun": 4000000.0,
+  "bridged_profile_sha256": "f7efa9d086530e4b86e824cc638555754ad2cf55652c6cb5cd07e8a91492f709",
+  "df_table_sha256": "54b8f8a322ce4c5c24de69c35105d4db1090fdd4bb99a9a215f7b64ff91fcb25",
+  "gates": {
+    "bridge": "OK",
+    "df_normalization": "PASS",
+    "remap": "BH_REMAP_COMPLETE",
+    "subgrid_bridge": "PASS"
+  },
+  "package": "gnc_absolute_closure_production_20260828_225019",
+  "post_bh_profile_sha256": "6a14518a622922309918239a623261142e3af9aac0ca9501b3eab3fa442fadca",
+  "r_in_pc": 1.2953781279748755,
+  "rh_pc": 11.434998173403924,
+  "root": "gnc_production_ej_20260829_histat16e5",
+  "schema": "gnc-production-preparation-v1",
+  "sigma0_over_m_cm2_g": 100.0,
+  "source_profile_sha256": "a8199391def81777c58e6d2b1d80c0be4ef242d9730c276be95e654fa95c6103",
+  "status": "PRODUCTION_PREPARATION_PASS",
+  "w_kms": 80.0
+}

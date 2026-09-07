@@ -1,0 +1,103 @@
+{
+  "C_E_thermal_sink": -0.00026222454065863513,
+  "C_M_measured": 0.0001748163604390901,
+  "absolute_two_current_closure_status": "INCOMPLETE_OR_FAILED",
+  "boundary_density_msun_pc3": 46.86581525482467,
+  "boundary_sigma1d_kms": 79.6112678522627,
+  "capture_binding_energy_current_used_by_fluid": false,
+  "capture_binding_energy_observable_status": "INCOMPLETE_OR_FAILED",
+  "capture_prescription": "direct no-rescattering mass current from the steady depleted non-local EJ solution",
+  "direct_immediate_model_spread_fraction_of_mean": 0.07953282828668155,
+  "energy_flux_scale_msun_kms2_per_myr": 509773461.618959,
+  "energy_interpretation": "The unresolved capture-binding-energy moment is carried into the black hole and is excluded from the halo luminosity. The fluid sink removes the local isotropic kinetic energy associated with the converged captured mass current.",
+  "gates": {
+    "binding_energy_status_recorded_separately": true,
+    "capture_binding_energy_not_used_as_fluid_luminosity": true,
+    "direct_immediate_mass_model_spread": true,
+    "mass_matched_hydrostatic_bridge": true,
+    "mass_observable_converged": true,
+    "physical_df_normalization": true,
+    "positive_direct_capture_current": true,
+    "production_bh_remap": true,
+    "selected_highest_resolution": true,
+    "selected_reporting_surface_is_physical_crossing": true,
+    "selected_steady_solver": true,
+    "single_physical_identity": true,
+    "unique_selected_convergence_group": true,
+    "validated_mass_sensitivity_le_tolerance": true
+  },
+  "identity": {
+    "angular_bins": 257,
+    "boundary_radius_tolerance": 0.001,
+    "bridge_json_sha256": "68789f3655070d93308eb4fc10eccdd5d8bd029963872de86cab448fc4f19940",
+    "bridge_r_in_pc": 1.2953781279748755,
+    "bridged_profile_sha256": "f7efa9d086530e4b86e824cc638555754ad2cf55652c6cb5cd07e8a91492f709",
+    "closure_to_bridge_radius_relative_error": 0.00018301590420333191,
+    "convergence_json_sha256": "3fcc6574ce6bfe77d94a21e24042a0449997b8138a5fcbc273aadfecd25192cd",
+    "df_table_sha256": "54b8f8a322ce4c5c24de69c35105d4db1090fdd4bb99a9a215f7b64ff91fcb25",
+    "energy_bins": 64,
+    "fluid_profile_sha256": "6a14518a622922309918239a623261142e3af9aac0ca9501b3eab3fa442fadca",
+    "mbh_msun": 4000000.0,
+    "normalization_json_sha256": "5cfd10c5abc7be552a7b7bc59e23750ed60cdf6e194c067df5f9d8ae7be83fce",
+    "r_outer_pc": 1.295141053175499,
+    "remap_json_sha256": "318c43e046737b05446bc7987a015b5e12a5c8a7cb9eaab097157aa7a5df0e78",
+    "rh_pc": 11.434998173403924,
+    "seeds": [
+      314159,
+      271828
+    ],
+    "sigma0_over_m_cm2_g": 100.0,
+    "source_collapse_profile_sha256": "a8199391def81777c58e6d2b1d80c0be4ef242d9730c276be95e654fa95c6103",
+    "steady_json_sha256": "df69f00f612deca00006466ed04d007e8adb2eb33cc1793b19459c3cd222f712",
+    "w_kms": 80.0
+  },
+  "immediate_absorbing_loss_cone_mdot_msun_per_myr": 15.225413953495528,
+  "inputs": {
+    "bridge_json": "bridge.json",
+    "convergence_json": "ej_convergence.json",
+    "normalization_json": "df_normalization.json",
+    "remap_json": "remap.json",
+    "selected_steady_json": "steady_combined.json"
+  },
+  "mass_coupling": "The short response does not delete a fluid shell. It stops before the omitted captured mass exceeds the declared interface gates.",
+  "mass_flux_scale_msun_per_myr": 80431.865568723,
+  "measured_mdot_msun_per_myr": 14.06080600205032,
+  "model_spread_tolerance": 0.1,
+  "physical_fluid_branch": "control versus local thermal sink",
+  "schema": "gnc-fluid-mass-closure-v1",
+  "scientific_scope": "CONVERGED_MASS_CURRENT_FOR_FIXED_SNAPSHOT_FLUID_RESPONSE",
+  "status": "FLUID_MASS_CLOSURE_MEASURED",
+  "thermal_sink_current_msun_kms2_per_myr": -133675.11181299388,
+  "thermal_specific_energy_factor": 1.5,
+  "validated_mass_sensitivity_envelope": {
+    "direct_immediate_model_spread_fraction_of_mean": 0.07953282828668155,
+    "independent_seed_by_model": {
+      "direct": 0.03671240523533659,
+      "immediate": 0.03561277641854009
+    },
+    "independent_seed_full_range_fraction_of_mean": 0.03671240523533659,
+    "interpretation": "This is the largest validated fractional sensitivity across independent seeds, selected resolution and reporting-surface tests, and the two capture prescriptions. It is not a Gaussian one-sigma error.",
+    "maximum_fractional_sensitivity": 0.07953282828668155,
+    "resolution_and_boundary": {
+      "by_model": {
+        "direct": {
+          "by_dimension": {
+            "angular": 0.0006660021517483903,
+            "boundary": 0.05341512555666146,
+            "energy": 0.043955967780536585
+          },
+          "maximum": 0.05341512555666146
+        },
+        "immediate": {
+          "by_dimension": {
+            "angular": 0.0008959283398125037,
+            "boundary": 0.053465563911945034,
+            "energy": 0.04137487050748703
+          },
+          "maximum": 0.053465563911945034
+        }
+      },
+      "maximum": 0.053465563911945034
+    }
+  }
+}

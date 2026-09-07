@@ -1,0 +1,122 @@
+{
+  "schema": "sidm-reproduction-inputs-v1",
+  "source_export_sha256": "fbc61ceb72ea15f02d52a11ff73cf3bda020d8d4ac7ce8f5c4b6741a0fc3214d",
+  "permission": "Production snapshots approved for public release by the project owner on 2026-09-07.",
+  "transformation": "Physical tables preserved byte for byte. Absolute paths in JSON replaced with basenames and dependent JSON identity hashes rebased. Existing scientific status and gate values describe the archived runs, not a fresh rerun.",
+  "files": [
+    {
+      "path": "data/production/prep_manifest.json",
+      "original_sha256": "9092366080be5e1c8901b2a3c286f8dcbf0f39eaaed4e971b1b3514f41a0d9ae",
+      "public_sha256": "1ef37512610a67bdd15652753812b9104806afe08fe07a26e5d64e02c807a027",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/production/remap/remap.json",
+      "original_sha256": "a8ccc9b4cfec39fe8aa7fa956b30eb4f357a7c782645f798ba2ce39f53419f38",
+      "public_sha256": "318c43e046737b05446bc7987a015b5e12a5c8a7cb9eaab097157aa7a5df0e78",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/production/remap/profile_bh.txt",
+      "original_sha256": "6a14518a622922309918239a623261142e3af9aac0ca9501b3eab3fa442fadca",
+      "public_sha256": "6a14518a622922309918239a623261142e3af9aac0ca9501b3eab3fa442fadca",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/production/input/prof_deep.txt",
+      "original_sha256": "a8199391def81777c58e6d2b1d80c0be4ef242d9730c276be95e654fa95c6103",
+      "public_sha256": "a8199391def81777c58e6d2b1d80c0be4ef242d9730c276be95e654fa95c6103",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/production/bridge/bridge.json",
+      "original_sha256": "d3259f55a887c90c94c0236f6f9d34ea28774ec24ea8fd83e7f58f90b6f1e3f3",
+      "public_sha256": "68789f3655070d93308eb4fc10eccdd5d8bd029963872de86cab448fc4f19940",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/production/bridge/boundary_criteria.json",
+      "original_sha256": "8ba2657757f071d3fa7d26d400780cd0db78f56241066ebfa1e3bffbe0d32dad",
+      "public_sha256": "163ae54adfe5843029a4168fdfb7a868d81f8080dc030bef9646d3fa1a562e77",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/production/bridge/bridged_profile.txt",
+      "original_sha256": "f7efa9d086530e4b86e824cc638555754ad2cf55652c6cb5cd07e8a91492f709",
+      "public_sha256": "f7efa9d086530e4b86e824cc638555754ad2cf55652c6cb5cd07e8a91492f709",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/production/normalized/df_normalization.json",
+      "original_sha256": "6458e4733ba5e3157c34c99f4192f5b865fdaaa693b1ffc80161ea9e9a4cca57",
+      "public_sha256": "5cfd10c5abc7be552a7b7bc59e23750ed60cdf6e194c067df5f9d8ae7be83fce",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/production/normalized/f_evolved_normalized.txt",
+      "original_sha256": "54b8f8a322ce4c5c24de69c35105d4db1090fdd4bb99a9a215f7b64ff91fcb25",
+      "public_sha256": "54b8f8a322ce4c5c24de69c35105d4db1090fdd4bb99a9a215f7b64ff91fcb25",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/scan20/scan20_summary.json",
+      "original_sha256": "00acf491fb463ea8012880797691171b373bf5c587bf4111d776bf44dbed1c76",
+      "public_sha256": "d01048e40a4e94dabd5050dbd0e08dd13b5e32f54a7cb74db92aad51dd70a5d1",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/reference/scan20/scan20_results.csv",
+      "original_sha256": "44c9328a969873f6b7e19de76fd151d1cd3fbf7254944d0e652423de8da456b7",
+      "public_sha256": "44c9328a969873f6b7e19de76fd151d1cd3fbf7254944d0e652423de8da456b7",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/aggregate_v6_mass_reaudit_boundaryfix/fluid_mass_closure.json",
+      "original_sha256": "552dfbb3d12e685afed7242db17a5749dfdb1a80404564140bc562b6ba6f36af",
+      "public_sha256": "a75c972329609aff437f39a6c17139ff95582c3ffb74adfcc95f44a222fcd798",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/reference/production/aggregate_v6_mass_reaudit_boundaryfix/ej_convergence.json",
+      "original_sha256": "3fcc6574ce6bfe77d94a21e24042a0449997b8138a5fcbc273aadfecd25192cd",
+      "public_sha256": "3fcc6574ce6bfe77d94a21e24042a0449997b8138a5fcbc273aadfecd25192cd",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/aggregate_v6_mass_reaudit_boundaryfix/ej_convergence.csv",
+      "original_sha256": "05ca58b4ec482403ef4164c7596ea333ae51922a6cd613801977c2dbb442998d",
+      "public_sha256": "05ca58b4ec482403ef4164c7596ea333ae51922a6cd613801977c2dbb442998d",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/aggregate_v6_mass_reaudit_boundaryfix/capture_tail_diagnostic.json",
+      "original_sha256": "99d988bbc42e1b8288fc2a47ad2a3f632063b95a9eca3f6d73213d30d2f5ce82",
+      "public_sha256": "99d988bbc42e1b8288fc2a47ad2a3f632063b95a9eca3f6d73213d30d2f5ce82",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/fluid_mass_v6_final_20260901_0955/fluid_feedback_trajectories.csv",
+      "original_sha256": "3ec99d06f46b8d2c00e3e965081eba67690852d3cb02a9815e52fc77f717f1dd",
+      "public_sha256": "3ec99d06f46b8d2c00e3e965081eba67690852d3cb02a9815e52fc77f717f1dd",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/fluid_mass_v6_final_20260901_0955/fluid_response_analysis.json",
+      "original_sha256": "2157fae4a9507c3a1eb8ff9e65159b31d9ae535f4911289881b09f1b4a214ade",
+      "public_sha256": "f0fa5b744b54163e9392e4e4856ce6576206cf6e9f0b50e079503f75440159ce",
+      "metadata_relocated": true
+    },
+    {
+      "path": "data/reference/production/fluid_mass_v6_final_20260901_0955/fluid_response_comparison.csv",
+      "original_sha256": "8c99fc51fdcc5cf490b37f28d9de204e5d1b537422e05bb6fdec4567b23d8d3f",
+      "public_sha256": "8c99fc51fdcc5cf490b37f28d9de204e5d1b537422e05bb6fdec4567b23d8d3f",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/fluid_mass_v6_final_20260901_0955/fluid_feedback_summary.json",
+      "original_sha256": "a12830ff81549dfd4b9a500dade772cf99ee48e0e0b810becef2f0845519f018",
+      "public_sha256": "0a96e0e5a9cc86baec52fe78ba57c37951e6d90071aae955d3b85f63158e6b5e",
+      "metadata_relocated": true
+    }
+  ]
+}

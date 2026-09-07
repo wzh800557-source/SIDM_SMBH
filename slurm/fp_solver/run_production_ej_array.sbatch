@@ -37,7 +37,7 @@ case "$SLURM_ARRAY_TASK_ID" in
  11) CRIT=orbit_e0p9; E=16; GRID=fine; SEED=271828 ;;
   *) exit 2 ;;
 esac
-RB=$(python - "$ROOT/bridge/boundary_criteria.json" "$CRIT" <<'PY'
+RB=$("$PYTHON_BIN" - "$ROOT/bridge/boundary_criteria.json" "$CRIT" <<'PY'
 import json,sys
 print('%.16e'%json.load(open(sys.argv[1]))['criteria'][sys.argv[2]]['r_boundary_pc'])
 PY
@@ -46,7 +46,7 @@ TAG=${CRIT}_e${E}_${GRID}_s${SEED}
 OUT=$ROOT/operators/$TAG
 mkdir -p "$OUT"
 printf 'EJ_OPERATOR_START %s tag=%s r=%s pairs_per_bin=%s\n' \
-  "$(date -Is)" "$TAG" "$RB" "$PAIRS_PER_BIN"
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$TAG" "$RB" "$PAIRS_PER_BIN"
 "$PYTHON_BIN" -u "$PKG/finite_angle_capture.py" \
   --profile "$ROOT/bridge/bridged_profile.txt" \
   --df-table "$ROOT/normalized/f_evolved_normalized.txt" \
@@ -69,4 +69,4 @@ assert x['direct_capture_binding_roundtrip_relative_error'] <= 1e-10
 assert x['immediate_capture_binding_roundtrip_relative_error'] <= 1e-10
 print('MASS_AND_CAPTURE_ENERGY_ROUNDTRIP_PASS')
 PY
-printf 'EJ_OPERATOR_DONE %s tag=%s\n' "$(date -Is)" "$TAG" | tee "$OUT/STATUS.txt"
+printf 'EJ_OPERATOR_DONE %s tag=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$TAG" | tee "$OUT/STATUS.txt"

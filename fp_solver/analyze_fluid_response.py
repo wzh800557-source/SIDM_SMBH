@@ -19,6 +19,25 @@ VALID_SINK_STOPS = VALID_CONTROL_STOPS | {
     "unmodeled_gnc_mass_loss_limit",
 }
 
+CANONICAL_RESPONSE_FIELDS = (
+    "rho_inner_mean_msun_pc3",
+    "sigma_inner_1d_kms",
+    "r_inner_pc",
+)
+LEGACY_RESPONSE_ALIASES = {
+    "rho_inner_mean_msun_pc3": "rho_c_msun_pc3",
+    "sigma_inner_1d_kms": "sigma_c_kms",
+    "r_inner_pc": "r0_pc",
+}
+INNER_DENSITY_DEFINITION = (
+    "mean density inside the innermost resolved Lagrangian shell, "
+    "3*M(<r_inner)/(4*pi*r_inner^3)"
+)
+INNER_DISPERSION_DEFINITION = (
+    "one-dimensional velocity dispersion in the innermost resolved "
+    "Lagrangian shell"
+)
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -82,6 +101,57 @@ def log_interp(x: list[float], y: list[float], target: float) -> float:
     )
 
 
+def validate_resolved_diagnostics(
+    summary: dict,
+    rows: dict[str, list[dict]],
+    density_tolerance: float,
+) -> float:
+    metadata = summary.get("resolved_diagnostics")
+    expected_metadata = {
+        "density_field": "rho_inner_mean_msun_pc3",
+        "density_definition": INNER_DENSITY_DEFINITION,
+        "density_is_extrapolated_central_value": False,
+        "dispersion_field": "sigma_inner_1d_kms",
+        "dispersion_definition": INNER_DISPERSION_DEFINITION,
+        "radius_field": "r_inner_pc",
+    }
+    if not isinstance(metadata, dict) or any(
+        metadata.get(key) != value for key, value in expected_metadata.items()
+    ):
+        raise RuntimeError("fluid feedback has an ambiguous inner-density diagnostic")
+
+    maximum_density_error = 0.0
+    for branch, values in rows.items():
+        for row in values:
+            for canonical, legacy in LEGACY_RESPONSE_ALIASES.items():
+                if canonical not in row or legacy not in row:
+                    raise RuntimeError(
+                        f"{branch} trajectory lacks {canonical} or its legacy alias"
+                    )
+                if not close(row[canonical], row[legacy], tolerance=5.0e-12):
+                    raise RuntimeError(
+                        f"{branch} trajectory has inconsistent {canonical} aliases"
+                    )
+            shell_mass = float(row.get("inner_shell_mass_msun", math.nan))
+            radius = float(row["r_inner_pc"])
+            expected_density = 3.0 * shell_mass / (4.0 * math.pi * radius**3)
+            density_error = abs(
+                float(row["rho_inner_mean_msun_pc3"]) / expected_density - 1.0
+            ) if expected_density > 0.0 else math.inf
+            maximum_density_error = max(maximum_density_error, density_error)
+            if (
+                not math.isfinite(shell_mass)
+                or shell_mass <= 0.0
+                or not math.isfinite(density_error)
+                or density_error > density_tolerance
+            ):
+                raise RuntimeError(
+                    f"{branch} trajectory does not satisfy the innermost-shell "
+                    "mean-density definition"
+                )
+    return maximum_density_error
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--summary", type=Path, required=True)
@@ -91,22 +161,47 @@ def main() -> int:
     parser.add_argument("--bridge-json", type=Path, required=True)
     parser.add_argument("--out-json", type=Path, required=True)
     parser.add_argument("--out-csv", type=Path, required=True)
+    parser.add_argument(
+        "--mean-density-consistency-tolerance",
+        type=float,
+        default=1.0e-5,
+        help=(
+            "maximum relative mismatch between the stored innermost-shell "
+            "density and 3M/(4 pi r^3); this accommodates the accepted "
+            "finite hydrostatic-remap tolerance"
+        ),
+    )
     args = parser.parse_args()
+    if not 0.0 < args.mean_density_consistency_tolerance < 1.0e-3:
+        raise ValueError("mean-density consistency tolerance must lie in (0,1e-3)")
 
     summary = json.loads(args.summary.read_text())
     closure = json.loads(args.closure_json.read_text())
     bridge = json.loads(args.bridge_json.read_text())
     rows = read_rows(args.trajectories)
+    absolute_closure = (
+        closure.get("schema") == "gnc-fluid-absolute-closure-v1"
+        and closure.get("status") == "ABSOLUTE_CLOSURE_MEASURED"
+    )
+    mass_closure = (
+        closure.get("schema") == "gnc-fluid-mass-closure-v1"
+        and closure.get("status") == "FLUID_MASS_CLOSURE_MEASURED"
+        and closure.get("capture_binding_energy_current_used_by_fluid") is False
+    )
+    expected_summary_status = (
+        "MEASURED_FLUID_FEEDBACK_COMPLETE"
+        if absolute_closure else "MASS_CLOSURE_FLUID_RESPONSE_COMPLETE"
+        if mass_closure else None
+    )
     if (
-        summary.get("schema") != "gnc-fluid-feedback-v4"
-        or summary.get("status") != "MEASURED_FLUID_FEEDBACK_COMPLETE"
+        summary.get("schema") != "gnc-fluid-feedback-v5"
+        or summary.get("status") != expected_summary_status
     ):
         raise RuntimeError("fluid feedback did not use an accepted closure")
-    if (
-        closure.get("schema") != "gnc-fluid-absolute-closure-v1"
-        or closure.get("status") != "ABSOLUTE_CLOSURE_MEASURED"
-    ):
-        raise RuntimeError("fluid response requires an accepted absolute closure")
+    if not (absolute_closure or mass_closure):
+        raise RuntimeError(
+            "fluid response requires an accepted absolute or mass-current closure"
+        )
     closure_gates = closure.get("gates")
     if (
         not isinstance(closure_gates, dict)
@@ -123,6 +218,12 @@ def main() -> int:
         raise RuntimeError(
             "the accepted physical response must contain only control and sink"
         )
+    resolved_density_max_relative_error = validate_resolved_diagnostics(
+        summary,
+        rows,
+        args.mean_density_consistency_tolerance,
+    )
+    resolved_diagnostics_verified = True
 
     control = rows["control"]
     sink = rows["sink"]
@@ -147,7 +248,7 @@ def main() -> int:
     c_tau = [float(row["tau_relax"]) for row in control]
     s_tau = [float(row["tau_relax"]) for row in sink]
     comparison_rows = []
-    fields = ("rho_c_msun_pc3", "sigma_c_kms", "r0_pc")
+    fields = CANONICAL_RESPONSE_FIELDS
     ratios = {field: [] for field in fields}
     for tau in target_tau:
         out = {"tau_relax": float(tau)}
@@ -243,8 +344,8 @@ def main() -> int:
             values[-1].get("time_myr"),
         )
         and close(
-            branch_summaries[name].get("final_rho_c_msun_pc3"),
-            values[-1].get("rho_c_msun_pc3"),
+            branch_summaries[name].get("final_rho_inner_mean_msun_pc3"),
+            values[-1].get("rho_inner_mean_msun_pc3"),
         )
         and close(
             branch_summaries[name].get("captured_mass_msun"),
@@ -301,7 +402,8 @@ def main() -> int:
     initial_match = all(
         close(control[0][field], sink[0][field], tolerance=5.0e-12)
         for field in (
-            "rho_c_msun_pc3", "sigma_c_kms", "r0_pc", "M_bh_msun",
+            "rho_inner_mean_msun_pc3", "sigma_inner_1d_kms", "r_inner_pc",
+            "inner_shell_mass_msun", "M_bh_msun",
             "lmfp_scaleheight_factor_inner", "lmfp_scaleheight_factor_min",
             "time_myr", "captured_mass_msun", "E_boundary_msun_kms2",
             "E_total_code", "n_conduction",
@@ -315,6 +417,23 @@ def main() -> int:
     )
     gates = {
         "accepted_closure": bool(summary.get("input_closure_accepted")),
+        "resolved_inner_density_definition_verified": (
+            resolved_diagnostics_verified
+        ),
+        "closure_scope_matches_summary": (
+            bool(summary.get("absolute_two_current_closure")) == absolute_closure
+            and bool(summary.get("mass_current_closure")) == mass_closure
+        ) if ("absolute_two_current_closure" in summary
+              or "mass_current_closure" in summary) else absolute_closure,
+        "capture_binding_energy_excluded_for_mass_closure": (
+            not mass_closure
+            or (
+                closure.get("capture_binding_energy_current_used_by_fluid") is False
+                and summary.get("applied_currents", {}).get(
+                    "source_luminosity_msun_kms2_per_myr"
+                ) is None
+            )
+        ),
         **identity_gates,
         **current_gates,
         "common_evolved_interval": common_tau > 0.0,
@@ -361,7 +480,7 @@ def main() -> int:
         writer.writerows(comparison_rows)
 
     result = {
-        "schema": "black-hole-aware-fluid-response-v2",
+        "schema": "black-hole-aware-fluid-response-v3",
         "status": (
             "BLACK_HOLE_AWARE_RESPONSE_COMPLETE"
             if all(gates.values()) else "FAIL"
@@ -370,24 +489,37 @@ def main() -> int:
         "common_tau_relax": common_tau,
         "control_stop_reason": branch_summaries["control"]["stop_reason"],
         "sink_stop_reason": branch_summaries["sink"]["stop_reason"],
-        "density_sink_over_control_at_common_end": ratios[
-            "rho_c_msun_pc3"
+        "inner_mean_density_sink_over_control_at_common_end": ratios[
+            "rho_inner_mean_msun_pc3"
         ][-1],
-        "density_max_abs_fractional_difference": max(
-            abs(value - 1.0) for value in ratios["rho_c_msun_pc3"]
+        "inner_mean_density_max_abs_fractional_difference": max(
+            abs(value - 1.0) for value in ratios["rho_inner_mean_msun_pc3"]
         ),
-        "dispersion_sink_over_control_at_common_end": ratios[
-            "sigma_c_kms"
+        "inner_dispersion_sink_over_control_at_common_end": ratios[
+            "sigma_inner_1d_kms"
         ][-1],
-        "inner_radius_sink_over_control_at_common_end": ratios["r0_pc"][-1],
+        "inner_radius_sink_over_control_at_common_end": ratios["r_inner_pc"][-1],
+        "resolved_density_diagnostic": summary["resolved_diagnostics"],
+        "resolved_density_max_relative_consistency_error": (
+            resolved_density_max_relative_error
+        ),
+        "resolved_density_consistency_tolerance": (
+            args.mean_density_consistency_tolerance
+        ),
         "interpretation": (
             "Both branches include the same central point mass and the same "
             "black-hole-limited conductivity. The closure current is held at "
             "its matched-snapshot value. The branch difference isolates the "
             "thermal energy removed by that current over the interval in "
             "which omitted captured mass remains below the interface validity "
-            "thresholds."
+            "thresholds. Density refers to the mean enclosed density of the "
+            "innermost resolved Lagrangian shell, not an extrapolated central value."
         ),
+        "closure_scope": (
+            "absolute_two_current_closure"
+            if absolute_closure else "mass_current_closure_only"
+        ),
+        "capture_binding_energy_current_used_by_fluid": False,
         "fluid_feedback_summary": args.summary.name,
         "fluid_feedback_trajectories": args.trajectories.name,
         "comparison_csv": args.out_csv.name,

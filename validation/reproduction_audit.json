@@ -1,0 +1,61 @@
+{
+  "schema": "sidm-reproduction-release-audit-v1",
+  "date_utc": "2026-09-07",
+  "status": "CODE_AND_FIXED_SNAPSHOT_INPUTS_AUDITED_FULL_RERUN_PENDING",
+  "python_version": "3.12.14",
+  "readme_intentionally_blank": true,
+  "completed_checks": {
+    "test_programs": 24,
+    "native_fluid_smoke_test": "PASS; synthetic boundary current only",
+    "production_preparation": "PASS; native BH remap, bridge, reporting surfaces, DF normalization",
+    "preparation_comparison": "validation/preparation_comparison.json",
+    "archived_fluid_trajectory_reanalysis": "BLACK_HOLE_AWARE_RESPONSE_COMPLETE",
+    "archived_fluid_trajectory_gates_all_pass": true,
+    "reference_figures_regenerated": 6,
+    "released_input_integrity": "19 files checked against data/manifest.json",
+    "production_task_plan": "38 independent-seed tasks in 19 groups",
+    "dense_scan_reference": "1200 rows, 20 by 20 by 3; interface and fluid luminosity only",
+    "native_gnc_source_preparation": "PASS; normalization, weighted loading, plunge records and Born kernel patches installed",
+    "native_gnc_compiled": false
+  },
+  "archived_response_crosscheck": {
+    "scope": "mass_current_closure_only",
+    "common_tau_relax": 0.0593231093924701,
+    "inner_mean_density_sink_over_control_at_common_end": 1.00107938458313,
+    "inner_radius_sink_over_control_at_common_end": 0.9996404628404736,
+    "inner_dispersion_sink_over_control_at_common_end": 0.999948311893855,
+    "note": "These values were re-analyzed from archived measured trajectories. Evolution was not rerun in this audit."
+  },
+  "restored_or_fixed": [
+    "Approved production snapshot, matched checkpoints and reference measurements",
+    "20 by 20 by 3 scan package and submission sequence",
+    "Observable-specific convergence gates and mass-only closure assembler",
+    "Capture-spectrum reporting and mass/binding-energy roundtrip tests",
+    "Mass-only fluid-response input handling and resolved-shell diagnostics",
+    "Unconditional saving of the final branch state at stopping guards",
+    "Production plotting contract, including the boundary full-range metric",
+    "Portable interpreter selection, repository-relative paths and explicit run plan"
+  ],
+  "preserved": [
+    "Newer energy-moment audit and occupation-table identity check",
+    "Separate failed binding-energy gates, without promoting mass convergence to energy closure",
+    "Native source licences and a blank top-level README"
+  ],
+  "scan_code_changes_relative_to_export": [
+    "The boundary classifier reports missing critical-orbit diagnostics as unavailable rather than a physical failure. This changes status labels, not the interface or fluid-luminosity calculation.",
+    "The fluid measurement uses the bundled engine instead of an external absolute path.",
+    "Archived CSV measurements and statuses are preserved, not relabelled as a fresh scan."
+  ],
+  "not_verified_in_this_audit": [
+    "Fresh execution of all 38 high-statistics operator tasks and the full steady-state ladder",
+    "Fresh evolution of the complete production fluid response",
+    "Fresh execution of all 1200 scan cases",
+    "Native GNC compilation, coefficient-table generation and MPI execution"
+  ],
+  "not_bundled": [
+    "Large intermediate collision operators, which the included task plan regenerates",
+    "Exact NFW-to-collapse restart history before the released production snapshot",
+    "Historical native-GNC run directories and generated coefficient tables"
+  ],
+  "scientific_scope": "Fixed-snapshot mass-current closure and short black-hole-aware fluid response. A continuously updated two-way energy closure is not established."
+}

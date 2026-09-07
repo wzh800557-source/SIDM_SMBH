@@ -13,7 +13,9 @@ binaries or run outputs. `tools/build_gnc.py` copies it to a separate build
 directory and installs our absolute-normalization, weighted-particle, plunge-record,
 and Born-scattering patches before compilation. The finite-angle collision and
 steady-state calculations are in `fp_solver`. The scan drivers are in
-`parameter_scan` and cluster submission scripts are in `slurm`.
+`parameter_scan` (coarse grid) and `parameter_scan20` (20 by 20 by 3 grid).
+Cluster submission scripts are in `slurm`. See `REPRODUCING.md` for production
+inputs, run commands, and the limits of the completed checks.
 
 ## Python environment
 
@@ -50,7 +52,8 @@ This evolves a newly generated NFW halo with constant cross section and writes
 radius in pc, shell-averaged density in solar masses per cubic pc, and
 one-dimensional velocity dispersion in km/s. The output is an installation example,
 not the production deep-collapse snapshot. Existing output directories are never
-overwritten. No private production snapshots are included in this repository.
+overwritten. The approved production snapshot and matched checkpoints are in
+`data/production`, with reference measurements in `data/reference`.
 
 The matched fluid-response driver takes a remapped profile, bridge metadata, and
 an accepted closure file. Its full argument list is available with:

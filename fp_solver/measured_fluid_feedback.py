@@ -44,6 +44,16 @@ from fluid_bh_scaleheight import (
 from interface_bridge import validate_interface_bridge
 
 
+INNER_DENSITY_DEFINITION = (
+    "mean density inside the innermost resolved Lagrangian shell, "
+    "3*M(<r_inner)/(4*pi*r_inner^3)"
+)
+INNER_DISPERSION_DEFINITION = (
+    "one-dimensional velocity dispersion in the innermost resolved "
+    "Lagrangian shell"
+)
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -386,13 +396,25 @@ def total_energy_code(h: MeasuredBoundaryHalo) -> float:
 def snapshot(h: MeasuredBoundaryHalo, branch: str, lphys: float,
              scale_t_myr: float, scale_e: float, mdot: float) -> dict:
     t_myr = h.t * scale_t_myr
+    rho_inner_mean = (
+        h.rho[0] * h.scale_rho.to_value(u.Msun / u.pc**3)
+    )
+    sigma_inner_1d = h.v[0] * h.scale_v.to_value(u.km / u.s)
+    r_inner = h.r[0] * h.scale_r.to_value(u.pc)
     return {
         "branch": branch,
         "tau_relax": h.t / h.t_relax,
         "time_myr": t_myr,
-        "rho_c_msun_pc3": h.rho[0] * h.scale_rho.to_value(u.Msun / u.pc**3),
-        "sigma_c_kms": h.v[0] * h.scale_v.to_value(u.km / u.s),
-        "r0_pc": h.r[0] * h.scale_r.to_value(u.pc),
+        "rho_inner_mean_msun_pc3": rho_inner_mean,
+        "sigma_inner_1d_kms": sigma_inner_1d,
+        "r_inner_pc": r_inner,
+        "inner_shell_mass_msun": h.m[0] * h.scale_m.to_value(u.Msun),
+        # Retain the old column names for readers of development trajectories.
+        # New analysis products require the canonical names above and verify
+        # that these aliases are numerically identical.
+        "rho_c_msun_pc3": rho_inner_mean,
+        "sigma_c_kms": sigma_inner_1d,
+        "r0_pc": r_inner,
         "M_bh_msun": h.M_bh * h.scale_m.to_value(u.Msun),
         "L_inner_msun_kms2_per_myr": lphys,
         "captured_mass_msun": mdot * t_myr,
@@ -469,7 +491,7 @@ def run_branch(branch: str, lphys: float, mdot: float, profile: np.ndarray,
 
     rows = [snapshot(h, branch, lphys, scale_t_myr, scale_e, mdot)]
     next_output = args.output_dtau
-    rho_initial = float(h.rho[0])
+    rho_inner_initial = float(h.rho[0])
     wall0 = time.time()
     stop_reason = "tau_end"
     first_shell_mass = float(profile_check["inner_shell_mass_msun"])
@@ -490,7 +512,7 @@ def run_branch(branch: str, lphys: float, mdot: float, profile: np.ndarray,
         if tau >= next_output or tau >= args.tau_end:
             rows.append(snapshot(h, branch, lphys, scale_t_myr, scale_e, mdot))
             next_output += args.output_dtau
-        if h.rho[0] / rho_initial >= args.rho_factor_end:
+        if h.rho[0] / rho_inner_initial >= args.rho_factor_end:
             stop_reason = "rho_factor_end"
             if rows[-1]["n_conduction"] != h.n_conduction:
                 rows.append(snapshot(h, branch, lphys, scale_t_myr, scale_e, mdot))
@@ -509,6 +531,13 @@ def run_branch(branch: str, lphys: float, mdot: float, profile: np.ndarray,
                 rows.append(snapshot(h, branch, lphys, scale_t_myr, scale_e, mdot))
             break
 
+    # Always preserve the state at which the branch actually stopped.  This is
+    # needed not only for physical stopping conditions, but also for a step or
+    # wall-clock guard reached between scheduled output times.  The branch
+    # summary and trajectory must describe the same endpoint.
+    if rows[-1]["n_conduction"] != h.n_conduction:
+        rows.append(snapshot(h, branch, lphys, scale_t_myr, scale_e, mdot))
+
     budget_rel = (
         abs(h.E_conduction_budget_error_code)
         / h.E_conduction_budget_scale_code
@@ -519,8 +548,13 @@ def run_branch(branch: str, lphys: float, mdot: float, profile: np.ndarray,
         "stop_reason": stop_reason,
         "final_tau_relax": h.t / h.t_relax,
         "final_time_myr": h.t * scale_t_myr,
-        "final_rho_c_msun_pc3": rows[-1]["rho_c_msun_pc3"],
-        "rho_c_factor": float(h.rho[0] / rho_initial),
+        "final_rho_inner_mean_msun_pc3": rows[-1][
+            "rho_inner_mean_msun_pc3"
+        ],
+        "rho_inner_mean_factor": float(h.rho[0] / rho_inner_initial),
+        # Deprecated aliases retained in the raw branch summary only.
+        "final_rho_c_msun_pc3": rows[-1]["rho_inner_mean_msun_pc3"],
+        "rho_c_factor": float(h.rho[0] / rho_inner_initial),
         "n_conduction": h.n_conduction,
         "L_inner_code": lcode,
         "L_inner_msun_kms2_per_myr": lphys,
@@ -614,13 +648,25 @@ def main() -> int:
     diag = json.loads(args.diagnostics.read_text())
     bridge = json.loads(args.bridge_json.read_text())
     input_status = diag.get("status")
-    accepted_input = input_status == "ABSOLUTE_CLOSURE_MEASURED"
+    absolute_input = input_status == "ABSOLUTE_CLOSURE_MEASURED"
+    mass_closure_input = input_status == "FLUID_MASS_CLOSURE_MEASURED"
+    accepted_input = absolute_input or mass_closure_input
     provisional_input = (
         input_status == "FINITE_ANGLE_ISOTROPIC_INJECTION_CEILING_CONVERGED"
     )
     if accepted_input:
-        if diag.get("schema") != "gnc-fluid-absolute-closure-v1":
+        expected_schema = (
+            "gnc-fluid-absolute-closure-v1"
+            if absolute_input else "gnc-fluid-mass-closure-v1"
+        )
+        if diag.get("schema") != expected_schema:
             raise RuntimeError("accepted closure metadata schema is stale")
+        if mass_closure_input and diag.get(
+            "capture_binding_energy_current_used_by_fluid"
+        ) is not False:
+            raise RuntimeError(
+                "mass closure must exclude the capture binding-energy current"
+            )
         closure_gates = diag.get("gates")
         if (
             not isinstance(closure_gates, dict)
@@ -691,12 +737,21 @@ def main() -> int:
     currents = {
         "control": 0.0,
         "sink": float(diag["thermal_sink_current_msun_kms2_per_myr"]),
-        "source": float(diag["returned_energy_source_ceiling_msun_kms2_per_myr"]),
     }
+    if not mass_closure_input:
+        currents["source"] = float(
+            diag["returned_energy_source_ceiling_msun_kms2_per_myr"]
+        )
     if (
         not math.isfinite(mdot) or mdot <= 0.0
         or not math.isfinite(currents["sink"]) or currents["sink"] >= 0.0
-        or not math.isfinite(currents["source"]) or currents["source"] <= 0.0
+        or (
+            "source" in currents
+            and (
+                not math.isfinite(currents["source"])
+                or currents["source"] <= 0.0
+            )
+        )
     ):
         raise RuntimeError("accepted closure currents have an unphysical sign")
 
@@ -704,7 +759,9 @@ def main() -> int:
     summaries = {}
     branches = tuple(x.strip() for x in args.branches.split(",") if x.strip())
     if not branches or any(x not in currents for x in branches):
-        raise ValueError("--branches must be a subset of control,sink,source")
+        raise ValueError(
+            "--branches requests a current that is absent from this closure"
+        )
     for branch in branches:
         branch_mdot = 0.0 if branch == "control" else mdot
         rows, summary = run_branch(
@@ -720,14 +777,19 @@ def main() -> int:
         w.writerows(all_rows)
 
     out = {
-        "schema": "gnc-fluid-feedback-v4",
+        "schema": "gnc-fluid-feedback-v5",
         "status": (
             "MEASURED_FLUID_FEEDBACK_COMPLETE"
-            if accepted_input else "FLUID_FEEDBACK_SENSITIVITY_COMPLETE"
+            if absolute_input
+            else "MASS_CLOSURE_FLUID_RESPONSE_COMPLETE"
+            if mass_closure_input
+            else "FLUID_FEEDBACK_SENSITIVITY_COMPLETE"
         ),
         "input_closure_status": input_status,
         "input_closure_accepted": accepted_input,
-        "provisional_sensitivity_only": not accepted_input,
+        "absolute_two_current_closure": absolute_input,
+        "mass_current_closure": mass_closure_input,
+        "provisional_sensitivity_only": provisional_input,
         "method": (
             "shared adiabatic central point-mass remap; BH-limited LMFP scale height; "
             "matched t-channel Yukawa K3/K5 conductivity; fixed orbit-domain "
@@ -736,10 +798,20 @@ def main() -> int:
         ),
         "current_role": (
             "accepted absolute closure"
-            if accepted_input
+            if absolute_input
+            else "accepted mass closure with unresolved binding-energy moment"
+            if mass_closure_input
             else "provisional isotropic-reservoir injection-ceiling sensitivity"
         ),
         "closure_update_mode": "fixed_at_matched_snapshot",
+        "resolved_diagnostics": {
+            "density_field": "rho_inner_mean_msun_pc3",
+            "density_definition": INNER_DENSITY_DEFINITION,
+            "density_is_extrapolated_central_value": False,
+            "dispersion_field": "sigma_inner_1d_kms",
+            "dispersion_definition": INNER_DISPERSION_DEFINITION,
+            "radius_field": "r_inner_pc",
+        },
         "profile": args.profile.name,
         "gnc_diagnostics": args.diagnostics.name,
         "interface_bridge_json": args.bridge_json.name,
@@ -753,7 +825,7 @@ def main() -> int:
             "Mdot_msun_per_myr": mdot,
             "control_luminosity_msun_kms2_per_myr": currents["control"],
             "sink_luminosity_msun_kms2_per_myr": currents["sink"],
-            "source_luminosity_msun_kms2_per_myr": currents["source"],
+            "source_luminosity_msun_kms2_per_myr": currents.get("source"),
         },
         "tau_end_requested": args.tau_end,
         "sigma_over_m_cm2_g": args.sigma_over_m,

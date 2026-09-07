@@ -1,0 +1,3 @@
+# Reference-table bytes are part of the reproducibility identity.
+data/** -text
+data/**/*.csv whitespace=cr-at-eol

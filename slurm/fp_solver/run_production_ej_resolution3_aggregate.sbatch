@@ -8,6 +8,10 @@
 #SBATCH --output=slurm-%x-%j.out
 
 set -euo pipefail
+module load deprecated-modules
+module load anaconda3/2022.05-x86_64
+eval "$(conda shell.bash hook)"
+conda activate fesc
 export OMP_NUM_THREADS=1
 PYTHON_BIN=${PYTHON_BIN:-python3}
 : "${ROOT:?submit with ROOT=<production root>}"
@@ -16,7 +20,7 @@ BASE_STEADY_ROOT=${BASE_STEADY_ROOT:-$ROOT/steady_v5}
 STEADY_ROOT=${STEADY_ROOT:-$ROOT/steady_v6}
 AGGREGATE_ROOT=${AGGREGATE_ROOT:-$ROOT/aggregate_v6}
 AGGREGATE_STATUS=${AGGREGATE_STATUS:-$ROOT/AGGREGATE_V6_STATUS.txt}
-V5_CONVERGENCE=${V5_CONVERGENCE:-$ROOT/aggregate_v5/ej_convergence.json}
+V5_CONVERGENCE=${V5_CONVERGENCE:-$ROOT/aggregate_v5_reaudit/ej_convergence.json}
 mkdir -p "$STEADY_ROOT" "$AGGREGATE_ROOT"
 
 # Continue only from a numerically complete, sentinel-safe V5 result whose
@@ -26,10 +30,20 @@ import json,sys
 d=json.load(open(sys.argv[1]))
 assert d['schema']=='finite-angle-ej-convergence-v3'
 assert d['status']=='INCOMPLETE_OR_FAILED'
+assert d['fractional_tolerance']==0.1
+assert set(d['required_dimensions'])=={'energy','angular','boundary'}
+path=d['production_resolution_path']
+assert path['previous_energy_bins']==32
+assert path['energy_ladder_angular_bins']==65
+assert path['final_energy_bins']==48
+assert path['previous_angular_bins']==65
+assert path['final_angular_bins']==129
 assert d['dimension_gates']['boundary']['pass']
 assert not d['dimension_gates']['energy']['pass']
 assert not d['dimension_gates']['angular']['pass']
 for group in d['groups']:
+ assert group['numerical_solver_gate']
+ assert len(group['seed_results']) >= 2
  assert all(
   record['seed_gate']
   for model in group['models'].values()
@@ -86,7 +100,7 @@ for GROUP in "${NEW_GROUPS[@]}"; do
     :
   elif test ! -e "$OUT/operator_combined.npz" && \
        test ! -e "$OUT/operator_combined.json"; then
-    python -u "$PKG/combine_ej_operators.py" \
+    "$PYTHON_BIN" -u "$PKG/combine_ej_operators.py" \
       "$A/operator.npz" "$B/operator.npz" \
       --out "$OUT/operator_combined.npz" \
       --out-json "$OUT/operator_combined.json"
@@ -103,7 +117,7 @@ for GROUP in "${NEW_GROUPS[@]}"; do
       :
     elif test ! -e "$OUT/steady_${ITEM}.json" && \
          test ! -e "$OUT/steady_${ITEM}.csv"; then
-      python -u "$PKG/solve_ej_steady_state.py" \
+      "$PYTHON_BIN" -u "$PKG/solve_ej_steady_state.py" \
         --operator "$OP" --out-json "$OUT/steady_${ITEM}.json" \
         --out-csv "$OUT/steady_${ITEM}.csv" \
         --residual-tolerance 1.0e-7 --maximum-evaluations 10000
@@ -140,4 +154,4 @@ grep -q '"status": "PRODUCTION_CONVERGENCE_PASS"' \
 grep -q '"status": "ABSOLUTE_CLOSURE_MEASURED"' \
   "$AGGREGATE_ROOT/absolute_closure.json"
 printf 'PRODUCTION_EJ_AGGREGATE_DONE %s ROOT=%s AGGREGATE_DIR=%s\n' \
-  "$(date -Is)" "$ROOT" "$AGGREGATE_ROOT" | tee "$AGGREGATE_STATUS"
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ROOT" "$AGGREGATE_ROOT" | tee "$AGGREGATE_STATUS"

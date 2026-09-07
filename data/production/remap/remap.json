@@ -1,0 +1,1418 @@
+{
+  "M_bh_msun": 4000000.0,
+  "black_hole_remap": {
+    "M_bh_final_msun": 3999999.999999999,
+    "M_bh_target_msun": 4000000.0,
+    "entropy_max_relative_drift": 0.0024361486250639164,
+    "growth_steps": 153,
+    "hydrostatic_final_max_dr_over_r": 1.642059969090551e-10,
+    "initial_equilibration_entropy_max_relative_drift": 1.7311022282306965e-07,
+    "max_force_fraction": 0.02,
+    "method": "adaptive adiabatic point-mass growth",
+    "r0_final_pc": 20.66968496631609,
+    "r0_initial_pc": 25.66031667702205,
+    "r0_pre_bh_equilibrated_pc": 25.66508750298842,
+    "rho0_final_msun_pc3": 5.5364767078326045,
+    "rho0_initial_msun_pc3": 2.9022515359805063,
+    "rho0_pre_bh_equilibrated_msun_pc3": 2.9006327554841085,
+    "shell_mass_max_absolute_drift_code": 0.0,
+    "trajectory": [
+      {
+        "M_bh_msun": 4108.08754424603,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.063706193839398e-15,
+        "r0_pc": 25.659317795892896,
+        "rho0_msun_pc3": 2.9025890090806823,
+        "step": 1
+      },
+      {
+        "M_bh_msun": 8298.336839376982,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.0246030787892858e-14,
+        "r0_pc": 25.653434111431217,
+        "rho0_msun_pc3": 2.904585701685252,
+        "step": 2
+      },
+      {
+        "M_bh_msun": 12572.391120410548,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.0661254890507058e-14,
+        "r0_pc": 25.647434227102487,
+        "rho0_msun_pc3": 2.906623695975802,
+        "step": 3
+      },
+      {
+        "M_bh_msun": 16931.92648706479,
+        "fractional_force_increment_at_r0": 0.019999999999999993,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.1616888107453007e-14,
+        "r0_pc": 25.64131587824861,
+        "rho0_msun_pc3": 2.9087038741116436,
+        "step": 4
+      },
+      {
+        "M_bh_msun": 21378.652561052117,
+        "fractional_force_increment_at_r0": 0.020000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.2714639690566073e-14,
+        "r0_pc": 25.63507675730316,
+        "rho0_msun_pc3": 2.9108271382161215,
+        "step": 5
+      },
+      {
+        "M_bh_msun": 25914.313156519187,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.392775876742228e-14,
+        "r0_pc": 25.628714513028726,
+        "rho0_msun_pc3": 2.9129944108729804,
+        "step": 6
+      },
+      {
+        "M_bh_msun": 30540.6869638956,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.479018409246925e-14,
+        "r0_pc": 25.622226749742882,
+        "rho0_msun_pc3": 2.915206635636762,
+        "step": 7
+      },
+      {
+        "M_bh_msun": 35259.588247419546,
+        "fractional_force_increment_at_r0": 0.020000000000000014,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.6226933530442834e-14,
+        "r0_pc": 25.615611026532672,
+        "rho0_msun_pc3": 2.91746477755771,
+        "step": 8
+      },
+      {
+        "M_bh_msun": 40072.867556613965,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.7992941436496067e-14,
+        "r0_pc": 25.608864856457398,
+        "rho0_msun_pc3": 2.919769823721704,
+        "step": 9
+      },
+      {
+        "M_bh_msun": 44982.41245199228,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.985427058644129e-14,
+        "r0_pc": 25.601985705739914,
+        "rho0_msun_pc3": 2.922122783805615,
+        "step": 10
+      },
+      {
+        "M_bh_msun": 49990.14824527815,
+        "fractional_force_increment_at_r0": 0.01999999999999999,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.056116781628453e-14,
+        "r0_pc": 25.594970992946042,
+        "rho0_msun_pc3": 2.9245246906487363,
+        "step": 11
+      },
+      {
+        "M_bh_msun": 55098.03875442974,
+        "fractional_force_increment_at_r0": 0.019999999999999993,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.2295882178158966e-14,
+        "r0_pc": 25.58781808815227,
+        "rho0_msun_pc3": 2.9269766008407094,
+        "step": 12
+      },
+      {
+        "M_bh_msun": 60308.08707376436,
+        "fractional_force_increment_at_r0": 0.020000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.483121533181454e-14,
+        "r0_pc": 25.580524312101627,
+        "rho0_msun_pc3": 2.9294795953265518,
+        "step": 13
+      },
+      {
+        "M_bh_msun": 65622.3363594857,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.6587838293567074e-14,
+        "r0_pc": 25.57308693534771,
+        "rho0_msun_pc3": 2.9320347800293294,
+        "step": 14
+      },
+      {
+        "M_bh_msun": 71042.87063092143,
+        "fractional_force_increment_at_r0": 0.01999999999999998,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.862090971682797e-14,
+        "r0_pc": 25.565503177386688,
+        "rho0_msun_pc3": 2.9346432864911454,
+        "step": 15
+      },
+      {
+        "M_bh_msun": 76571.81558778588,
+        "fractional_force_increment_at_r0": 0.01999999999999999,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.079647737276367e-14,
+        "r0_pc": 25.557770205777455,
+        "rho0_msun_pc3": 2.9373062725329637,
+        "step": 16
+      },
+      {
+        "M_bh_msun": 82211.33944378763,
+        "fractional_force_increment_at_r0": 0.020000000000000007,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.390690618540558e-14,
+        "r0_pc": 25.549885135249724,
+        "rho0_msun_pc3": 2.9400249229339894,
+        "step": 17
+      },
+      {
+        "M_bh_msun": 87963.65377690941,
+        "fractional_force_increment_at_r0": 0.020000000000000014,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.686937846936093e-14,
+        "r0_pc": 25.54184502680024,
+        "rho0_msun_pc3": 2.9428004501312377,
+        "step": 18
+      },
+      {
+        "M_bh_msun": 93831.01439669363,
+        "fractional_force_increment_at_r0": 0.019999999999999993,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.98676076998406e-14,
+        "r0_pc": 25.533646886776836,
+        "rho0_msun_pc3": 2.9456340949400146,
+        "step": 19
+      },
+      {
+        "M_bh_msun": 99815.72222887354,
+        "fractional_force_increment_at_r0": 0.020000000000000007,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.310884826922656e-14,
+        "r0_pc": 25.525287665950604,
+        "rho0_msun_pc3": 2.9485271272960007,
+        "step": 20
+      },
+      {
+        "M_bh_msun": 105920.12421769704,
+        "fractional_force_increment_at_r0": 0.01999999999999999,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.686490694462128e-14,
+        "r0_pc": 25.51676425857598,
+        "rho0_msun_pc3": 2.9514808470197296,
+        "step": 21
+      },
+      {
+        "M_bh_msun": 112146.61424629702,
+        "fractional_force_increment_at_r0": 0.020000000000000014,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.0874249659660497e-14,
+        "r0_pc": 25.50807350143894,
+        "rho0_msun_pc3": 2.9544965846041853,
+        "step": 22
+      },
+      {
+        "M_bh_msun": 118497.63407546897,
+        "fractional_force_increment_at_r0": 0.019999999999999983,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.509473988545161e-14,
+        "r0_pc": 25.49921217289317,
+        "rho0_msun_pc3": 2.957575702026406,
+        "step": 23
+      },
+      {
+        "M_bh_msun": 124975.6743012244,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.975753541631893e-14,
+        "r0_pc": 25.49017699188432,
+        "rho0_msun_pc3": 2.960719593583886,
+        "step": 24
+      },
+      {
+        "M_bh_msun": 131583.2753314949,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 6.442353597027493e-14,
+        "r0_pc": 25.480964616962456,
+        "rho0_msun_pc3": 2.9639296867566527,
+        "step": 25
+      },
+      {
+        "M_bh_msun": 138323.02838237083,
+        "fractional_force_increment_at_r0": 0.020000000000000035,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.02162178047301e-14,
+        "r0_pc": 25.471571645282655,
+        "rho0_msun_pc3": 2.9672074430959796,
+        "step": 26
+      },
+      {
+        "M_bh_msun": 145197.5764942643,
+        "fractional_force_increment_at_r0": 0.02000000000000003,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.60004759606742e-14,
+        "r0_pc": 25.461994611593912,
+        "rho0_msun_pc3": 2.9705543591406283,
+        "step": 27
+      },
+      {
+        "M_bh_msun": 152209.61556839562,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.218858013269428e-14,
+        "r0_pc": 25.452229987216406,
+        "rho0_msun_pc3": 2.973971967361653,
+        "step": 28
+      },
+      {
+        "M_bh_msun": 159361.89542400956,
+        "fractional_force_increment_at_r0": 0.020000000000000028,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.921816687676889e-14,
+        "r0_pc": 25.44227417900715,
+        "rho0_msun_pc3": 2.9774618371368082,
+        "step": 29
+      },
+      {
+        "M_bh_msun": 166657.22087673578,
+        "fractional_force_increment_at_r0": 0.019999999999999973,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.677385565559936e-14,
+        "r0_pc": 25.432123528314417,
+        "rho0_msun_pc3": 2.981025575755541,
+        "step": 30
+      },
+      {
+        "M_bh_msun": 174098.4528385165,
+        "fractional_force_increment_at_r0": 0.01999999999999998,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.0535645818509512e-13,
+        "r0_pc": 25.421774309920714,
+        "rho0_msun_pc3": 2.984664829455815,
+        "step": 31
+      },
+      {
+        "M_bh_msun": 181688.50943953288,
+        "fractional_force_increment_at_r0": 0.020000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.150609986837655e-13,
+        "r0_pc": 25.411222730974682,
+        "rho0_msun_pc3": 2.98838128449383,
+        "step": 32
+      },
+      {
+        "M_bh_msun": 189430.36717256956,
+        "fractional_force_increment_at_r0": 0.019999999999999976,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.2354509126123826e-13,
+        "r0_pc": 25.400464929912122,
+        "rho0_msun_pc3": 2.9921766682478776,
+        "step": 33
+      },
+      {
+        "M_bh_msun": 197327.062060267,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.3396101941087737e-13,
+        "r0_pc": 25.389496975366004,
+        "rho0_msun_pc3": 2.996052750357653,
+        "step": 34
+      },
+      {
+        "M_bh_msun": 205381.69084571835,
+        "fractional_force_increment_at_r0": 0.020000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.4593787575458677e-13,
+        "r0_pc": 25.378314865066276,
+        "rho0_msun_pc3": 3.0000113439001757,
+        "step": 35
+      },
+      {
+        "M_bh_msun": 213597.41220687877,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.5816612913083517e-13,
+        "r0_pc": 25.366914524728998,
+        "rho0_msun_pc3": 3.0040543066038987,
+        "step": 36
+      },
+      {
+        "M_bh_msun": 221977.44799526237,
+        "fractional_force_increment_at_r0": 0.020000000000000028,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.7163764482437255e-13,
+        "r0_pc": 25.35529180693555,
+        "rho0_msun_pc3": 3.008183542102267,
+        "step": 37
+      },
+      {
+        "M_bh_msun": 230525.08449941367,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.8636532751867863e-13,
+        "r0_pc": 25.343442490002015,
+        "rho0_msun_pc3": 3.012401001228274,
+        "step": 38
+      },
+      {
+        "M_bh_msun": 239243.67373364797,
+        "fractional_force_increment_at_r0": 0.02000000000000003,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.0158828654980065e-13,
+        "r0_pc": 25.331362276838956,
+        "rho0_msun_pc3": 3.016708683351586,
+        "step": 39
+      },
+      {
+        "M_bh_msun": 248136.63475256698,
+        "fractional_force_increment_at_r0": 0.02000000000000002,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.190866492294786e-13,
+        "r0_pc": 25.319046793802,
+        "rho0_msun_pc3": 3.0211086377598084,
+        "step": 40
+      },
+      {
+        "M_bh_msun": 257207.45499186436,
+        "fractional_force_increment_at_r0": 0.020000000000000028,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.377613809739951e-13,
+        "r0_pc": 25.30649158953365,
+        "rho0_msun_pc3": 3.025602965085583,
+        "step": 41
+      },
+      {
+        "M_bh_msun": 266459.6916359477,
+        "fractional_force_increment_at_r0": 0.02000000000000005,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.577647318427673e-13,
+        "r0_pc": 25.293692133796405,
+        "rho0_msun_pc3": 3.0301938187813184,
+        "step": 42
+      },
+      {
+        "M_bh_msun": 275896.97301291267,
+        "fractional_force_increment_at_r0": 0.01999999999999995,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.79625995149007e-13,
+        "r0_pc": 25.280643816297935,
+        "rho0_msun_pc3": 3.0348834066433175,
+        "step": 43
+      },
+      {
+        "M_bh_msun": 285523.00001741695,
+        "fractional_force_increment_at_r0": 0.01999999999999998,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.040919474339344e-13,
+        "r0_pc": 25.267341945508498,
+        "rho0_msun_pc3": 3.0396739923872693,
+        "step": 44
+      },
+      {
+        "M_bh_msun": 295341.5475620113,
+        "fractional_force_increment_at_r0": 0.01999999999999999,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.292002881092572e-13,
+        "r0_pc": 25.25378174747121,
+        "rho0_msun_pc3": 3.0445678972770476,
+        "step": 45
+      },
+      {
+        "M_bh_msun": 305356.46605749754,
+        "fractional_force_increment_at_r0": 0.02000000000000003,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.5745299642612827e-13,
+        "r0_pc": 25.239958364605368,
+        "rho0_msun_pc3": 3.0495675018089985,
+        "step": 46
+      },
+      {
+        "M_bh_msun": 315571.68292289355,
+        "fractional_force_increment_at_r0": 0.02000000000000001,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.882117135011377e-13,
+        "r0_pc": 25.225866854503863,
+        "rho0_msun_pc3": 3.0546752474537215,
+        "step": 47
+      },
+      {
+        "M_bh_msun": 325991.20412559743,
+        "fractional_force_increment_at_r0": 0.019999999999999966,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.2051525045185286e-13,
+        "r0_pc": 25.21150218872476,
+        "rho0_msun_pc3": 3.0598936384577744,
+        "step": 48
+      },
+      {
+        "M_bh_msun": 336619.1157523554,
+        "fractional_force_increment_at_r0": 0.02000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.571870328563711e-13,
+        "r0_pc": 25.196859251577706,
+        "rho0_msun_pc3": 3.065225243707623,
+        "step": 49
+      },
+      {
+        "M_bh_msun": 347459.58561164857,
+        "fractional_force_increment_at_r0": 0.019999999999999966,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.964854147337205e-13,
+        "r0_pc": 25.181932838906242,
+        "rho0_msun_pc3": 3.070672698658198,
+        "step": 50
+      },
+      {
+        "M_bh_msun": 358516.86486812757,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.391240635516554e-13,
+        "r0_pc": 25.166717656866,
+        "rho0_msun_pc3": 3.0762387073288555,
+        "step": 51
+      },
+      {
+        "M_bh_msun": 369795.2897097361,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.852625343054511e-13,
+        "r0_pc": 25.151208320700096,
+        "rho0_msun_pc3": 3.0819260443692253,
+        "step": 52
+      },
+      {
+        "M_bh_msun": 381299.2830481769,
+        "fractional_force_increment_at_r0": 0.020000000000000028,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 6.342024658031333e-13,
+        "r0_pc": 25.135399353512042,
+        "rho0_msun_pc3": 3.0877375571979426,
+        "step": 53
+      },
+      {
+        "M_bh_msun": 393033.3562533865,
+        "fractional_force_increment_at_r0": 0.02000000000000002,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 6.895324247320242e-13,
+        "r0_pc": 25.119285185037338,
+        "rho0_msun_pc3": 3.0936761682170624,
+        "step": 54
+      },
+      {
+        "M_bh_msun": 405002.11092270026,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.487508205981851e-13,
+        "r0_pc": 25.1028601504144,
+        "rho0_msun_pc3": 3.099744877105321,
+        "step": 55
+      },
+      {
+        "M_bh_msun": 417210.2406854003,
+        "fractional_force_increment_at_r0": 0.019999999999999976,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.135969006532096e-13,
+        "r0_pc": 25.08611848895558,
+        "rho0_msun_pc3": 3.105946763193512,
+        "step": 56
+      },
+      {
+        "M_bh_msun": 429662.53304335434,
+        "fractional_force_increment_at_r0": 0.02000000000000001,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.8289397586601e-13,
+        "r0_pc": 25.069054342919614,
+        "rho0_msun_pc3": 3.1122849879251895,
+        "step": 57
+      },
+      {
+        "M_bh_msun": 442363.8712484675,
+        "fractional_force_increment_at_r0": 0.020000000000000014,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.586613011907063e-13,
+        "r0_pc": 25.051661756286077,
+        "rho0_msun_pc3": 3.118762797406402,
+        "step": 58
+      },
+      {
+        "M_bh_msun": 455319.23621768283,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.0406751544663179e-12,
+        "r0_pc": 25.03393467353327,
+        "rho0_msun_pc3": 3.1253835250479907,
+        "step": 59
+      },
+      {
+        "M_bh_msun": 468533.70848628256,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.130661388912437e-12,
+        "r0_pc": 25.015866938420345,
+        "rho0_msun_pc3": 3.1321505943044112,
+        "step": 60
+      },
+      {
+        "M_bh_msun": 482012.47020025423,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.2280146030449637e-12,
+        "r0_pc": 24.99745229277514,
+        "rho0_msun_pc3": 3.139067521513028,
+        "step": 61
+      },
+      {
+        "M_bh_msun": 495760.8071485054,
+        "fractional_force_increment_at_r0": 0.02000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.3335490829471078e-12,
+        "r0_pc": 24.978684375288616,
+        "rho0_msun_pc3": 3.1461379188382077,
+        "step": 62
+      },
+      {
+        "M_bh_msun": 509784.11083572154,
+        "fractional_force_increment_at_r0": 0.02000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.448885457556825e-12,
+        "r0_pc": 24.959556720317526,
+        "rho0_msun_pc3": 3.1533654973245246,
+        "step": 63
+      },
+      {
+        "M_bh_msun": 524087.8805966821,
+        "fractional_force_increment_at_r0": 0.020000000000000066,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.5736673949559568e-12,
+        "r0_pc": 24.940062756696516,
+        "rho0_msun_pc3": 3.1607540700637498,
+        "step": 64
+      },
+      {
+        "M_bh_msun": 538677.7257528617,
+        "fractional_force_increment_at_r0": 0.019999999999999928,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.7094739597330522e-12,
+        "r0_pc": 24.92019580656108,
+        "rho0_msun_pc3": 3.1683075554805074,
+        "step": 65
+      },
+      {
+        "M_bh_msun": 553559.367812165,
+        "fractional_force_increment_at_r0": 0.01999999999999998,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.8575661384474537e-12,
+        "r0_pc": 24.89994908418302,
+        "rho0_msun_pc3": 3.176029980741578,
+        "step": 66
+      },
+      {
+        "M_bh_msun": 568738.6427126542,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.0184625293871504e-12,
+        "r0_pc": 24.879315694819834,
+        "rho0_msun_pc3": 3.183925485294279,
+        "step": 67
+      },
+      {
+        "M_bh_msun": 584221.5031111534,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.1939816357323248e-12,
+        "r0_pc": 24.858288633579786,
+        "rho0_msun_pc3": 3.191998324539394,
+        "step": 68
+      },
+      {
+        "M_bh_msun": 600014.0207176225,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.3838247373317598e-12,
+        "r0_pc": 24.83686078430449,
+        "rho0_msun_pc3": 3.2002528736445326,
+        "step": 69
+      },
+      {
+        "M_bh_msun": 616122.388676221,
+        "fractional_force_increment_at_r0": 0.020000000000000035,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.59052208788286e-12,
+        "r0_pc": 24.815024918470566,
+        "rho0_msun_pc3": 3.2086936315040795,
+        "step": 70
+      },
+      {
+        "M_bh_msun": 632552.9239939915,
+        "fractional_force_increment_at_r0": 0.019999999999999976,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.8157789973495846e-12,
+        "r0_pc": 24.79277369411267,
+        "rho0_msun_pc3": 3.2173252248520416,
+        "step": 71
+      },
+      {
+        "M_bh_msun": 649312.0700181172,
+        "fractional_force_increment_at_r0": 0.01999999999999994,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.060380053006685e-12,
+        "r0_pc": 24.77009965476964,
+        "rho0_msun_pc3": 3.226152412534612,
+        "step": 72
+      },
+      {
+        "M_bh_msun": 666406.3989627257,
+        "fractional_force_increment_at_r0": 0.02000000000000006,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.3273225432732867e-12,
+        "r0_pc": 24.74699522845585,
+        "rho0_msun_pc3": 3.235180089949491,
+        "step": 73
+      },
+      {
+        "M_bh_msun": 683842.6144862262,
+        "fractional_force_increment_at_r0": 0.02000000000000001,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.6165366957673984e-12,
+        "r0_pc": 24.723452726660277,
+        "rho0_msun_pc3": 3.2444132936592993,
+        "step": 74
+      },
+      {
+        "M_bh_msun": 701627.5543201967,
+        "fractional_force_increment_at_r0": 0.019999999999999983,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.932063473479362e-12,
+        "r0_pc": 24.699464343375126,
+        "rho0_msun_pc3": 3.2538572061869635,
+        "step": 75
+      },
+      {
+        "M_bh_msun": 719768.1929508467,
+        "fractional_force_increment_at_r0": 0.020000000000000028,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.2754317407165915e-12,
+        "r0_pc": 24.675022154156977,
+        "rho0_msun_pc3": 3.263517161001063,
+        "step": 76
+      },
+      {
+        "M_bh_msun": 738271.6443541097,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.648509622728583e-12,
+        "r0_pc": 24.65011811522239,
+        "rho0_msun_pc3": 3.2733986476998838,
+        "step": 77
+      },
+      {
+        "M_bh_msun": 757145.1647854379,
+        "fractional_force_increment_at_r0": 0.01999999999999994,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.055633579622768e-12,
+        "r0_pc": 24.624744062581055,
+        "rho0_msun_pc3": 3.283507317402975,
+        "step": 78
+      },
+      {
+        "M_bh_msun": 776396.1556253927,
+        "fractional_force_increment_at_r0": 0.020000000000000046,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.498445095175894e-12,
+        "r0_pc": 24.598891711209127,
+        "rho0_msun_pc3": 3.293848988359735,
+        "step": 79
+      },
+      {
+        "M_bh_msun": 796032.1662821466,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.980227860018269e-12,
+        "r0_pc": 24.572552654265397,
+        "rho0_msun_pc3": 3.304429651784927,
+        "step": 80
+      },
+      {
+        "M_bh_msun": 816060.8971520355,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 6.504612843377622e-12,
+        "r0_pc": 24.545718362353572,
+        "rho0_msun_pc3": 3.3152554779314927,
+        "step": 81
+      },
+      {
+        "M_bh_msun": 836490.2026393223,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.076800612879369e-12,
+        "r0_pc": 24.518380182833692,
+        "rho0_msun_pc3": 3.3263328224115885,
+        "step": 82
+      },
+      {
+        "M_bh_msun": 857328.0942363548,
+        "fractional_force_increment_at_r0": 0.020000000000000035,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.698334031302974e-12,
+        "r0_pc": 24.49052933918596,
+        "rho0_msun_pc3": 3.3376682327773395,
+        "step": 83
+      },
+      {
+        "M_bh_msun": 878582.7436653279,
+        "fractional_force_increment_at_r0": 0.019999999999999973,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.376313813208143e-12,
+        "r0_pc": 24.46215693043015,
+        "rho0_msun_pc3": 3.3492684553734438,
+        "step": 84
+      },
+      {
+        "M_bh_msun": 900262.4860828804,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.113873675619242e-12,
+        "r0_pc": 24.43325393060466,
+        "rho0_msun_pc3": 3.3611404424741536,
+        "step": 85
+      },
+      {
+        "M_bh_msun": 922375.823348784,
+        "fractional_force_increment_at_r0": 0.019999999999999955,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.918459845381667e-12,
+        "r0_pc": 24.403811188308225,
+        "rho0_msun_pc3": 3.373291359718188,
+        "step": 86
+      },
+      {
+        "M_bh_msun": 944931.4273600057,
+        "fractional_force_increment_at_r0": 0.019999999999999983,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.079390067541355e-11,
+        "r0_pc": 24.373819426308753,
+        "rho0_msun_pc3": 3.385728593855406,
+        "step": 87
+      },
+      {
+        "M_bh_msun": 967938.1434514519,
+        "fractional_force_increment_at_r0": 0.02000000000000002,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.1748083134846828e-11,
+        "r0_pc": 24.34326924122277,
+        "rho0_msun_pc3": 3.398459760820194,
+        "step": 88
+      },
+      {
+        "M_bh_msun": 991404.993864727,
+        "fractional_force_increment_at_r0": 0.019999999999999973,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.2788381586831136e-11,
+        "r0_pc": 24.312151103269986,
+        "rho0_msun_pc3": 3.4114927141469145,
+        "step": 89
+      },
+      {
+        "M_bh_msun": 1015341.1812862676,
+        "fractional_force_increment_at_r0": 0.020000000000000035,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.3921431777134522e-11,
+        "r0_pc": 24.28045535610702,
+        "rho0_msun_pc3": 3.4248355537439386,
+        "step": 90
+      },
+      {
+        "M_bh_msun": 1039756.092456239,
+        "fractional_force_increment_at_r0": 0.020000000000000094,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.5156725355425682e-11,
+        "r0_pc": 24.248172216744933,
+        "rho0_msun_pc3": 3.438496635043359,
+        "step": 91
+      },
+      {
+        "M_bh_msun": 1064659.30184961,
+        "fractional_force_increment_at_r0": 0.020000000000000063,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.650332830040087e-11,
+        "r0_pc": 24.21529177555527,
+        "rho0_msun_pc3": 3.4524845785445133,
+        "step": 92
+      },
+      {
+        "M_bh_msun": 1090060.5754308482,
+        "fractional_force_increment_at_r0": 0.019999999999999976,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.7971351810384466e-11,
+        "r0_pc": 24.181803996369155,
+        "rho0_msun_pc3": 3.466808279770472,
+        "step": 93
+      },
+      {
+        "M_bh_msun": 1115969.874483711,
+        "fractional_force_increment_at_r0": 0.02000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.9571170155576375e-11,
+        "r0_pc": 24.147698716674856,
+        "rho0_msun_pc3": 3.481476919657478,
+        "step": 94
+      },
+      {
+        "M_bh_msun": 1142397.3595176314,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.1316291588941124e-11,
+        "r0_pc": 24.112965647918656,
+        "rho0_msun_pc3": 3.496499975398634,
+        "step": 95
+      },
+      {
+        "M_bh_msun": 1169353.3942522302,
+        "fractional_force_increment_at_r0": 0.019999999999999993,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.3219601750911737e-11,
+        "r0_pc": 24.07759437591471,
+        "rho0_msun_pc3": 3.5118872317640304,
+        "step": 96
+      },
+      {
+        "M_bh_msun": 1196848.5496815208,
+        "fractional_force_increment_at_r0": 0.020000000000000056,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.529476049674981e-11,
+        "r0_pc": 24.041574361369268,
+        "rho0_msun_pc3": 3.527648792920927,
+        "step": 97
+      },
+      {
+        "M_bh_msun": 1224893.608219397,
+        "fractional_force_increment_at_r0": 0.01999999999999993,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.7558584944030388e-11,
+        "r0_pc": 24.004894940525205,
+        "rho0_msun_pc3": 3.543795094778732,
+        "step": 98
+      },
+      {
+        "M_bh_msun": 1253499.567928031,
+        "fractional_force_increment_at_r0": 0.01999999999999992,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.0027730398026057e-11,
+        "r0_pc": 23.967545325932797,
+        "rho0_msun_pc3": 3.5603369178849156,
+        "step": 99
+      },
+      {
+        "M_bh_msun": 1282677.6468308375,
+        "fractional_force_increment_at_r0": 0.01999999999999994,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.272247304099933e-11,
+        "r0_pc": 23.929514607352925,
+        "rho0_msun_pc3": 3.5772854008994917,
+        "step": 100
+      },
+      {
+        "M_bh_msun": 1312439.2873117004,
+        "fractional_force_increment_at_r0": 0.020000000000000007,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.566260635603637e-11,
+        "r0_pc": 23.89079175279921,
+        "rho0_msun_pc3": 3.5946520546770575,
+        "step": 101
+      },
+      {
+        "M_bh_msun": 1342796.1606021803,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.887127822909149e-11,
+        "r0_pc": 23.8513656097257,
+        "rho0_msun_pc3": 3.6124487769871605,
+        "step": 102
+      },
+      {
+        "M_bh_msun": 1373760.1713584699,
+        "fractional_force_increment_at_r0": 0.019999999999999976,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.2373223937420037e-11,
+        "r0_pc": 23.811224906366867,
+        "rho0_msun_pc3": 3.630687867905371,
+        "step": 103
+      },
+      {
+        "M_bh_msun": 1405343.4623298855,
+        "fractional_force_increment_at_r0": 0.02000000000000007,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.6195508552449954e-11,
+        "r0_pc": 23.77035825323719,
+        "rho0_msun_pc3": 3.649382045909225,
+        "step": 104
+      },
+      {
+        "M_bh_msun": 1437558.4191207294,
+        "fractional_force_increment_at_r0": 0.020000000000000066,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.03685774513292e-11,
+        "r0_pc": 23.72875414479754,
+        "rho0_msun_pc3": 3.6685444647151435,
+        "step": 105
+      },
+      {
+        "M_bh_msun": 1470417.67504739,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.492524007421529e-11,
+        "r0_pc": 23.686400961295917,
+        "rho0_msun_pc3": 3.6881887308945016,
+        "step": 106
+      },
+      {
+        "M_bh_msun": 1503934.1160925839,
+        "fractional_force_increment_at_r0": 0.020000000000000066,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.990062412291641e-11,
+        "r0_pc": 23.64328697079042,
+        "rho0_msun_pc3": 3.7083289223090325,
+        "step": 107
+      },
+      {
+        "M_bh_msun": 1538120.8859586816,
+        "fractional_force_increment_at_r0": 0.019999999999999983,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 6.533414144780008e-11,
+        "r0_pc": 23.59940033136233,
+        "rho0_msun_pc3": 3.72897960740824,
+        "step": 108
+      },
+      {
+        "M_bh_msun": 1572991.3912221014,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.126994747451932e-11,
+        "r0_pc": 23.554729093527772,
+        "rho0_msun_pc3": 3.7501558654336717,
+        "step": 109
+      },
+      {
+        "M_bh_msun": 1608559.3065907895,
+        "fractional_force_increment_at_r0": 0.02000000000000001,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.775267417336515e-11,
+        "r0_pc": 23.509261202856404,
+        "rho0_msun_pc3": 3.7718733075776294,
+        "step": 110
+      },
+      {
+        "M_bh_msun": 1644838.5802668512,
+        "fractional_force_increment_at_r0": 0.020000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.483642241567558e-11,
+        "r0_pc": 23.462984502805696,
+        "rho0_msun_pc3": 3.794148099146645,
+        "step": 111
+      },
+      {
+        "M_bh_msun": 1681843.4394164344,
+        "fractional_force_increment_at_r0": 0.020000000000000056,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.257552047001946e-11,
+        "r0_pc": 23.41588673778023,
+        "rho0_msun_pc3": 3.816996982782723,
+        "step": 112
+      },
+      {
+        "M_bh_msun": 1719588.3957490092,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.0103456855182052e-10,
+        "r0_pc": 23.367955556424853,
+        "rho0_msun_pc3": 3.8404373027986973,
+        "step": 113
+      },
+      {
+        "M_bh_msun": 1758088.2512082355,
+        "fractional_force_increment_at_r0": 0.02000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.1027875525013649e-10,
+        "r0_pc": 23.3191785151615,
+        "rho0_msun_pc3": 3.864487030687093,
+        "step": 114
+      },
+      {
+        "M_bh_msun": 1797358.103776646,
+        "fractional_force_increment_at_r0": 0.019999999999999987,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.2038388542449742e-10,
+        "r0_pc": 23.26954308197916,
+        "rho0_msun_pc3": 3.8891647918654932,
+        "step": 115
+      },
+      {
+        "M_bh_msun": 1837413.3533964253,
+        "fractional_force_increment_at_r0": 0.02000000000000003,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.314312801120493e-10,
+        "r0_pc": 23.219036640487264,
+        "rho0_msun_pc3": 3.9144898937249692,
+        "step": 116
+      },
+      {
+        "M_bh_msun": 1878269.7080085997,
+        "fractional_force_increment_at_r0": 0.019999999999999962,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.4351073009620234e-10,
+        "r0_pc": 23.167646494242472,
+        "rho0_msun_pc3": 3.940482355052123,
+        "step": 117
+      },
+      {
+        "M_bh_msun": 1919943.1897130178,
+        "fractional_force_increment_at_r0": 0.020000000000000018,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.5671965966124047e-10,
+        "r0_pc": 23.115359871359463,
+        "rho0_msun_pc3": 3.9671629368994714,
+        "step": 118
+      },
+      {
+        "M_bh_msun": 1962450.141051524,
+        "fractional_force_increment_at_r0": 0.019999999999999962,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.7116600493173535e-10,
+        "r0_pc": 23.062163929416414,
+        "rho0_msun_pc3": 3.99455317498319,
+        "step": 119
+      },
+      {
+        "M_bh_msun": 2005807.2314168005,
+        "fractional_force_increment_at_r0": 0.019999999999999955,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.869678869831734e-10,
+        "r0_pc": 23.00804576066605,
+        "rho0_msun_pc3": 4.02267541369208,
+        "step": 120
+      },
+      {
+        "M_bh_msun": 2050031.4635893824,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.042545517859215e-10,
+        "r0_pc": 22.9529923975634,
+        "rho0_msun_pc3": 4.0515528417965685,
+        "step": 121
+      },
+      {
+        "M_bh_msun": 2095140.1804054163,
+        "fractional_force_increment_at_r0": 0.02000000000000007,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.2316809968399367e-10,
+        "r0_pc": 22.896990818621727,
+        "rho0_msun_pc3": 4.081209529951798,
+        "step": 122
+      },
+      {
+        "M_bh_msun": 2141151.0715577705,
+        "fractional_force_increment_at_r0": 0.01999999999999992,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.438645624642963e-10,
+        "r0_pc": 22.840027954607994,
+        "rho0_msun_pc3": 4.111670470094686,
+        "step": 123
+      },
+      {
+        "M_bh_msun": 2188082.180533172,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.665143476252455e-10,
+        "r0_pc": 22.78209069508981,
+        "rho0_msun_pc3": 4.1429616168406485,
+        "step": 124
+      },
+      {
+        "M_bh_msun": 2235951.9116880815,
+        "fractional_force_increment_at_r0": 0.020000000000000004,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 2.913053956927324e-10,
+        "r0_pc": 22.72316589534566,
+        "rho0_msun_pc3": 4.175109930992296,
+        "step": 125
+      },
+      {
+        "M_bh_msun": 2284779.037466089,
+        "fractional_force_increment_at_r0": 0.019999999999999952,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.184438503201816e-10,
+        "r0_pc": 22.663240383650503,
+        "rho0_msun_pc3": 4.208143425279117,
+        "step": 126
+      },
+      {
+        "M_bh_msun": 2334582.7057596566,
+        "fractional_force_increment_at_r0": 0.019999999999999952,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.481552514468747e-10,
+        "r0_pc": 22.602300968949088,
+        "rho0_msun_pc3": 4.242091212454425,
+        "step": 127
+      },
+      {
+        "M_bh_msun": 2385382.447419096,
+        "fractional_force_increment_at_r0": 0.01999999999999999,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 3.8068832947875396e-10,
+        "r0_pc": 22.540334448929137,
+        "rho0_msun_pc3": 4.276983555883723,
+        "step": 128
+      },
+      {
+        "M_bh_msun": 2437198.183911724,
+        "fractional_force_increment_at_r0": 0.02000000000000003,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.1631569107219936e-10,
+        "r0_pc": 22.47732761850717,
+        "rho0_msun_pc3": 4.312851922766673,
+        "step": 129
+      },
+      {
+        "M_bh_msun": 2490050.235134204,
+        "fractional_force_increment_at_r0": 0.01999999999999994,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.5533614165357646e-10,
+        "r0_pc": 22.413267278739173,
+        "rho0_msun_pc3": 4.349729040143914,
+        "step": 130
+      },
+      {
+        "M_bh_msun": 2543959.3273811345,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 4.98078413808929e-10,
+        "r0_pc": 22.34814024616895,
+        "rho0_msun_pc3": 4.387648953849125,
+        "step": 131
+      },
+      {
+        "M_bh_msun": 2598946.601473003,
+        "fractional_force_increment_at_r0": 0.019999999999999962,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.449024848746313e-10,
+        "r0_pc": 22.28193336262682,
+        "rho0_msun_pc3": 4.426647090576771,
+        "step": 132
+      },
+      {
+        "M_bh_msun": 2655033.621046709,
+        "fractional_force_increment_at_r0": 0.01999999999999995,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 5.962057293188824e-10,
+        "r0_pc": 22.214633505491104,
+        "rho0_msun_pc3": 4.466760323246761,
+        "step": 133
+      },
+      {
+        "M_bh_msun": 2712242.3810118893,
+        "fractional_force_increment_at_r0": 0.020000000000000077,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 6.524227445217284e-10,
+        "r0_pc": 22.14622759842523,
+        "rho0_msun_pc3": 4.508027039858367,
+        "step": 134
+      },
+      {
+        "M_bh_msun": 2770595.316176373,
+        "fractional_force_increment_at_r0": 0.01999999999999992,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.140313051082934e-10,
+        "r0_pc": 22.07670262260281,
+        "rho0_msun_pc3": 4.550487216038111,
+        "step": 135
+      },
+      {
+        "M_bh_msun": 2830115.310044146,
+        "fractional_force_increment_at_r0": 0.019999999999999966,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 7.815577963030772e-10,
+        "r0_pc": 22.006045628433217,
+        "rho0_msun_pc3": 4.59418249149905,
+        "step": 136
+      },
+      {
+        "M_bh_msun": 2890825.7037892756,
+        "fractional_force_increment_at_r0": 0.020000000000000063,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 8.555770311698326e-10,
+        "r0_pc": 21.934243747799965,
+        "rho0_msun_pc3": 4.639156250642752,
+        "step": 137
+      },
+      {
+        "M_bh_msun": 2952750.305409307,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 9.367237806406352e-10,
+        "r0_pc": 21.861284206823704,
+        "rho0_msun_pc3": 4.68545370755012,
+        "step": 138
+      },
+      {
+        "M_bh_msun": 3015913.3990617394,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.565777086623562e-16,
+        "r0_pc": 21.787154339162022,
+        "rho0_msun_pc3": 4.733121995622574,
+        "step": 139
+      },
+      {
+        "M_bh_msun": 3080339.75458722,
+        "fractional_force_increment_at_r0": 0.020000000000000052,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.4908179082291817e-16,
+        "r0_pc": 21.71184159985725,
+        "rho0_msun_pc3": 4.78221026215222,
+        "step": 140
+      },
+      {
+        "M_bh_msun": 3146054.6372232107,
+        "fractional_force_increment_at_r0": 0.019999999999999955,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 2.637518658018911e-16,
+        "r0_pc": 21.635333579743403,
+        "rho0_msun_pc3": 4.832769768117385,
+        "step": 141
+      },
+      {
+        "M_bh_msun": 3213083.817511921,
+        "fractional_force_increment_at_r0": 0.019999999999999955,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 2.2931636326074256e-16,
+        "r0_pc": 21.557618020423096,
+        "rho0_msun_pc3": 4.884853993518936,
+        "step": 142
+      },
+      {
+        "M_bh_msun": 3281453.581406405,
+        "fractional_force_increment_at_r0": 0.020000000000000063,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.7136768976194626e-16,
+        "r0_pc": 21.47868282982446,
+        "rho0_msun_pc3": 4.938518748593379,
+        "step": 143
+      },
+      {
+        "M_bh_msun": 3351190.7405787795,
+        "fractional_force_increment_at_r0": 0.01999999999999997,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 2.1154890937481398e-16,
+        "r0_pc": 21.398516098347642,
+        "rho0_msun_pc3": 4.993822291260409,
+        "step": 144
+      },
+      {
+        "M_bh_msun": 3422322.642934601,
+        "fractional_force_increment_at_r0": 0.02,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.2941150431273096e-16,
+        "r0_pc": 21.31710611560994,
+        "rho0_msun_pc3": 5.0508254511859265,
+        "step": 145
+      },
+      {
+        "M_bh_msun": 3494877.183337539,
+        "fractional_force_increment_at_r0": 0.019999999999999997,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 4.762822521434418e-16,
+        "r0_pc": 21.234441387797485,
+        "rho0_msun_pc3": 5.10959176086647,
+        "step": 146
+      },
+      {
+        "M_bh_msun": 3568882.8145485357,
+        "fractional_force_increment_at_r0": 0.01999999999999995,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 2.3527280319173843e-16,
+        "r0_pc": 21.15051065563112,
+        "rho0_msun_pc3": 5.1701875941674755,
+        "step": 147
+      },
+      {
+        "M_bh_msun": 3644368.5583837526,
+        "fractional_force_increment_at_r0": 0.020000000000000042,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.468630497292542e-16,
+        "r0_pc": 21.06530291295241,
+        "rho0_msun_pc3": 5.232682312776463,
+        "step": 148
+      },
+      {
+        "M_bh_msun": 3721364.017095674,
+        "fractional_force_increment_at_r0": 0.02000000000000003,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 1.6226986273373564e-16,
+        "r0_pc": 20.978807425935642,
+        "rho0_msun_pc3": 5.2971484210622375,
+        "step": 149
+      },
+      {
+        "M_bh_msun": 3799899.384981833,
+        "fractional_force_increment_at_r0": 0.019999999999999955,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.4088748907665533e-16,
+        "r0_pc": 20.891013752929503,
+        "rho0_msun_pc3": 5.363661729864163,
+        "step": 150
+      },
+      {
+        "M_bh_msun": 3880005.460225716,
+        "fractional_force_increment_at_r0": 0.01999999999999999,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 3.8241863478384413e-16,
+        "r0_pc": 20.801911764931614,
+        "rho0_msun_pc3": 5.432301529769901,
+        "step": 151
+      },
+      {
+        "M_bh_msun": 3961713.6569744763,
+        "fractional_force_increment_at_r0": 0.02000000000000005,
+        "hydrostatic_adjustments": 4,
+        "hydrostatic_last_max_dr_over_r": 2.0222602734981522e-16,
+        "r0_pc": 20.711491666697366,
+        "rho0_msun_pc3": 5.503150774477352,
+        "step": 152
+      },
+      {
+        "M_bh_msun": 3999999.999999999,
+        "fractional_force_increment_at_r0": 0.009187727036149262,
+        "hydrostatic_adjustments": 3,
+        "hydrostatic_last_max_dr_over_r": 1.642059969090551e-10,
+        "r0_pc": 20.66968496631609,
+        "rho0_msun_pc3": 5.5364767078326045,
+        "step": 153
+      }
+    ]
+  },
+  "lmfp_scaleheight_factor_inner": 0.13314673241652306,
+  "lmfp_scaleheight_factor_min": 0.11775517638783979,
+  "output_profile": "profile_bh.txt",
+  "output_profile_sha256": "6a14518a622922309918239a623261142e3af9aac0ca9501b3eab3fa442fadca",
+  "post_profile_rows": 400,
+  "profile_installation": {
+    "inner_shell_mass_msun": 205404.3772123015,
+    "profile_roundtrip_max_relative_error": 3.3306690738754696e-16,
+    "r0_pc": 25.66031667702205,
+    "rho0_msun_pc3": 2.9022515359805063,
+    "sigma0_kms": 31.312830950277114,
+    "total_enclosed_mass_msun": 15283226426.126614
+  },
+  "schema": "adiabatic-bh-remapped-fluid-profile-v1",
+  "sigma0_over_m_cm2_g": 100.0,
+  "source_profile": "prof_deep.txt",
+  "source_profile_sha256": "a8199391def81777c58e6d2b1d80c0be4ef242d9730c276be95e654fa95c6103",
+  "status": "BH_REMAP_COMPLETE",
+  "yukawa_w_kms": 80.0
+}

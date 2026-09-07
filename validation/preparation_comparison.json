@@ -1,0 +1,14 @@
+{
+  "remap/profile_bh.txt": {
+    "numeric_values": 1200,
+    "max_relative_difference": 8.463841875667758e-15
+  },
+  "bridge/bridged_profile.txt": {
+    "numeric_values": 13995,
+    "max_relative_difference": 9.448425527191942e-13
+  },
+  "normalized/f_evolved_normalized.txt": {
+    "numeric_values": 11026,
+    "max_relative_difference": 3.411989105728156e-08
+  }
+}

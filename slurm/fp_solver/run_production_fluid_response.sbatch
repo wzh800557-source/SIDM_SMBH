@@ -48,4 +48,4 @@ grep -q '"schema": "black-hole-aware-fluid-response-v2"' \
 grep -q '"status": "BLACK_HOLE_AWARE_RESPONSE_COMPLETE"' \
   "$FLUID_DIR/fluid_response_analysis.json"
 printf 'PRODUCTION_FLUID_RESPONSE_DONE %s ROOT=%s FLUID_DIR=%s\n' \
-  "$(date -Is)" "$ROOT" "$FLUID_DIR" | tee "$FLUID_STATUS"
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ROOT" "$FLUID_DIR" | tee "$FLUID_STATUS"
