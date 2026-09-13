@@ -16,11 +16,11 @@ set +e
 "$PYTHON_BIN" -u "$PKG/conservative_moving_boundary.py" \
   --energy-gate "$ENERGY_GATE" --trajectory "$BOUNDARY_TRAJECTORY" \
   --outdir "$MOVING_OUT" \
-  --fluid-mass "${FLUID_MASS_MSUN:?required}" \
-  --kinetic-mass "${KINETIC_MASS_MSUN:?required}" \
-  --black-hole-mass "${BLACK_HOLE_MASS_MSUN:?required}" \
-  --fluid-energy "${FLUID_ENERGY_MSUN_KMS2:?required}" \
-  --kinetic-energy "${KINETIC_ENERGY_MSUN_KMS2:?required}"
+  --fluid-mass="${FLUID_MASS_MSUN:?required}" \
+  --kinetic-mass="${KINETIC_MASS_MSUN:?required}" \
+  --black-hole-mass="${BLACK_HOLE_MASS_MSUN:?required}" \
+  --fluid-energy="${FLUID_ENERGY_MSUN_KMS2:?required}" \
+  --kinetic-energy="${KINETIC_ENERGY_MSUN_KMS2:?required}"
 RC=$?
 set -e
 if [[ $RC == 4 ]]; then
