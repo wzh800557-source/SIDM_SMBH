@@ -42,6 +42,7 @@ def main():
                 }
                 (root / f"{label}_{index}.json").write_text(json.dumps(item))
         result = aggregate(root)
+        json.dumps(result)
     assert result["status"] == "CALIBRATION_ACCEPTED"
     assert abs(result["adopted_parameters"]["Kn_star"] / kn_star - 1.0) < 2.0e-5
     assert abs(result["adopted_parameters"]["p"] / exponent - 1.0) < 2.0e-5

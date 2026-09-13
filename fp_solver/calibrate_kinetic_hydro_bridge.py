@@ -98,13 +98,16 @@ def fit_group(runs: list[dict]) -> dict:
     high_index = int(np.argmax(kn))
     gates = {
         "optimizer": bool(fit.success),
-        "fit_rms_below_five_percent_hydrodynamic_rate": float(
-            np.sqrt(np.mean(fractional**2))
-        ) < 0.05,
-        "small_kn_reaches_hydrodynamic_endpoint": abs(mdot[low_index] / hydro - 1.0) < 0.10,
-        "large_kn_reaches_ballistic_endpoint": abs(
-            mdot[high_index] / max(ballistic, 1.0e-30) - 1.0
-        ) < 0.10,
+        "fit_rms_below_five_percent_hydrodynamic_rate": bool(
+            float(np.sqrt(np.mean(fractional**2))) < 0.05
+        ),
+        "small_kn_reaches_hydrodynamic_endpoint": bool(
+            abs(float(mdot[low_index]) / hydro - 1.0) < 0.10
+        ),
+        "large_kn_reaches_ballistic_endpoint": bool(
+            abs(float(mdot[high_index]) / max(ballistic, 1.0e-30) - 1.0)
+            < 0.10
+        ),
     }
     return {
         "status": "RESOLUTION_FIT_PASS" if all(gates.values()) else "RESOLUTION_FIT_DIAGNOSTIC",
@@ -135,14 +138,14 @@ def aggregate(root: Path) -> dict:
         first, second = ordered[-2:]
         kn_difference = abs(first["Kn_star"] / second["Kn_star"] - 1.0)
         p_difference = abs(first["p"] / second["p"] - 1.0)
-        resolution_gate = kn_difference < 0.10 and p_difference < 0.10
+        resolution_gate = bool(kn_difference < 0.10 and p_difference < 0.10)
         comparison = {
             "Kn_star_relative_difference": kn_difference,
             "p_relative_difference": p_difference,
             "tolerance": 0.10,
             "status": "PASS" if resolution_gate else "FAIL",
         }
-    accepted = resolution_gate and len(passing) >= 2
+    accepted = bool(resolution_gate and len(passing) >= 2)
     adopted = None
     if accepted:
         adopted = {
@@ -165,8 +168,8 @@ def aggregate(root: Path) -> dict:
         "resolution_comparison": comparison,
         "adopted_parameters": adopted,
         "gates": {
-            "two_resolutions_pass": len(passing) >= 2,
-            "parameters_resolution_converged": resolution_gate,
+            "two_resolutions_pass": bool(len(passing) >= 2),
+            "parameters_resolution_converged": bool(resolution_gate),
         },
         "interpretation": (
             "Kn_star and p are usable only when status is CALIBRATION_ACCEPTED. "
