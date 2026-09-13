@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-09-13T21:17:31.387443+00:00",
+  "decision": "The capture-energy current is not authorized for fluid coupling.",
+  "fluid_coupling_authorized": false,
+  "gates": {
+    "energy_grid_converged": false,
+    "internal_energy_moments_stationary": false,
+    "ledger_identities": true,
+    "mass_grid_converged": false,
+    "physical_pair_energy_conserved": true,
+    "seed_converged": true,
+    "summary_complete": true,
+    "upstream_authorized": false
+  },
+  "maximum_internal_l1_over_boundary_scale": 2.7280556061949977,
+  "resolution_convergence": {
+    "direct": {
+      "capture_energy_relative_change": 0.1715312505804667,
+      "capture_mass_relative_change": 0.08035276374460598,
+      "energy_bins": [
+        64,
+        96
+      ]
+    },
+    "immediate": {
+      "capture_energy_relative_change": 0.17128287532172504,
+      "capture_mass_relative_change": 0.07576604376340801,
+      "energy_bins": [
+        64,
+        96
+      ]
+    }
+  },
+  "rows_evaluated": 8,
+  "schema": "capture-energy-current-gate-v1",
+  "seed_convergence": {
+    "direct_E64": {
+      "energy_current_fractional_range": 0.013531115637298946,
+      "mdot_fractional_range": 0.03671240523768461
+    },
+    "direct_E96": {
+      "energy_current_fractional_range": 0.013930843770907036,
+      "mdot_fractional_range": 0.028840860697949642
+    },
+    "immediate_E64": {
+      "energy_current_fractional_range": 0.013378560005380558,
+      "mdot_fractional_range": 0.03561277642300793
+    },
+    "immediate_E96": {
+      "energy_current_fractional_range": 0.013801273358047575,
+      "mdot_fractional_range": 0.028011490545786527
+    }
+  },
+  "status": "ENERGY_CURRENT_GATE_FAIL",
+  "thresholds": {
+    "grid_convergence_relative": 0.05,
+    "internal_moment_relative": 0.01,
+    "seed_convergence_relative": 0.05
+  }
+}

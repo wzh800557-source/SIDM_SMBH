@@ -117,6 +117,18 @@
       "original_sha256": "a12830ff81549dfd4b9a500dade772cf99ee48e0e0b810becef2f0845519f018",
       "public_sha256": "0a96e0e5a9cc86baec52fe78ba57c37951e6d90071aae955d3b85f63158e6b5e",
       "metadata_relocated": true
+    },
+    {
+      "path": "data/reference/production/energy_followup_20260907/followup_summary_retrieved.json",
+      "original_sha256": "162d272f4be7b18870adda5aeb15fbc1b453f8a86e8e5be8c11decc4261b4c26",
+      "public_sha256": "162d272f4be7b18870adda5aeb15fbc1b453f8a86e8e5be8c11decc4261b4c26",
+      "metadata_relocated": false
+    },
+    {
+      "path": "data/reference/production/energy_followup_20260907/energy_current_gate.json",
+      "original_sha256": "3a492d5499762a2fcd4b8f5a92bf68412e4b9078f8b80b2cb9847663589c44bf",
+      "public_sha256": "3a492d5499762a2fcd4b8f5a92bf68412e4b9078f8b80b2cb9847663589c44bf",
+      "metadata_relocated": false
     }
   ]
 }

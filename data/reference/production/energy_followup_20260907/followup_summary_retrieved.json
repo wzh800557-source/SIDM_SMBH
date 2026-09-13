@@ -1,0 +1,19 @@
+{
+  "schema": "energy-followup-retrieved-summary-v1",
+  "status": "FOLLOWUP_DIAGNOSTICS_COMPLETE",
+  "missing_runs": [],
+  "cluster_jobs": {"array": 22177812, "summary": 22177813},
+  "source_label": "sidm_energy_followup_20260907/results/followup_summary.json",
+  "retrieval_note": "The fields required by the coupling gate were transcribed from the completed cluster summary. The full operator archives remain on the cluster.",
+  "fluid_coupling_authorized": false,
+  "rows": [
+    {"energy_bins":64,"seed":314159,"model":"direct","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":13.829373819895883,"energy_audit":{"capture_orbital_energy_rate":-134457295.9952175,"internal_l1_over_boundary_scale":2.7280556061949977,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":64,"seed":314159,"model":"immediate","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":14.9824306957,"energy_audit":{"capture_orbital_energy_rate":-134393246.4619,"internal_l1_over_boundary_scale":2.70231,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":64,"seed":271828,"model":"direct","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":14.3465772874,"energy_audit":{"capture_orbital_energy_rate":-132650165.0239,"internal_l1_over_boundary_scale":2.68949,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":64,"seed":271828,"model":"immediate","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":15.5256697763,"energy_audit":{"capture_orbital_energy_rate":-132607205.6767,"internal_l1_over_boundary_scale":2.66227,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":96,"seed":314159,"model":"direct","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":15.0005046155,"energy_audit":{"capture_orbital_energy_rate":-157552195.3323,"internal_l1_over_boundary_scale":2.59487,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":96,"seed":314159,"model":"immediate","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":16.1799579452,"energy_audit":{"capture_orbital_energy_rate":-157445557.2495,"internal_l1_over_boundary_scale":2.57160,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":96,"seed":271828,"model":"direct","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":15.4394620344,"energy_audit":{"capture_orbital_energy_rate":-155372542.5148,"internal_l1_over_boundary_scale":2.50557,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}},
+    {"energy_bins":96,"seed":271828,"model":"immediate","population_status":"EJ_STEADY_SMOKE_PASS","mdot_msun_per_myr":16.6396206023,"energy_audit":{"capture_orbital_energy_rate":-155287500.0436,"internal_l1_over_boundary_scale":2.48186,"status":"MOMENT_AUDIT_FAIL","gates":{"physical_pair_energy_conserved":true,"ledger_identity":true}}}
+  ]
+}
