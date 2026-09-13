@@ -200,6 +200,82 @@ python figures/plot_manuscript_scan.py \
   --outdir results/scan20_figures
 ```
 
+## Reproduce the cross-regime calibration
+
+The orbit-resolved current, a conductive hydrostatic spike, and Bondi inflow are
+separate boundary-value problems. The calibration therefore keeps three branches
+rather than blending a single FP coefficient monotonically into a Bondi rate.
+
+```sh
+make calibrate
+```
+
+This command performs two checks. First, it reads the ten vector-extracted
+simulation markers from Sabarish et al. (2025) and refits their harmonic form,
+
+```text
+dotM = C + 1 / (A s + B / s).
+```
+
+The joint refit gives `C = 1.782 Msun/yr`, `A = 0.05705`, and `B = 0.27554`,
+placing the conductivity turnover at `s = 2.198 cm^2/g`. Omitting one marker at a
+time moves the turnover between 2.149 and 2.256 cm^2/g. These leave-one-out ranges
+measure point sensitivity rather than a statistical confidence interval. The
+paper prints `C = 3.67`, but that value is incompatible with its plotted fit and
+its stated collisionless rate of `1.7 Msun/yr`; the code records the discrepancy
+and determines all three coefficients from the vector data. The benchmark has an
+LMFP excess proportional to `s` and an SMFP excess proportional to `1/s`. It
+describes a conduction-supported isolated spike with different boundary
+conditions from either a Bondi reservoir or the velocity-dependent production
+halo.
+
+Second, the command evaluates a nominal adiabatic Bondi benchmark and audits the
+saved Yukawa profile from the ISCO to the nominal Bondi radius. For a monatomic SIDM fluid,
+`gamma = 5/3`, `lambda_B = 1/4`, and `c_infinity = sqrt(gamma) sigma_1d`. At the
+fiducial boundary, substituting the local density and dispersion for the
+asymptotic reservoir values gives `dotM_B = 4.10e4 Msun/Myr`, about 2.92e3 times
+the measured FP current. The saved hydrostatic state does not itself supply that
+Bondi reservoir. The Bondi branch is also excluded by the collisionality audit,
+because the saved profile has
+`N_orb = 1.95e-8` at the ISCO. Orbital memory therefore survives inside the nominal
+Bondi region even though `N_orb` is close to unity near its outer edge.
+
+The output is written to `validation/cross_regime_calibration.json`, and the figure
+is written to `validation/cross_regime_figures/`. The vector-extracted benchmark
+and its metadata are under `data/calibration/`. The current code uses the exact
+Bondi normalization in new coarse-scan summaries. Archived scan tables retain the
+older dimensional comparison and are not silently rewritten.
+
+The source figure is not redistributed. To reproduce the marker extraction from
+`images/imfp.pdf` in the paper's arXiv source package, install the optional
+dependency and run
+
+```sh
+python -m pip install -r requirements-calibration-extraction.txt
+python tools/extract_sabarish_imfp.py /path/to/images/imfp.pdf \
+  --out /tmp/sabarish_imfp.csv \
+  --reference data/calibration/sabarish_2025_imfp_digitized.csv
+```
+
+The extractor identifies the ten black vector markers, applies the stored affine
+axis transform, and checks the result against the released CSV.
+
+`fp_solver/moving_interface_ledger.py` supplies conservative mass and energy
+bookkeeping for a moving boundary. It requires measured specific energies,
+luminosity, and work terms. The ledger does not turn the captured-mass current into
+a thermal current.
+
+To regenerate the calibration, its integrated acceptance ledger, every package
+test, and the repository audit in one step, run
+
+```sh
+make final-calibration
+```
+
+The resulting `validation/final_calibration_audit.json` separates accepted
+fixed-snapshot results from the energy and time-dependent coupling gates that have
+not passed. A completed numerical process is never promoted across those gates.
+
 ## Native GNC calculations
 
 The fixed-snapshot non-local operator workflow above runs in Python. The native

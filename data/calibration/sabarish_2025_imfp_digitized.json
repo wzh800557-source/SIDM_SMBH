@@ -1,0 +1,22 @@
+{
+  "source": "Sabarish et al. 2025, A&A 703 A142, arXiv:2505.14779",
+  "source_figure_file": "imfp.pdf",
+  "source_figure_label": "fig:imfp-fit",
+  "extraction": "Black five-point vector markers transformed with the figure's affine axis coordinates",
+  "extraction_script": "tools/extract_sabarish_imfp.py",
+  "axis_transform": {
+    "x_at_zero": 63.123352,
+    "x_points_per_cross_section_unit": 40.5818181818,
+    "top_at_rate_two": 254.1278125,
+    "top_points_per_rate_unit": 40.32
+  },
+  "scope": "Constant isotropic cross-section, isolated conductive SIDM spike",
+  "published_model": "dotM = C + 1/(A*s + B/s)",
+  "published_A": 0.056,
+  "published_B": 0.27,
+  "collisionless_baseline_msun_per_yr": 1.7,
+  "printed_C_msun_per_yr": 3.67,
+  "printed_C_consistency_note": "The printed C value is incompatible with the plotted fit and the paper's stated 1.7 Msun/yr collisionless baseline. The calibration therefore refits C, A, and B jointly to the vector data.",
+  "published_beta_lmfp": 0.97,
+  "warning": "This benchmark is not a t-channel Yukawa or Bondi-inflow calibration."
+}

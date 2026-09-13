@@ -8,11 +8,19 @@ import json
 import math
 from datetime import datetime, timezone
 from pathlib import Path
+import sys
 
 import numpy as np
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
-G_PC_KMS2_MSUN = 4.30091e-3
+from fp_solver.cross_regime_closure import (  # noqa: E402
+    bondi_lambda,
+    bondi_rate_msun_per_myr,
+    sound_speed_from_sigma_1d,
+)
+
 KMS_TO_PC_PER_MYR = 1.0227121650537077
 
 
@@ -182,18 +190,16 @@ def main() -> int:
             ),
         }
 
-    # This is a dimensional supply benchmark, not a physical prescription for
-    # weakly collisional capture.  sqrt(3)*sigma_b is the local RMS speed and
-    # lambda_B is fixed to one.
-    v_eff = math.sqrt(3.0) * sigma_b
-    bondi_benchmark = (
-        4.0
-        * math.pi
-        * G_PC_KMS2_MSUN**2
-        * case["black_hole_mass_msun"] ** 2
-        * rho_b
-        / v_eff**3
-        * KMS_TO_PC_PER_MYR
+    # Nominal polytropic Bondi benchmark for an ideal monatomic SIDM fluid.
+    # The local boundary values are substituted for the asymptotic reservoir
+    # values, so this is not a Bondi solution for the saved hydrostatic state.
+    bondi_gamma = 5.0 / 3.0
+    bondi_sound_speed = sound_speed_from_sigma_1d(sigma_b, bondi_gamma)
+    bondi_benchmark = bondi_rate_msun_per_myr(
+        case["black_hole_mass_msun"],
+        rho_b,
+        bondi_sound_speed,
+        bondi_gamma,
     )
     max_gate = 0.10
     numerical_sensitivities = []
@@ -257,13 +263,18 @@ def main() -> int:
         "all_selected_solver_gates_pass": solver_pass,
         "bondi_dimensional_supply_benchmark": {
             "definition": (
-                "4 pi G^2 M_bh^2 rho_b / (sqrt(3) sigma_b)^3, with lambda_B=1"
+                "4 pi lambda_B (G M_bh)^2 rho_b / c_infinity^3, with "
+                "gamma=5/3, lambda_B=1/4, and c_infinity=sqrt(gamma) sigma_b"
             ),
+            "gamma": bondi_gamma,
+            "lambda_B": bondi_lambda(bondi_gamma),
+            "sound_speed_infinity_kms": bondi_sound_speed,
             "mdot_msun_per_myr": bondi_benchmark,
             "bondi_over_direct_fp_mass_current": bondi_benchmark / direct_mdot,
             "interpretation": (
-                "dimensional collisional-inflow benchmark only; it omits the "
-                "angular-momentum loss-cone bottleneck"
+                "nominal steady spherical fluid benchmark obtained by treating "
+                "the local boundary as the asymptotic reservoir; use only after "
+                "collisionality and flow-boundary gates pass"
             ),
         },
         "black_hole_aware_fluid_flux": fluid,

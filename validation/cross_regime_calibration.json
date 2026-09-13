@@ -1,0 +1,136 @@
+{
+  "closure_decision": {
+    "implemented_branches": [
+      "measured orbit-resolved FP current",
+      "published constant-cross-section conductive-spike benchmark",
+      "exact polytropic Bondi endpoint"
+    ],
+    "reason": "A hydrostatic conductive spike and a maintained radial Bondi flow have different high-collisionality limits. Collisionality alone does not specify the outer reservoir or radial flow state.",
+    "transition_solver": "Use non-orbit-averaged radial kinetics when N_orb crosses unity inside the inflow path.",
+    "universal_monotonic_fp_to_bondi_bridge": "REJECTED"
+  },
+  "conductive_spike": {
+    "adopted_shape_exponent_p": 1.0,
+    "adoption_reason": "The harmonic-conductivity asymptotes fix p=1. The free-p fit is retained only as a diagnostic of the measured turnover shape.",
+    "digitized_generalized_shape_check": {
+      "baseline_msun_per_yr": 1.5691964046322684,
+      "maximum_excess_msun_per_yr": 4.084931649552909,
+      "optimizer_success": true,
+      "rms_msun_per_yr": 0.08083366344330498,
+      "shape_exponent_p": 0.8982106218466936,
+      "sigma_transition_cm2_g": 2.1971346119012574
+    },
+    "digitized_same_form_refit": {
+      "A": 0.05705389255926939,
+      "B": 0.2755432650420915,
+      "baseline_msun_per_yr": 1.7819027820912625,
+      "maximum_absolute_residual_msun_per_yr": 0.2175323926893329,
+      "maximum_excess_msun_per_yr": 3.987791691950335,
+      "optimizer_success": true,
+      "rms_msun_per_yr": 0.11784586173688016,
+      "sigma_transition_cm2_g": 2.1976182862154428
+    },
+    "leave_one_out_refit_range": {
+      "interpretation": "Sensitivity to omission of one vector point; not a statistical confidence interval.",
+      "number_of_refits": 10,
+      "ranges": {
+        "A": {
+          "maximum": 0.058623856338678455,
+          "minimum": 0.05527841672790699
+        },
+        "B": {
+          "maximum": 0.2855424167671642,
+          "minimum": 0.2643112670915345
+        },
+        "baseline_msun_per_yr": {
+          "maximum": 1.8710488902212037,
+          "minimum": 1.72734881021939
+        },
+        "maximum_excess_msun_per_yr": {
+          "maximum": 4.1365127586820885,
+          "minimum": 3.8655413629785884
+        },
+        "sigma_transition_cm2_g": {
+          "maximum": 2.2556278633598854,
+          "minimum": 2.148531311615471
+        }
+      }
+    },
+    "metadata": {
+      "axis_transform": {
+        "top_at_rate_two": 254.1278125,
+        "top_points_per_rate_unit": 40.32,
+        "x_at_zero": 63.123352,
+        "x_points_per_cross_section_unit": 40.5818181818
+      },
+      "collisionless_baseline_msun_per_yr": 1.7,
+      "extraction": "Black five-point vector markers transformed with the figure's affine axis coordinates",
+      "extraction_script": "tools/extract_sabarish_imfp.py",
+      "printed_C_consistency_note": "The printed C value is incompatible with the plotted fit and the paper's stated 1.7 Msun/yr collisionless baseline. The calibration therefore refits C, A, and B jointly to the vector data.",
+      "printed_C_msun_per_yr": 3.67,
+      "published_A": 0.056,
+      "published_B": 0.27,
+      "published_beta_lmfp": 0.97,
+      "published_model": "dotM = C + 1/(A*s + B/s)",
+      "scope": "Constant isotropic cross-section, isolated conductive SIDM spike",
+      "source": "Sabarish et al. 2025, A&A 703 A142, arXiv:2505.14779",
+      "source_figure_file": "imfp.pdf",
+      "source_figure_label": "fig:imfp-fit",
+      "warning": "This benchmark is not a t-channel Yukawa or Bondi-inflow calibration."
+    },
+    "reference_parameters": {
+      "A": 0.056,
+      "B": 0.27,
+      "baseline_msun_per_yr": 1.7,
+      "lmfp_scaling": "excess rate proportional to sigma/m",
+      "maximum_excess_msun_per_yr": 4.066250303952222,
+      "sigma_transition_cm2_g": 2.1957751641342,
+      "smfp_scaling": "excess rate proportional to (sigma/m)^-1",
+      "source": "Sabarish et al. 2025, arXiv:2505.14779"
+    }
+  },
+  "created_at": "2026-09-13T20:32:15.477517+00:00",
+  "fiducial_yukawa_halo": {
+    "N_orb_at_r_B": 1.1986241644563402,
+    "N_orb_at_r_in": 0.9999999999997036,
+    "black_hole_mass_msun": 4000000.0,
+    "bondi_reservoir_identification": "Diagnostic substitution rho_infinity=rho(r_in) and sigma_infinity=sigma_1d(r_in); the saved hydrostatic snapshot does not provide an asymptotic radial-flow reservoir.",
+    "boundary_density_msun_pc3": 46.85503055325899,
+    "boundary_radius_pc": 1.2953781279748755,
+    "boundary_sigma_1d_kms": 79.60522210790054,
+    "fixed_profile_scaling_warning": "This threshold scales the saved profile linearly in sigma0/m. It is not a self-consistent high-cross-section halo solution.",
+    "gamma": 1.6666666666666667,
+    "measured_fp_C_M": 0.00017480587589500886,
+    "measured_fp_mdot_msun_per_myr": 14.06080600205032,
+    "nominal_adiabatic_bondi_benchmark_mdot_msun_per_myr": 41048.98399230438,
+    "nominal_bondi_C_M_in_boundary_normalization": 0.5103266199909615,
+    "nominal_bondi_benchmark_over_measured_fp": 2919.3905375210134,
+    "nominal_bondi_radius_pc": 1.6288777070807936,
+    "radial_collisionality_gate": {
+      "N_orb_at_capture": 1.9546719640729976e-08,
+      "N_orb_at_supply": 1.1986241644563402,
+      "additional_bondi_requirements": [
+        "steady spherical inflow",
+        "negligible rotation",
+        "outer reservoir fixes density and sound speed",
+        "transonic solution connects to the capture surface"
+      ],
+      "capture_radius_pc": 1.1484978606195766e-06,
+      "continuum_gate_interpretation": "For H approximately r, the default N_orb threshold corresponds to Kn<=0.1. A hydrodynamic solve must evaluate its own scale height.",
+      "hydrodynamic_collisionality_pass": false,
+      "hydrodynamic_n_orb_threshold": 62.83185307179586,
+      "maximum_knudsen_if_H_equals_r": 321444489.03268456,
+      "minimum_N_orb": 1.9546719640729976e-08,
+      "physical_crossing": "N_orb=1",
+      "radius_of_minimum_N_orb_pc": 1.1484978606195766e-06,
+      "selected_solver": "FP_INNER_WITH_KINETIC_OR_FLUID_OUTER",
+      "status": "ORBIT_MEMORY_PRESENT",
+      "supply_radius_pc": 1.6288777070807936
+    },
+    "sigma0_over_m_for_N_ISCO_equal_one_fixed_profile_cm2_g": 5115947935.920029,
+    "sigma0_over_m_for_continuum_sentinel_at_ISCO_fixed_profile_cm2_g": 321444489032.6845,
+    "sound_speed_infinity_kms": 102.76989983168043
+  },
+  "schema": "sidm-smbh-cross-regime-calibration-v2",
+  "status": "AVAILABLE_BRANCHES_CALIBRATED"
+}

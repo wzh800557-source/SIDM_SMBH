@@ -1,0 +1,85 @@
+{
+  "accepted_results": {
+    "black_hole_aware_fluid_response": {
+      "common_duration_in_initial_relaxation_times": 0.0593231093924701,
+      "interpretation": "This run tests the response to a prescribed local kinetic sink at the accepted mass rate. It is not an absolute two-way evolution because the capture-weighted energy exchange is not accepted.",
+      "sink_over_control_inner_mean_density": 1.00107938458313,
+      "status": "NUMERICAL_SENSITIVITY_RUN_COMPLETE"
+    },
+    "captured_mass_current": {
+      "C_M": 0.0001748163604390901,
+      "direct_mdot_msun_per_myr": 14.06080600205032,
+      "immediate_mdot_msun_per_myr": 15.225413953495528,
+      "maximum_selected_fractional_sensitivity": 0.07953282828668155,
+      "status": "ACCEPTED_FIXED_SNAPSHOT_OBSERVABLE"
+    },
+    "collapse_snapshot_remap": {
+      "bridge_status": "OK",
+      "fp_owned_fraction_of_first_fluid_shell": 0.0037718455147972892,
+      "preparation_status": "PRODUCTION_PREPARATION_PASS",
+      "r_in_over_r_h": 0.11328188324399815,
+      "r_in_pc": 1.2953781279748755,
+      "status": "COMPLETE"
+    },
+    "cross_regime_calibration": {
+      "bondi_authorized_for_fiducial_profile": false,
+      "conductive_spike_refit": {
+        "A": 0.05705389255926939,
+        "B": 0.2755432650420915,
+        "baseline_msun_per_yr": 1.7819027820912625,
+        "rms_msun_per_yr": 0.11784586173688016,
+        "turnover_cm2_g": 2.1976182862154428
+      },
+      "fiducial_N_orb_at_capture": 1.9546719640729976e-08,
+      "fiducial_selected_branch": "orbit-resolved FP",
+      "nominal_bondi_benchmark_msun_per_myr": 41048.98399230438,
+      "nominal_bondi_over_measured_fp": 2919.3905375210134,
+      "status": "AVAILABLE_BRANCHES_CALIBRATED"
+    },
+    "moving_interface_ledger": {
+      "scope": "Conservative three-reservoir bookkeeping for supplied mass, captured mass, advected energy, luminosity, and boundary work.",
+      "status": "IMPLEMENTED_AND_UNIT_TESTED"
+    },
+    "nonlocal_depleted_phase_space": {
+      "description": "The steady finite-angle E-J solution supplies the accepted fixed-snapshot mass current. Its capture-energy moment remains outside the accepted observable set.",
+      "status": "COMPLETE_FOR_CAPTURED_MASS_CURRENT"
+    }
+  },
+  "created_at": "2026-09-13T20:32:23.569420+00:00",
+  "open_acceptance_gates": {
+    "absolute_two_way_evolution": {
+      "reason": "It requires an accepted energy current and production use of the moving-interface mass, energy, luminosity, and work ledger.",
+      "status": "NOT_AUTHORIZED"
+    },
+    "capture_weighted_energy_current": {
+      "reason": "The production energy-resolution gate failed.",
+      "status": "NOT_ACCEPTED"
+    },
+    "transition_regime": {
+      "reason": "Neither orbit-averaged FP nor hydrodynamics is valid across a path whose orbital transport depth is of order unity.",
+      "status": "SOLVER_REQUIRED"
+    }
+  },
+  "schema": "sidm-smbh-final-calibration-audit-v1",
+  "scientific_claim_boundary": {
+    "not_supported": [
+      "The black hole halts gravothermal collapse.",
+      "The black hole heats or cools the halo at the inferred capture-binding energy.",
+      "The archived short sink run is a calibrated physical halo trajectory."
+    ],
+    "supported": [
+      "The fiducial fixed-snapshot captured-mass current is accepted.",
+      "The fiducial Yukawa nucleus belongs to the orbit-resolved branch.",
+      "A hydrostatic conductive spike turns over between LMFP and SMFP limits.",
+      "A universal monotonic FP-to-Bondi interpolation is rejected."
+    ]
+  },
+  "scope": "Fixed collapse snapshot, mass-matched black-hole remap, measured orbit-resolved mass current, archived short fluid sensitivity run, and calibrated cross-regime branch selection.",
+  "solver_selection": {
+    "hydrodynamic_candidate": "Require a continuum path to capture. The released operational sentinel is N_orb >= 20*pi, equivalent to Kn <= 0.1 only when H=r.",
+    "hydrodynamic_endpoint": "Select a conductive spike for hydrostatic boundary conditions or Bondi for a verified steady, spherical, low-rotation transonic flow supplied by a maintained reservoir.",
+    "orbit_resolved": "Use FP where N_orb < 1.",
+    "transition": "Use non-orbit-averaged radial kinetics through N_orb near unity."
+  },
+  "status": "MASS_CURRENT_AND_BRANCH_SELECTION_COMPLETE_ENERGY_CLOSURE_OPEN"
+}
