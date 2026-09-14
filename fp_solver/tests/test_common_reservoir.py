@@ -73,6 +73,8 @@ def main() -> int:
                 3,
                 "--samples-per-rank",
                 300,
+                "--weight-n",
+                4.0e6 / 300,
                 "--grid-bins",
                 48,
                 "--importance-uniform-fraction",
@@ -122,6 +124,17 @@ def main() -> int:
             assert max(abs(float(x) - 1.0) for x in rank_means) > 1.0e-4
             assert math.isclose(diag["importance_boundary_fed_fraction"], 0.70)
             assert diag["sample_boundary_fed_band_fraction"] > 0.60
+
+        for name in boundaries:
+            mfrac = (root / f"norm_{name}" / "mfrac.normalized.in").read_text()
+            fields = mfrac.splitlines()[3].split()
+            particle_weight = float(fields[4])
+            assert math.isclose(
+                4.0e6 / particle_weight,
+                300.0,
+                rel_tol=1.0e-7,
+                abs_tol=0.0,
+            )
 
         assert (
             manifests["outer"]["common_reservoir_fingerprint"]

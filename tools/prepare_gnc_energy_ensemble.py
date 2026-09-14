@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -60,6 +61,12 @@ def main() -> int:
     if bridge.get("status") != "OK":
         raise ValueError("hydrostatic bridge did not pass")
     boundary = float(bridge["r_in_pc"])
+    mbh_msun = float(bridge["mbh_msun"])
+    # The patched GNC initializer constructs mbh / Weight_n particles on each
+    # MPI rank.  Match that native count to the imported phase-space catalogue
+    # so increasing --samples-per-rank changes the Monte-Carlo resolution
+    # without changing the represented physical mass.
+    particle_weight_msun = mbh_msun / args.samples_per_rank
     args.run_root.mkdir(parents=True, exist_ok=False)
 
     members = []
@@ -70,7 +77,7 @@ def main() -> int:
             args.profile,
             "--bridge-json", args.bridge_json,
             "--outdir", normalized,
-            "--mbh", float(bridge["mbh_msun"]),
+            "--mbh", mbh_msun,
             "--r-boundary", boundary,
             "--normalization-radius", boundary,
             "--proposal-boundary-radius", boundary,
@@ -79,6 +86,7 @@ def main() -> int:
             "--df-fit-points", 512,
             "--ranks", args.ranks,
             "--samples-per-rank", args.samples_per_rank,
+            "--weight-n", particle_weight_msun,
             "--seed", args.normalization_seed,
             "--importance-uniform-fraction", args.importance_uniform_fraction,
             "--importance-capture-fraction", args.importance_capture_fraction,
@@ -89,6 +97,22 @@ def main() -> int:
                 args.importance_boundary_fed_xmin_factor
             ),
         ])
+        mfrac_lines = (normalized / "mfrac.normalized.in").read_text().splitlines()
+        component_fields = next(
+            line.split()
+            for line in mfrac_lines
+            if line.strip() and not line.lstrip().startswith("#")
+            and len(line.split()) >= 7 and float(line.split()[0]) > 0.0
+        )
+        written_particle_weight = float(component_fields[4])
+        implied_samples = mbh_msun / written_particle_weight
+        if not math.isclose(
+            implied_samples, args.samples_per_rank, rel_tol=1.0e-7, abs_tol=0.0
+        ):
+            raise RuntimeError(
+                "GNC particle count does not match imported catalogue: "
+                f"{implied_samples:g} != {args.samples_per_rank:d}"
+            )
         for seed in sorted(set(seeds)):
             tag = f"gx{grid}_dc{grid}_s{seed}"
             run_dir = args.run_root / tag
@@ -125,6 +149,9 @@ def main() -> int:
         "profile": args.profile.name,
         "bridge": args.bridge_json.name,
         "r_in_pc": boundary,
+        "mbh_msun": mbh_msun,
+        "samples_per_rank": args.samples_per_rank,
+        "particle_weight_msun": particle_weight_msun,
         "grids": sorted(set(grids)),
         "seeds": sorted(set(seeds)),
         "dt_tnr": args.dt_tnr,
