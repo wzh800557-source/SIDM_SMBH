@@ -113,7 +113,10 @@ def main(argv: Iterable[str] | None = None) -> int:
         "--cfs-file",
         type=Path,
         default=None,
-        help="compiled GNC auxiliary-function table; its path is written into model.in",
+        help=(
+            "compiled GNC auxiliary-function table (.bin); the suffix-free path "
+            "required by GNC is written into model.in"
+        ),
     )
     args = p.parse_args(argv)
 
@@ -185,7 +188,12 @@ def main(argv: Iterable[str] | None = None) -> int:
     if args.cfs_file is not None:
         if not args.cfs_file.is_file():
             raise FileNotFoundError(args.cfs_file)
-        model = replace_assignment(model, "cfs dir", str(args.cfs_file))
+        if args.cfs_file.suffix != ".bin":
+            raise ValueError("cfs-file must name the compiled .bin table")
+        # ``cfuns`` writes ``<stem>.bin`` and the GNC reader appends ``.bin``
+        # itself.  Validate and hash the real file, but put only its stem in the
+        # sequential model deck.
+        model = replace_assignment(model, "cfs dir", str(args.cfs_file.with_suffix("")))
     model = replace_assignment(
         model, "num of ge update per snap", str(args.updates_per_snapshot)
     )

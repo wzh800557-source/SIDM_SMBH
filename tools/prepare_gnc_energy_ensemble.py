@@ -44,7 +44,7 @@ def main() -> int:
         parser.error("the production gate requires at least two grids and two seeds")
     if any(grid % args.ranks for grid in grids):
         parser.error("each grid is also used for dc-bins and must divide by ranks")
-    cfs = args.gnc_build / "common_data" / "cfuns_34"
+    cfs = args.gnc_build / "common_data" / "cfuns_34.bin"
     executables = [args.gnc_build / "main" / name for name in ("ini", "main", "pro")]
     for path in [args.profile, args.bridge_json, args.base_model, cfs, *executables]:
         if not path.is_file():

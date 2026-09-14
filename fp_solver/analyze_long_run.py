@@ -11,6 +11,7 @@ current, and the dimensionless coefficients required by the fluid boundary.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -64,6 +65,14 @@ def load_manifest(run: Path) -> dict:
     if out.get("status") != "PREFLIGHT_PASS":
         raise ValueError("run manifest did not pass preflight")
     return out
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def load_plunge_records(run: Path) -> np.ndarray:
@@ -217,6 +226,35 @@ def main(argv: Iterable[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     manifest = load_manifest(args.run)
+    build_status_path = args.run / "build_status.json"
+    build_status = (
+        json.loads(build_status_path.read_text())
+        if build_status_path.is_file() else {}
+    )
+    required_build_flags = (
+        "compiled",
+        "absolute_normalization_patch",
+        "plunge_records_patch",
+        "inner_inventory_patch",
+        "snapshot_terminal_coefficients_only",
+        "weighted_xj_loader",
+        "born_kernel",
+    )
+    validated_build = (
+        build_status.get("status") == "COMPILED"
+        and all(build_status.get(key) is True for key in required_build_flags)
+    )
+    executable_hashes = {
+        name: sha256(args.run / name)
+        for name in ("ini", "main", "pro")
+        if (args.run / name).is_file()
+    }
+    solver_fingerprint = (
+        hashlib.sha256(
+            json.dumps(executable_hashes, sort_keys=True).encode("utf-8")
+        ).hexdigest()
+        if len(executable_hashes) == 3 else None
+    )
     ranks = int(manifest["ranks"])
     particle_mass = float(manifest["particle_mass_msun"])
     mbh = float(json.loads((args.run / "df_normalization.json").read_text())["mbh_msun"])
@@ -560,6 +598,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         diagnostic_failures.append("inner mass-energy inventory records are incomplete")
     if not np.isfinite(supplied_outward_current):
         diagnostic_failures.append("boundary-supplied energy current is unavailable")
+    if not validated_build or solver_fingerprint is None:
+        diagnostic_failures.append("patched production FP build provenance is incomplete")
     status = (
         "DIRECT_FP_ENERGY_DIAGNOSTIC_COMPLETE"
         if not diagnostic_failures else "DIRECT_FP_ENERGY_DIAGNOSTIC_INCOMPLETE"
@@ -793,6 +833,11 @@ def main(argv: Iterable[str] | None = None) -> int:
             "physical_configuration_fingerprint": manifest.get(
                 "physical_configuration_fingerprint"
             ),
+            "solver_executable_fingerprint": solver_fingerprint,
+            "solver_executable_sha256": executable_hashes,
+            "validated_patched_build": validated_build,
+            "build_status": build_status,
+            "cfs_sha256": manifest.get("cfs_sha256"),
             "sidm_kernel": manifest.get("sidm_kernel"),
             "sigma0_over_m_cm2_g": manifest.get("sigma0_over_m_cm2_g"),
             "yukawa_w_kms": manifest.get("yukawa_w_kms"),

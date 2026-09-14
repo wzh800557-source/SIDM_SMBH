@@ -41,6 +41,8 @@ def main() -> int:
         )
         bridge = json.loads(bridge_json.read_text())
         anchor = float(bridge["r_in_pc"])
+        cfs = root / "cfuns_34.bin"
+        cfs.write_bytes(b"synthetic-cfs-table")
         boundaries = {
             "outer": anchor,
             "inner": 0.8 * anchor,
@@ -94,6 +96,8 @@ def main() -> int:
                 0.2,
                 "--gnc-seed",
                 7300 + len(manifests),
+                "--cfs-file",
+                cfs,
             )
             diagnostics[name] = json.loads((norm / "df_normalization.json").read_text())
             manifests[name] = json.loads((rundir / "run_manifest.json").read_text())
@@ -120,6 +124,9 @@ def main() -> int:
             assert f"SEED_VALUE\t\t\t\t\t\t= {manifest['gnc_seed']}" in model
             assert "SAME_INI_SEED\t\t\t\t\t= 1" in model
             assert "SAME_EVL_SEED\t\t\t\t\t= 1" in model
+            assert f"cfs dir ={cfs.with_suffix('')}" in model
+            assert manifest["cfs_file"] == cfs.name
+            assert manifest["cfs_sha256"] is not None
         assert (
             diagnostics["outer"]["df_table_sha256"]
             == diagnostics["outer_repeat"]["df_table_sha256"]

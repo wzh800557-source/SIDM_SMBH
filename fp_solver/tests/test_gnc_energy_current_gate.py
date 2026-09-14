@@ -28,6 +28,9 @@ def gate_row(grid, seed, scale=1.0):
         "grid": grid,
         "physical_fingerprint": "same-physical-halo",
         "reservoir_fingerprint": f"reservoir-{grid}",
+        "solver_fingerprint": "same-patched-binary",
+        "cfs_sha256": "same-cfs-table",
+        "validated_build": True,
         "kernel_compatible": True,
         "mass_consistency": 1.0e-6,
         "raw_count": 30,
@@ -97,6 +100,18 @@ def test_synthetic_long_run(root: Path) -> None:
     }
     (run / "run_manifest.json").write_text(json.dumps(manifest))
     (run / "df_normalization.json").write_text(json.dumps({"mbh_msun": 4.0e6}))
+    for executable in ("ini", "main", "pro"):
+        (run / executable).write_bytes(("synthetic-" + executable).encode())
+    (run / "build_status.json").write_text(json.dumps({
+        "status": "COMPILED",
+        "compiled": True,
+        "absolute_normalization_patch": True,
+        "plunge_records_patch": True,
+        "inner_inventory_patch": True,
+        "snapshot_terminal_coefficients_only": True,
+        "weighted_xj_loader": True,
+        "born_kernel": True,
+    }))
     write_event_table(output / "BH_event_Nweight.txt", True)
     write_event_table(output / "BH_event_N.txt", False)
     for snapshot in range(1, 61):

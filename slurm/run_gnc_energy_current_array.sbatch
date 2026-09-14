@@ -33,6 +33,7 @@ if [[ -e "$RUN_DIR/output" ]]; then
   exit 2
 fi
 cp "$GNC_BUILD/main/ini" "$GNC_BUILD/main/main" "$GNC_BUILD/main/pro" "$RUN_DIR/"
+cp "$GNC_BUILD/build_status.json" "$RUN_DIR/"
 cp -a "$GNC_BUILD/examples/1comp_lc/output" "$RUN_DIR/output"
 cd "$RUN_DIR"
 printf 'INITIALIZING %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$STATUS"

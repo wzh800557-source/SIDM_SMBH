@@ -63,6 +63,9 @@ def extract(path: Path) -> dict:
             "physical_configuration_fingerprint"
         ),
         "reservoir_fingerprint": provenance.get("common_reservoir_fingerprint"),
+        "solver_fingerprint": provenance.get("solver_executable_fingerprint"),
+        "cfs_sha256": provenance.get("cfs_sha256"),
+        "validated_build": provenance.get("validated_patched_build") is True,
         "kernel_compatible": value.get("physical_kernel_compatible") is True,
         "mass_consistency": _finite_float(
             value, "event_vs_plunge_mass_relative_difference"
@@ -144,6 +147,8 @@ def evaluate(
             raise ValueError("capture sufficient statistics must be non-negative")
 
     physical_fingerprints = {row["physical_fingerprint"] for row in rows}
+    solver_fingerprints = {row["solver_fingerprint"] for row in rows}
+    cfs_fingerprints = {row["cfs_sha256"] for row in rows}
     grids = sorted({row["grid"] for row in rows}, key=lambda grid: (grid[0] * grid[1], grid))
     grouped = {
         grid: [row for row in rows if row["grid"] == grid]
@@ -267,6 +272,13 @@ def evaluate(
             len(physical_fingerprints) == 1
             and None not in physical_fingerprints
             and scalar_configuration_consistent
+        ),
+        "production_solver_build_consistent": (
+            all(row["validated_build"] for row in rows)
+            and len(solver_fingerprints) == 1
+            and None not in solver_fingerprints
+            and len(cfs_fingerprints) == 1
+            and None not in cfs_fingerprints
         ),
         "independent_seed_design": seed_design,
         "resolution_design": resolution_design,
