@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=gnc_e_current
 #SBATCH --partition=mit_preemptable
-#SBATCH --ntasks=4
+#SBATCH --ntasks=8
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=96G
 #SBATCH --time=08:00:00

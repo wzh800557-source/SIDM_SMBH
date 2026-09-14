@@ -358,6 +358,19 @@ def main(argv: Iterable[str] | None = None) -> int:
         "guard_cells_below_boundary": guard_cells,
         "clone_scheme": 0,
         "variance_reduction": "imported proposal weights only",
+        "importance_proposal": {
+            "uniform_fraction": dfdiag.get("importance_uniform_fraction"),
+            "initial_cusp_fraction": dfdiag.get("importance_capture_fraction"),
+            "initial_cusp_x_interval": dfdiag.get(
+                "importance_capture_x_interval"
+            ),
+            "boundary_fed_fraction": dfdiag.get(
+                "importance_boundary_fed_fraction", 0.0
+            ),
+            "boundary_fed_x_interval": dfdiag.get(
+                "importance_boundary_fed_x_interval"
+            ),
+        },
         "df_asymp": norm["asymp"],
         "cusp_slope_beta": dfdiag["beta"],
         "n0_pc3": norm["n0"],

@@ -75,6 +75,14 @@ def main() -> int:
                 300,
                 "--grid-bins",
                 48,
+                "--importance-uniform-fraction",
+                0.05,
+                "--importance-capture-fraction",
+                0.15,
+                "--importance-boundary-fed-fraction",
+                0.70,
+                "--importance-boundary-fed-xmin-factor",
+                0.5,
             )
             run(
                 PACKAGE / "prepare_absolute_run.py",
@@ -112,6 +120,8 @@ def main() -> int:
             )
             rank_means = diag["importance_weight_rank_means"]
             assert max(abs(float(x) - 1.0) for x in rank_means) > 1.0e-4
+            assert math.isclose(diag["importance_boundary_fed_fraction"], 0.70)
+            assert diag["sample_boundary_fed_band_fraction"] > 0.60
 
         assert (
             manifests["outer"]["common_reservoir_fingerprint"]
@@ -127,6 +137,9 @@ def main() -> int:
             assert "CLONE_SCHEME\t\t\t\t\t= 0" in model
             assert "# clone x0 = disabled; imported proposal weights are used" in model
             assert manifest["clone_scheme"] == 0
+            assert math.isclose(
+                manifest["importance_proposal"]["boundary_fed_fraction"], 0.70
+            )
             assert f"cfs dir ={cfs.with_suffix('')}" in model
             assert manifest["cfs_file"] == cfs.name
             assert manifest["cfs_sha256"] is not None

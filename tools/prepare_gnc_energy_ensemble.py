@@ -28,22 +28,29 @@ def main() -> int:
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--grid", type=int, action="append", default=[])
     parser.add_argument("--seed", type=int, action="append", default=[])
-    parser.add_argument("--ranks", type=int, default=4)
-    parser.add_argument("--samples-per-rank", type=int, default=5000)
+    parser.add_argument("--ranks", type=int, default=8)
+    parser.add_argument("--samples-per-rank", type=int, default=8000)
     parser.add_argument("--normalization-seed", type=int, default=73421)
     parser.add_argument("--dt-tnr", type=float, default=0.1)
-    parser.add_argument("--total-tnr", type=float, default=24.0)
+    parser.add_argument("--total-tnr", type=float, default=40.0)
+    parser.add_argument("--burn-in-tnr", type=float, default=10.0)
     parser.add_argument("--updates-per-snapshot", type=int, default=10)
     parser.add_argument("--sigma-over-m", type=float, default=100.0)
     parser.add_argument("--w-kms", type=float, default=80.0)
+    parser.add_argument("--importance-uniform-fraction", type=float, default=0.05)
+    parser.add_argument("--importance-capture-fraction", type=float, default=0.15)
+    parser.add_argument("--importance-boundary-fed-fraction", type=float, default=0.70)
+    parser.add_argument("--importance-boundary-fed-xmin-factor", type=float, default=0.5)
     args = parser.parse_args()
 
-    grids = args.grid or [80, 104]
+    grids = args.grid or [104, 128]
     seeds = args.seed or [271828, 314159]
     if len(set(grids)) < 2 or len(set(seeds)) < 2:
         parser.error("the production gate requires at least two grids and two seeds")
     if any(grid % args.ranks for grid in grids):
         parser.error("each grid is also used for dc-bins and must divide by ranks")
+    if not 0.0 < args.burn_in_tnr < args.total_tnr:
+        parser.error("burn-in-tnr must lie between zero and total-tnr")
     cfs = args.gnc_build / "common_data" / "cfuns_34.bin"
     executables = [args.gnc_build / "main" / name for name in ("ini", "main", "pro")]
     for path in [args.profile, args.bridge_json, args.base_model, cfs, *executables]:
@@ -73,6 +80,14 @@ def main() -> int:
             "--ranks", args.ranks,
             "--samples-per-rank", args.samples_per_rank,
             "--seed", args.normalization_seed,
+            "--importance-uniform-fraction", args.importance_uniform_fraction,
+            "--importance-capture-fraction", args.importance_capture_fraction,
+            "--importance-boundary-fed-fraction", (
+                args.importance_boundary_fed_fraction
+            ),
+            "--importance-boundary-fed-xmin-factor", (
+                args.importance_boundary_fed_xmin_factor
+            ),
         ])
         for seed in sorted(set(seeds)):
             tag = f"gx{grid}_dc{grid}_s{seed}"
@@ -114,7 +129,13 @@ def main() -> int:
         "seeds": sorted(set(seeds)),
         "dt_tnr": args.dt_tnr,
         "total_tnr": args.total_tnr,
-        "burn_in_tnr_for_gate": 4.0,
+        "burn_in_tnr_for_gate": args.burn_in_tnr,
+        "importance_proposal": {
+            "uniform_fraction": args.importance_uniform_fraction,
+            "initial_cusp_fraction": args.importance_capture_fraction,
+            "boundary_fed_fraction": args.importance_boundary_fed_fraction,
+            "boundary_fed_xmin_factor": args.importance_boundary_fed_xmin_factor,
+        },
         "sigma0_over_m_cm2_g": args.sigma_over_m,
         "w_kms": args.w_kms,
         "members": members,

@@ -456,6 +456,21 @@ def main(argv: Iterable[str] | None = None) -> int:
         help="upper edge of focused x proposal in units of x_boundary",
     )
     parser.add_argument(
+        "--importance-boundary-fed-fraction",
+        type=float,
+        default=0.0,
+        help=(
+            "fraction sampled just outside the FP energy boundary, where "
+            "particles that later supply the steady capture current originate"
+        ),
+    )
+    parser.add_argument(
+        "--importance-boundary-fed-xmin-factor",
+        type=float,
+        default=0.5,
+        help="lower edge of the boundary-fed proposal in units of x_boundary",
+    )
+    parser.add_argument(
         "--importance-uniform-j-fraction",
         type=float,
         default=0.2,
@@ -632,19 +647,35 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     # GNC estimates g from weighted samples.  In logarithmic coordinates the
     # physical number measure is g x^-3/2 j^2.  Direct sampling would put almost
-    # every orbit in the weakly bound reservoir when x_b/xmin is large, leaving no
-    # loss-cone statistics.  We therefore mix the physical law with broad and
-    # capture-focused proposals, and store p/q as a per-particle weight_N
-    # multiplier.  This is importance sampling, not a change to the DF.
+    # every orbit in the weakly bound reservoir when x_b/xmin is large.  We mix
+    # the physical law with broad, initially bound, and boundary-fed proposals,
+    # and store p/q as a per-particle weight_N multiplier.  The last component
+    # resolves particles that begin just outside x_b and later supply captures;
+    # it is importance sampling, not a change to the DF.
     target_z, target_pdf_z, target_cdf_z = tabulated_log_pdf(xgrid, gx)
     mix = float(args.importance_uniform_fraction)
     mix_cap = float(args.importance_capture_fraction)
-    if not (0.0 <= mix < 1.0 and 0.0 <= mix_cap < 1.0 and mix + mix_cap < 1.0):
-        raise ValueError("x proposal fractions must be non-negative and sum to less than one")
+    mix_fed = float(args.importance_boundary_fed_fraction)
+    if not (
+        0.0 <= mix < 1.0
+        and 0.0 <= mix_cap < 1.0
+        and 0.0 <= mix_fed < 1.0
+        and mix + mix_cap + mix_fed < 1.0
+    ):
+        raise ValueError(
+            "x proposal fractions must be non-negative and sum to less than one"
+        )
     capture_x_lo = xproposal
     capture_x_hi = min(xmax, xproposal * float(args.importance_capture_xmax_factor))
     if not capture_x_lo < capture_x_hi:
         raise ValueError("focused capture x interval is empty")
+    fed_xmin_factor = float(args.importance_boundary_fed_xmin_factor)
+    if not 0.0 < fed_xmin_factor < 1.0:
+        raise ValueError("boundary-fed xmin factor must lie between zero and one")
+    fed_x_lo = max(xmin, xproposal * fed_xmin_factor)
+    fed_x_hi = xproposal
+    if mix_fed > 0.0 and not fed_x_lo < fed_x_hi:
+        raise ValueError("focused boundary-fed x interval is empty")
 
     def target_pdf_logx(xv: np.ndarray) -> np.ndarray:
         return np.interp(np.log(xv), target_z, target_pdf_z)
@@ -659,13 +690,15 @@ def main(argv: Iterable[str] | None = None) -> int:
     for rank in range(args.ranks):
         rng = np.random.default_rng(args.seed + rank)
         component_x = rng.choice(
-            3, size=args.samples_per_rank,
-            p=[1.0 - mix - mix_cap, mix, mix_cap],
+            4,
+            size=args.samples_per_rank,
+            p=[1.0 - mix - mix_cap - mix_fed, mix, mix_cap, mix_fed],
         )
         xs = np.empty(args.samples_per_rank)
         select_target = component_x == 0
         select_uniform = component_x == 1
         select_capture = component_x == 2
+        select_fed = component_x == 3
         xs[select_target] = stratified_tabulated_samples(
             int(np.count_nonzero(select_target)), target_z, target_cdf_z, rng
         )
@@ -675,16 +708,25 @@ def main(argv: Iterable[str] | None = None) -> int:
         xs[select_capture] = stratified_power_samples(
             int(np.count_nonzero(select_capture)), capture_x_lo, capture_x_hi, 0.0, rng
         )
+        xs[select_fed] = stratified_power_samples(
+            int(np.count_nonzero(select_fed)), fed_x_lo, fed_x_hi, 0.0, rng
+        )
         pt = target_pdf_logx(xs)
         focused_pdf_logx = np.where(
             (xs >= capture_x_lo) & (xs <= capture_x_hi),
             1.0 / math.log(capture_x_hi / capture_x_lo),
             0.0,
         )
+        boundary_fed_pdf_logx = np.where(
+            (xs >= fed_x_lo) & (xs < fed_x_hi),
+            1.0 / math.log(fed_x_hi / fed_x_lo),
+            0.0,
+        )
         proposal = (
-            (1.0 - mix - mix_cap) * pt
+            (1.0 - mix - mix_cap - mix_fed) * pt
             + mix * uniform_pdf_logx
             + mix_cap * focused_pdf_logx
+            + mix_fed * boundary_fed_pdf_logx
         )
         importance_x = pt / proposal
 
@@ -819,6 +861,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     active_weight_fraction = float(np.sum(w_sample[x_sample >= xb]) / np.sum(w_sample))
     effective_sample_size = float(np.sum(w_sample) ** 2 / np.sum(w_sample**2))
     radius_ratio = x_sample / xb  # r_b/a for a=R_h/(2x)
+    boundary_fed_band = (x_sample >= fed_x_lo) & (x_sample < fed_x_hi)
     reaches_boundary = (
         (radius_ratio <= 2.0)
         & (j_sample**2 <= 2.0 * radius_ratio - radius_ratio**2)
@@ -857,6 +900,12 @@ def main(argv: Iterable[str] | None = None) -> int:
         "importance_uniform_fraction": mix,
         "importance_capture_fraction": mix_cap,
         "importance_capture_x_interval": [capture_x_lo, capture_x_hi],
+        "importance_boundary_fed_fraction": mix_fed,
+        "importance_boundary_fed_x_interval": [fed_x_lo, fed_x_hi],
+        "sample_boundary_fed_band_fraction": float(np.mean(boundary_fed_band)),
+        "sample_boundary_fed_band_physical_weight_fraction": float(
+            np.sum(w_sample[boundary_fed_band]) / np.sum(w_sample)
+        ),
         "importance_uniform_j_fraction": float(args.importance_uniform_j_fraction),
         "importance_capture_j_fraction": float(args.importance_capture_j_fraction),
         "importance_capture_j_interval": [capture_j_lo, capture_j_hi],
