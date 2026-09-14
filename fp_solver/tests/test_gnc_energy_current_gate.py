@@ -17,6 +17,7 @@ PACKAGE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PACKAGE))
 
 from gnc_energy_current_gate import evaluate  # noqa: E402
+from analyze_long_run import _json_default  # noqa: E402
 
 
 def gate_row(grid, seed, scale=1.0):
@@ -158,6 +159,9 @@ def test_synthetic_long_run(root: Path) -> None:
 
 
 def main() -> int:
+    encoded = json.dumps({"pass": np.bool_(True)}, default=_json_default)
+    assert json.loads(encoded)["pass"] is True
+
     rows = [
         gate_row((48, 72), 11, 0.98),
         gate_row((48, 72), 22, 1.00),

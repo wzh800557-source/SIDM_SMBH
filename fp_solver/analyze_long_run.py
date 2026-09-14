@@ -25,6 +25,17 @@ KMS_TO_PCMYR = 1.0227121650537077
 CM2_G_TO_PC2_MSUN = 2.0884205246637706e-4
 
 
+def _json_default(value):
+    """Convert NumPy scalar and array values emitted by diagnostics to JSON."""
+    if isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    raise TypeError(
+        f"Object of type {value.__class__.__name__} is not JSON serializable"
+    )
+
+
 def read_named_table(path: Path) -> np.ndarray:
     arr = np.genfromtxt(path, names=True, dtype=float, autostrip=True)
     if arr.dtype.names is None:
@@ -860,8 +871,11 @@ def main(argv: Iterable[str] | None = None) -> int:
             "orbital energies at the interface and capture surface are negative."
         ),
     }
-    out_json.write_text(json.dumps(diag, indent=2, sort_keys=True) + "\n")
-    print(json.dumps(diag, indent=2, sort_keys=True))
+    rendered = json.dumps(
+        diag, indent=2, sort_keys=True, default=_json_default
+    )
+    out_json.write_text(rendered + "\n")
+    print(rendered)
     return 0 if status == "DIRECT_FP_ENERGY_DIAGNOSTIC_COMPLETE" else 4
 
 
