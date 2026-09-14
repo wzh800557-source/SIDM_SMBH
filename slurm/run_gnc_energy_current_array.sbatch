@@ -3,7 +3,7 @@
 #SBATCH --partition=mit_preemptable
 #SBATCH --ntasks=4
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=32G
+#SBATCH --mem=96G
 #SBATCH --time=08:00:00
 #SBATCH --array=0-3%4
 set -euo pipefail
