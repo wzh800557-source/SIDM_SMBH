@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=gnc_e_current
-#SBATCH --partition=mit_preemptable
+#SBATCH --partition=mit_normal
+#SBATCH --no-requeue
 #SBATCH --ntasks=8
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=96G
