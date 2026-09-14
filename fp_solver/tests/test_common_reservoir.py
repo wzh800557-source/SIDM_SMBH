@@ -124,6 +124,9 @@ def main() -> int:
             assert f"SEED_VALUE\t\t\t\t\t\t= {manifest['gnc_seed']}" in model
             assert "SAME_INI_SEED\t\t\t\t\t= 1" in model
             assert "SAME_EVL_SEED\t\t\t\t\t= 1" in model
+            assert "CLONE_SCHEME\t\t\t\t\t= 0" in model
+            assert "# clone x0 = disabled; imported proposal weights are used" in model
+            assert manifest["clone_scheme"] == 0
             assert f"cfs dir ={cfs.with_suffix('')}" in model
             assert manifest["cfs_file"] == cfs.name
             assert manifest["cfs_sha256"] is not None

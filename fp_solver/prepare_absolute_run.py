@@ -25,6 +25,16 @@ def replace_assignment(text: str, key: str, value: str) -> str:
     return pattern.sub(lambda m: m.group("prefix") + value, text, count=1)
 
 
+def comment_assignment(text: str, key: str, note: str) -> str:
+    pattern = re.compile(
+        rf"^\s*{re.escape(key)}\s*=.*$", re.MULTILINE | re.IGNORECASE
+    )
+    matches = list(pattern.finditer(text))
+    if len(matches) != 1:
+        raise ValueError(f"expected one assignment for {key!r}, found {len(matches)}")
+    return pattern.sub(f"# {key} = {note}", text, count=1)
+
+
 def replace_first_data_line(text: str, value: str) -> str:
     lines = text.splitlines()
     for i, line in enumerate(lines):
@@ -185,6 +195,14 @@ def main(argv: Iterable[str] | None = None) -> int:
     model = replace_assignment(model, "SEED_VALUE", str(args.gnc_seed))
     model = replace_assignment(model, "SAME_INI_SEED", "1")
     model = replace_assignment(model, "SAME_EVL_SEED", "1")
+    # The imported x-J ensemble already uses proposal weights to resolve the
+    # high-binding-energy tail.  GNC cloning would apply a second importance
+    # sampler and expand one sample by Clone_factor**level, which both changes
+    # the represented measure and can exhaust node memory during initialization.
+    model = replace_assignment(model, "CLONE_SCHEME", "0")
+    model = comment_assignment(
+        model, "clone x0", "disabled; imported proposal weights are used"
+    )
     if args.cfs_file is not None:
         if not args.cfs_file.is_file():
             raise FileNotFoundError(args.cfs_file)
@@ -199,22 +217,19 @@ def main(argv: Iterable[str] | None = None) -> int:
     )
     model = replace_assignment(model, "timestep_snapshot (output)", f"{args.dt_tnr:.16e}")
     model = replace_assignment(model, "num_of_snapshot", str(nsnap))
-    model = replace_assignment(model, "clone x0", f"{10.0 * xb:.16e}")
     model = replace_grid_pair(model, args.gx_bins, args.dc_bins)
 
     # Deck round-trip checks catch the sequential-parser failure that previously
     # turned a blank clone value into -Infinity/NaN later in initialization.
     parsed = {
         key: assignment_float(model, key)
-        for key in ("mbh", "emin_factor", "emax_factor", "eboundary", "clone x0")
+        for key in ("mbh", "emin_factor", "emax_factor", "eboundary")
     }
     if not all(np.isfinite(list(parsed.values()))):
         raise ValueError("model deck contains non-finite numeric values")
     r_from_deck = norm["rh"] / (2.0 * parsed["eboundary"])
     if abs(r_from_deck / norm["rb"] - 1.0) > 1.0e-12:
         raise ValueError("deck does not map back to exact r_in")
-    if not math.isclose(parsed["clone x0"] / 10.0, xb, rel_tol=1e-12):
-        raise ValueError("clone threshold is not the boundary energy")
     guard_cells = (
         (math.log10(xb) - math.log10(xmin))
         / (math.log10(xmax) - math.log10(xmin))
@@ -341,7 +356,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         "emin_factor": xmin,
         "emax_factor": xmax,
         "guard_cells_below_boundary": guard_cells,
-        "clone_x0_deck": 10.0 * xb,
+        "clone_scheme": 0,
+        "variance_reduction": "imported proposal weights only",
         "df_asymp": norm["asymp"],
         "cusp_slope_beta": dfdiag["beta"],
         "n0_pc3": norm["n0"],
