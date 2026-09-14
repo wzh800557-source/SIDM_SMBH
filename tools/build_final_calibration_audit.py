@@ -152,6 +152,23 @@ def build_audit(root: Path = ROOT) -> dict:
                     "nominal_bondi_benchmark_over_measured_fp"
                 ],
                 "bondi_authorized_for_fiducial_profile": False,
+                "dimensionless_conductive_turnover": calibration[
+                    "conductive_spike"
+                ]["dimensionless_turnover_calibration"],
+            },
+            "direct_fp_energy_current_gate": {
+                "status": "IMPLEMENTED_AWAITING_PRODUCTION_ENSEMBLE",
+                "capture_selection": (
+                    "post-burn-in plunges whose inherited x_initial is below "
+                    "the FP boundary energy"
+                ),
+                "required_design": "two independent seeds at two resolutions",
+                "required_effective_boundary_supplied_captures": 50,
+                "ledger_terms": [
+                    "boundary advected orbital energy",
+                    "captured orbital energy",
+                    "outward released binding energy",
+                ],
             },
         },
         "solver_selection": {
@@ -172,7 +189,10 @@ def build_audit(root: Path = ROOT) -> dict:
         "open_acceptance_gates": {
             "capture_weighted_energy_current": {
                 "status": "NOT_ACCEPTED",
-                "reason": "The production energy-resolution gate failed.",
+                "reason": (
+                    "The old aggregate moment failed. The replacement direct "
+                    "plunge-record gate awaits its production ensemble."
+                ),
             },
             "transition_regime": {
                 "status": "SOLVER_REQUIRED",

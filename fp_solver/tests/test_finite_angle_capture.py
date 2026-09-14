@@ -49,7 +49,7 @@ def main() -> int:
     # Exact conditional mean from numerical quadrature.
     grid = np.linspace(0.0, 1.0, 200001)
     pdf = 10.0 / (1.0 + 9.0 * grid) ** 2
-    mean_exact = np.trapz(grid * pdf, grid)
+    mean_exact = np.trapezoid(grid * pdf, grid)
     assert abs(float(np.mean(u)) / mean_exact - 1.0) < 8.0e-3
 
     v1 = rng.normal(size=(10000, 3)) * 300.0
@@ -84,7 +84,7 @@ def main() -> int:
     afixed = (np.linalg.norm(fixed1[0] - fixed2[0]) / 80.0) ** 2
     grid_fixed = np.linspace(0.0, 1.0, 300001)
     pdf_fixed = (1.0 + afixed) / (1.0 + afixed * grid_fixed) ** 2
-    exact_u = np.trapz(grid_fixed * pdf_fixed, grid_fixed)
+    exact_u = np.trapezoid(grid_fixed * pdf_fixed, grid_fixed)
     assert abs(float(np.mean(angular_weight)) - 1.0) < 1.2e-2
     assert abs(float(np.mean(angular_weight * sampled_u)) / exact_u - 1.0) < 1.5e-2
     direct1, direct2, _ = scatter_equal_mass(fixed1, fixed2, 80.0, rng)
@@ -220,7 +220,7 @@ def main() -> int:
         test_speed**2 + background_speed**2
         - 2.0 * test_speed * background_speed * mu
     )
-    brute = np.trapz(relative / (1.0 + (relative / 80.0) ** 2), mu) / 2.0
+    brute = np.trapezoid(relative / (1.0 + (relative / 80.0) ** 2), mu) / 2.0
     exact = angular_mean_v_sigma_total_ratio(
         test_speed, background_speed, 80.0
     )

@@ -246,7 +246,7 @@ def main() -> int:
     generalized = fit_generalized_shape(s, rate)
     leave_one_out = leave_one_out_published_form(s, rate)
     result = {
-        "schema": "sidm-smbh-cross-regime-calibration-v2",
+        "schema": "sidm-smbh-cross-regime-calibration-v3",
         "status": "AVAILABLE_BRANCHES_CALIBRATED",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "conductive_spike": {
@@ -255,7 +255,27 @@ def main() -> int:
             "digitized_same_form_refit": same_form,
             "leave_one_out_refit_range": leave_one_out,
             "digitized_generalized_shape_check": generalized,
-            "adopted_shape_exponent_p": 1.0,
+            "dimensionless_turnover_calibration": {
+                "formula": "2*(Kn/Kn_*)^p/[1+(Kn/Kn_*)^(2p)]",
+                "Kn_star": published.knudsen_turnover,
+                "adopted_shape_exponent_p": published.shape_exponent_p,
+                "empirical_shape_exponent_p": generalized["shape_exponent_p"],
+                "empirical_sigma_transition_cm2_g": generalized[
+                    "sigma_transition_cm2_g"
+                ],
+                "scope": (
+                    "Hydrostatic, constant, isotropic cross-section conductive "
+                    "SIDM spike. Kn is the local mean free path divided by the "
+                    "transport scale height used by that calculation."
+                ),
+                "interpretation": (
+                    "Kn_*=1 is the LMFP/SMFP crossing. The adopted p=1 is fixed "
+                    "by the opposite linear conductivity asymptotes. The free-p "
+                    "fit is a diagnostic of the digitized turnover shape."
+                ),
+                "not_an_fp_to_bondi_bridge": True,
+            },
+            "adopted_shape_exponent_p": published.shape_exponent_p,
             "adoption_reason": (
                 "The harmonic-conductivity asymptotes fix p=1. The free-p fit is "
                 "retained only as a diagnostic of the measured turnover shape."

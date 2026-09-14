@@ -71,6 +71,9 @@ def load_plunge_records(run: Path) -> np.ndarray:
         run.rglob("plunge_records_*.txt"),
         key=lambda p: int(re.findall(r"(\d+)", p.stem)[-1]),
     )
+    bh_files = [path for path in files if "/BH/" in path.as_posix()]
+    if bh_files:
+        files = bh_files
     rows = []
     for p in files:
         data_lines = [
@@ -80,10 +83,92 @@ def load_plunge_records(run: Path) -> np.ndarray:
         if not data_lines:
             continue
         a = np.loadtxt(data_lines, ndmin=2)
-        if a.shape[1] != 9:
-            raise ValueError(f"{p} has {a.shape[1]} plunge columns, expected 9")
+        if a.shape[1] not in (9, 10):
+            raise ValueError(f"{p} has {a.shape[1]} plunge columns, expected 9 or 10")
+        if a.shape[1] == 9:
+            # Older patched runs did not record particle creation time.  Keep
+            # them readable, but the production gate records this provenance.
+            a = np.column_stack([a, np.full(a.shape[0], np.nan)])
         rows.append(a)
-    return np.vstack(rows) if rows else np.empty((0, 9), float)
+    return np.vstack(rows) if rows else np.empty((0, 10), float)
+
+
+def load_inner_inventory(run: Path) -> np.ndarray:
+    """Load per-snapshot mass and binding-energy inventories from patched GNC."""
+
+    files = sorted(
+        run.rglob("inner_inventory_*.txt"),
+        key=lambda p: int(re.findall(r"(\d+)", p.stem)[-1]),
+    )
+    bh_files = [path for path in files if "/BH/" in path.as_posix()]
+    if bh_files:
+        files = bh_files
+    rows = []
+    for path in files:
+        data = np.loadtxt(path, comments="#", ndmin=2)
+        if data.shape != (1, 6):
+            raise ValueError(f"{path} has shape {data.shape}, expected one row and six columns")
+        rows.append(data[0])
+    return np.asarray(rows, dtype=float) if rows else np.empty((0, 6), float)
+
+
+def effective_count(weights: np.ndarray) -> float:
+    weights = np.asarray(weights, dtype=float)
+    total = float(weights.sum())
+    squared = float(np.square(weights).sum())
+    return total * total / squared if squared > 0.0 else 0.0
+
+
+def weighted_moments(values: np.ndarray, weights: np.ndarray) -> dict:
+    values = np.asarray(values, dtype=float)
+    weights = np.asarray(weights, dtype=float)
+    if values.size == 0 or weights.size != values.size or float(weights.sum()) <= 0.0:
+        return {
+            "mean": math.nan,
+            "variance": math.nan,
+            "standard_error": math.nan,
+            "weight_sum": 0.0,
+            "weight_squared_sum": 0.0,
+            "weighted_value_sum": 0.0,
+            "weighted_value_squared_sum": 0.0,
+            "effective_count": 0.0,
+        }
+    mean = float(np.average(values, weights=weights))
+    variance = float(np.average(np.square(values - mean), weights=weights))
+    neff = effective_count(weights)
+    return {
+        "mean": mean,
+        "variance": variance,
+        "standard_error": math.sqrt(variance / neff) if neff > 0.0 else math.nan,
+        "weight_sum": float(weights.sum()),
+        "weight_squared_sum": float(np.square(weights).sum()),
+        "weighted_value_sum": float(np.dot(weights, values)),
+        "weighted_value_squared_sum": float(np.dot(weights, np.square(values))),
+        "effective_count": neff,
+    }
+
+
+def half_plateau(numerators: np.ndarray, durations: np.ndarray) -> dict:
+    """Compare time-averaged currents in the first and second retained halves."""
+
+    numerators = np.asarray(numerators, dtype=float)
+    durations = np.asarray(durations, dtype=float)
+    midpoint = numerators.size // 2
+    if midpoint < 1 or numerators.size - midpoint < 1:
+        return {
+            "available": False,
+            "first_half": math.nan,
+            "second_half": math.nan,
+            "relative_change": math.inf,
+        }
+    first = float(numerators[:midpoint].sum() / durations[:midpoint].sum())
+    second = float(numerators[midpoint:].sum() / durations[midpoint:].sum())
+    return {
+        "available": True,
+        "first_half": first,
+        "second_half": second,
+        "relative_change": relative_change(first, second),
+    }
 
 
 def main(argv: Iterable[str] | None = None) -> int:
@@ -95,6 +180,18 @@ def main(argv: Iterable[str] | None = None) -> int:
     p.add_argument("--plateau-tolerance", type=float, default=0.25)
     p.add_argument("--minimum-raw-captures", type=int, default=20)
     p.add_argument("--minimum-effective-captures", type=float, default=50.0)
+    p.add_argument(
+        "--minimum-boundary-effective-captures",
+        type=float,
+        default=10.0,
+        help="per-run diagnostic floor; the ensemble gate applies its own pooled floor",
+    )
+    p.add_argument(
+        "--inventory-tolerance",
+        type=float,
+        default=0.25,
+        help="maximum first-half/second-half change in inner mass and binding inventory",
+    )
     time_group = p.add_mutually_exclusive_group()
     time_group.add_argument(
         "--physical-tnr-myr", type=float, default=None,
@@ -141,9 +238,13 @@ def main(argv: Iterable[str] | None = None) -> int:
     cap_n_average = get_column(raw, capture_names)
     boundary_w = get_column(weighted, ("N_emax",))
     boundary_n_average = get_column(raw, ("N_emax",))
+    inner_inventory_event_w = get_column(weighted, ("N_norm_bd",))
+    inner_inventory_event_n_average = get_column(raw, ("N_norm_bd",))
     tsnap_gnc_native_myr = get_column(weighted, ("Tsnap", "TsnapMyr"))
     if not np.all(np.isfinite(np.r_[cap_w, cap_n_average, boundary_w,
-                                        boundary_n_average, tsnap_gnc_native_myr])):
+                                    boundary_n_average, inner_inventory_event_w,
+                                    inner_inventory_event_n_average,
+                                    tsnap_gnc_native_myr])):
         raise ValueError("event table contains non-finite values")
     if np.any(np.diff(tsnap_gnc_native_myr) <= 0.0):
         raise ValueError("GNC snapshot times are not strictly increasing")
@@ -160,6 +261,8 @@ def main(argv: Iterable[str] | None = None) -> int:
     cap_n_average = cap_n_average[:nuse]
     boundary_w = boundary_w[:nuse]
     boundary_n_average = boundary_n_average[:nuse]
+    inner_inventory_event_w = inner_inventory_event_w[:nuse]
+    inner_inventory_event_n_average = inner_inventory_event_n_average[:nuse]
     tsnap_gnc_native_myr = tsnap_gnc_native_myr[:nuse]
 
     gnc_native_tnr_myr = float(
@@ -215,31 +318,39 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     plunge = load_plunge_records(args.run)
     # columns: isnap, x_final, x_initial, j_final, j_initial, weight_real,
-    #          particle mass, exit time, periapse
+    #          particle mass, exit time, periapse, creation time
     burn_snapshot = int(round(args.burn_in_tnr / args.dt_tnr))
-    post_plunge = plunge[plunge[:, 0] > burn_snapshot] if plunge.size else plunge
+    if plunge.size:
+        in_range = (plunge[:, 0] > burn_snapshot) & (plunge[:, 0] <= nuse)
+        post_plunge = plunge[in_range]
+    else:
+        post_plunge = plunge
+
+    energy_unit_kms2 = G_PC_KMS2_MSUN * mbh / rh
+    mass_flux_scale = 4.0 * math.pi * rb**2 * rho_b * sigma_b * KMS_TO_PCMYR
+    energy_flux_scale = mass_flux_scale * sigma_b**2
+    x_boundary = float(manifest["x_boundary"])
+    boundary_binding_kms2 = x_boundary * energy_unit_kms2
+
     if post_plunge.size:
         physical_number_weight = post_plunge[:, 5] / ranks
         physical_mass_weight = physical_number_weight * post_plunge[:, 6]
-        post_mass_records = float(physical_mass_weight.sum())
-        # GNC stores bound orbital energies with the conventional negative sign.
-        # The closure uses positive binding energy x=|E|/(GM/R_h).
         x_final_binding = np.abs(post_plunge[:, 1])
         x_initial_binding = np.abs(post_plunge[:, 2])
-        mean_x_final = float(np.average(x_final_binding, weights=physical_mass_weight))
-        mean_x_initial = float(np.average(x_initial_binding, weights=physical_mass_weight))
-        weight_sum = float(physical_mass_weight.sum())
-        weight_sq_sum = float(np.square(physical_mass_weight).sum())
-        capture_effective_count = weight_sum**2 / weight_sq_sum if weight_sq_sum > 0.0 else 0.0
-        x_final_variance = float(np.average(
-            np.square(x_final_binding - mean_x_final), weights=physical_mass_weight
-        ))
-        mean_x_final_standard_error = (
-            math.sqrt(x_final_variance / capture_effective_count)
-            if capture_effective_count > 0.0 else math.nan
-        )
+        all_final = weighted_moments(x_final_binding, physical_mass_weight)
+        all_initial = weighted_moments(x_initial_binding, physical_mass_weight)
+        post_mass_records = all_final["weight_sum"]
+        mean_x_final = all_final["mean"]
+        mean_x_initial = all_initial["mean"]
+        capture_effective_count = all_final["effective_count"]
+        mean_x_final_standard_error = all_final["standard_error"]
         raw_capture_records = int(post_plunge.shape[0])
     else:
+        physical_mass_weight = np.empty(0, float)
+        x_final_binding = np.empty(0, float)
+        x_initial_binding = np.empty(0, float)
+        all_final = weighted_moments(x_final_binding, physical_mass_weight)
+        all_initial = weighted_moments(x_initial_binding, physical_mass_weight)
         post_mass_records = 0.0
         mean_x_final = math.nan
         mean_x_initial = math.nan
@@ -252,16 +363,13 @@ def main(argv: Iterable[str] | None = None) -> int:
         / max(abs(post_mass_records), abs(post_mass_table), np.finfo(float).tiny)
     )
     mass_consistency_pass = mass_consistency <= args.mass_consistency_tolerance
-    plateau_pass = last_change <= args.plateau_tolerance
+    legacy_plateau_pass = last_change <= args.plateau_tolerance
     raw_count_pass = raw_capture_records >= args.minimum_raw_captures
     effective_count_pass = capture_effective_count >= args.minimum_effective_captures
     count_pass = raw_count_pass and effective_count_pass
 
-    energy_unit_kms2 = G_PC_KMS2_MSUN * mbh / rh
     mean_capture_binding_kms2 = mean_x_final * energy_unit_kms2
     mean_initial_binding_kms2 = mean_x_initial * energy_unit_kms2
-    mass_flux_scale = 4.0 * math.pi * rb**2 * rho_b * sigma_b * KMS_TO_PCMYR
-    energy_flux_scale = mass_flux_scale * sigma_b**2
     c_m = mdot / mass_flux_scale
     l_capture = mdot * mean_capture_binding_kms2
     l_sink = -1.5 * mdot * sigma_b**2
@@ -270,11 +378,126 @@ def main(argv: Iterable[str] | None = None) -> int:
     c_e_sink = l_sink / energy_flux_scale
     c_e_source_ceiling = l_source_ceiling / energy_flux_scale
 
+    # A late plunge need not represent a boundary-fed steady current.  The
+    # initial-energy label is inherited by clones and boundary replacements, so
+    # x_initial < x_boundary selects trajectories supplied from outside r_in and
+    # removes depletion of the initially populated inner cusp.
+    supplied_mask = x_initial_binding < x_boundary
+    supplied = post_plunge[supplied_mask] if post_plunge.size else post_plunge
+    supplied_mass_weight = physical_mass_weight[supplied_mask]
+    supplied_x_final = x_final_binding[supplied_mask]
+    supplied_x_initial = x_initial_binding[supplied_mask]
+    supplied_release_x = supplied_x_final - x_boundary
+    supplied_final_stats = weighted_moments(supplied_x_final, supplied_mass_weight)
+    supplied_initial_stats = weighted_moments(supplied_x_initial, supplied_mass_weight)
+    supplied_release_stats = weighted_moments(supplied_release_x, supplied_mass_weight)
+
+    supplied_mass_win = np.zeros(nwin, float)
+    supplied_raw_win = np.zeros(nwin, float)
+    supplied_capture_mass_x_win = np.zeros(nwin, float)
+    supplied_release_mass_x_win = np.zeros(nwin, float)
+    if supplied.size:
+        supplied_window_index = ((supplied[:, 0].astype(int) - 1) // spw).astype(int)
+        valid_window = (supplied_window_index >= 0) & (supplied_window_index < nwin)
+        supplied_window_index = supplied_window_index[valid_window]
+        supplied_weights_in_window = supplied_mass_weight[valid_window]
+        supplied_final_in_window = supplied_x_final[valid_window]
+        supplied_release_in_window = supplied_release_x[valid_window]
+        np.add.at(supplied_mass_win, supplied_window_index, supplied_weights_in_window)
+        np.add.at(supplied_raw_win, supplied_window_index, 1.0)
+        np.add.at(
+            supplied_capture_mass_x_win,
+            supplied_window_index,
+            supplied_weights_in_window * supplied_final_in_window,
+        )
+        np.add.at(
+            supplied_release_mass_x_win,
+            supplied_window_index,
+            supplied_weights_in_window * supplied_release_in_window,
+        )
+
+    supplied_mdot_win = supplied_mass_win / dt_win_myr
+    supplied_capture_current_win = supplied_capture_mass_x_win * energy_unit_kms2 / dt_win_myr
+    supplied_boundary_advective_current_win = (
+        supplied_mass_win * x_boundary * energy_unit_kms2 / dt_win_myr
+    )
+    supplied_outward_current_win = supplied_release_mass_x_win * energy_unit_kms2 / dt_win_myr
+    supplied_time = float(dt_win_myr[keep].sum())
+    supplied_mass = float(supplied_mass_win[keep].sum())
+    supplied_mdot = supplied_mass / supplied_time
+    supplied_capture_current = float(
+        supplied_capture_mass_x_win[keep].sum() * energy_unit_kms2 / supplied_time
+    )
+    supplied_boundary_advective_current = float(
+        supplied_mass * x_boundary * energy_unit_kms2 / supplied_time
+    )
+    supplied_outward_current = float(
+        supplied_release_mass_x_win[keep].sum() * energy_unit_kms2 / supplied_time
+    )
+    supplied_identity_residual = (
+        supplied_capture_current
+        - supplied_boundary_advective_current
+        - supplied_outward_current
+    )
+    supplied_identity_relative = abs(supplied_identity_residual) / max(
+        abs(supplied_capture_current),
+        abs(supplied_boundary_advective_current),
+        abs(supplied_outward_current),
+        np.finfo(float).tiny,
+    )
+    supplied_mass_plateau = half_plateau(supplied_mass_win[keep], dt_win_myr[keep])
+    supplied_energy_plateau = half_plateau(
+        supplied_release_mass_x_win[keep] * energy_unit_kms2,
+        dt_win_myr[keep],
+    )
+    supplied_plateau_pass = (
+        supplied_mass_plateau["available"]
+        and supplied_energy_plateau["available"]
+        and supplied_mass_plateau["relative_change"] <= args.plateau_tolerance
+        and supplied_energy_plateau["relative_change"] <= args.plateau_tolerance
+    )
+    supplied_effective_pass = (
+        supplied_final_stats["effective_count"]
+        >= args.minimum_boundary_effective_captures
+    )
+    supplied_energy_physical = bool(
+        supplied.size
+        and np.all(np.isfinite(supplied_release_x))
+        and np.all(supplied_release_x >= 0.0)
+        and supplied_outward_current >= 0.0
+    )
+
+    # Directly track the live kinetic reservoir.  A constant current measured
+    # while this inventory drains is a transient, not a stationary closure.
+    inventory = load_inner_inventory(args.run)
+    if inventory.size:
+        inventory = inventory[
+            (inventory[:, 0] > burn_snapshot) & (inventory[:, 0] <= nuse)
+        ]
+    expected_inventory_snapshots = max(nuse - burn_snapshot, 0)
+    inventory_completeness = (
+        float(inventory.shape[0]) / expected_inventory_snapshots
+        if expected_inventory_snapshots else 0.0
+    )
+    inventory_mass_plateau = half_plateau(
+        inventory[:, 2] if inventory.size else np.empty(0),
+        np.ones(inventory.shape[0], float),
+    )
+    inventory_energy_plateau = half_plateau(
+        inventory[:, 3] * energy_unit_kms2 if inventory.size else np.empty(0),
+        np.ones(inventory.shape[0], float),
+    )
+    inventory_stationary = bool(
+        inventory_completeness >= 0.95
+        and inventory_mass_plateau["available"]
+        and inventory_energy_plateau["available"]
+        and inventory_mass_plateau["relative_change"] <= args.inventory_tolerance
+        and inventory_energy_plateau["relative_change"] <= args.inventory_tolerance
+    )
+
     # The capture records carry unequal physical weights.  Their effective count,
-    # rather than the raw Monte-Carlo row count, sets the counting error.  The
-    # window-to-window standard error additionally captures residual temporal
-    # variation.  We take the larger of the two for a conservative mass-current
-    # uncertainty and propagate the capture-energy mean independently.
+    # rather than the raw row count, sets the counting error.  The legacy all-
+    # capture quantities remain in the output for comparison with earlier runs.
     counting_fractional_error = (
         1.0 / math.sqrt(capture_effective_count)
         if capture_effective_count > 0.0 else math.inf
@@ -295,35 +518,75 @@ def main(argv: Iterable[str] | None = None) -> int:
     capture_energy_current_standard_error = abs(l_capture) * capture_energy_fractional_error
     sink_current_standard_error = abs(l_sink) * mdot_fractional_error
 
-    status = "ABSOLUTE_CLOSURE_MEASURED"
-    failures = []
-    if not plateau_pass:
-        failures.append("capture rate has not plateaued")
-    if not raw_count_pass:
-        failures.append("too few direct plunge records")
-    if not effective_count_pass:
-        failures.append("too few effective weighted captures")
-    if not mass_consistency_pass:
-        failures.append("event and plunge mass budgets disagree")
-    if not np.isfinite(c_e_capture):
-        failures.append("capture-weighted energy is unavailable")
-    if failures:
-        status = "MORE_RUNTIME_OR_DEBUG_REQUIRED"
-    statistical_acceptance_pass = not failures
-    physical_kernel_compatible = (
-        args.sigma_over_m_cm2_g is None or args.kernel_compatible
+    supplied_window_rates = supplied_mdot_win[keep]
+    supplied_window_mean = float(np.mean(supplied_window_rates))
+    supplied_window_std = (
+        float(np.std(supplied_window_rates, ddof=1))
+        if supplied_window_rates.size > 1 else 0.0
     )
-    physical_blockers = []
-    if statistical_acceptance_pass and not physical_kernel_compatible:
-        status = "STATISTICALLY_MEASURED_KERNEL_NOT_VALIDATED"
-        physical_blockers.append(
-            "GNC uses its forward-peaked small-angle SIDM kernel, which has not "
-            "been shown to match the isotropic constant-cross-section fluid run"
-        )
+    supplied_window_sem = supplied_window_std / math.sqrt(supplied_window_rates.size)
+    supplied_counting_fractional_error = (
+        1.0 / math.sqrt(supplied_final_stats["effective_count"])
+        if supplied_final_stats["effective_count"] > 0.0 else math.inf
+    )
+    supplied_window_fractional_error = (
+        supplied_window_sem / abs(supplied_mdot)
+        if supplied_mdot != 0.0 else math.inf
+    )
+    supplied_mdot_fractional_error = max(
+        supplied_counting_fractional_error, supplied_window_fractional_error
+    )
+    supplied_mdot_standard_error = abs(supplied_mdot) * supplied_mdot_fractional_error
+    supplied_release_mean_fractional_error = (
+        supplied_release_stats["standard_error"] / abs(supplied_release_stats["mean"])
+        if np.isfinite(supplied_release_stats["standard_error"])
+        and supplied_release_stats["mean"] != 0.0 else math.inf
+    )
+    supplied_outward_fractional_error = math.sqrt(
+        supplied_mdot_fractional_error**2
+        + supplied_release_mean_fractional_error**2
+    )
+    supplied_outward_standard_error = (
+        abs(supplied_outward_current) * supplied_outward_fractional_error
+    )
+
+    physical_kernel_compatible = args.kernel_compatible
+    diagnostic_failures = []
+    if not mass_consistency_pass:
+        diagnostic_failures.append("event and plunge mass budgets disagree")
+    if raw_capture_records == 0:
+        diagnostic_failures.append("no post-burn-in plunge records")
+    if inventory_completeness < 0.95:
+        diagnostic_failures.append("inner mass-energy inventory records are incomplete")
+    if not np.isfinite(supplied_outward_current):
+        diagnostic_failures.append("boundary-supplied energy current is unavailable")
+    status = (
+        "DIRECT_FP_ENERGY_DIAGNOSTIC_COMPLETE"
+        if not diagnostic_failures else "DIRECT_FP_ENERGY_DIAGNOSTIC_INCOMPLETE"
+    )
+    acceptance_blockers = []
+    if not supplied_effective_pass:
+        acceptance_blockers.append("too few effective boundary-supplied captures in this run")
+    if not supplied_plateau_pass:
+        acceptance_blockers.append("boundary-supplied mass or energy current has not plateaued")
+    if not inventory_stationary:
+        acceptance_blockers.append("inner mass or binding-energy inventory is not stationary")
+    if not supplied_energy_physical:
+        acceptance_blockers.append("released binding-energy current is not non-negative")
+    if not physical_kernel_compatible:
+        acceptance_blockers.append("SIDM kernel compatibility was not asserted")
+    statistical_acceptance_pass = not acceptance_blockers and not diagnostic_failures
+    physical_blockers = ([] if physical_kernel_compatible else [
+        "The requested physical time mapping must use the same Born/Yukawa "
+        "kernel as the GNC diffusion tables."
+    ])
 
     rows = np.column_stack([
         t0_tnr, t1_tnr, t0_myr, t1_myr, cap_w_win, cap_n_win_actual,
         mass_win, mdot_win, bd_w_win, bd_n_win_actual,
+        supplied_raw_win, supplied_mass_win, supplied_mdot_win,
+        supplied_capture_current_win, supplied_boundary_advective_current_win,
+        supplied_outward_current_win,
     ])
     out_csv = args.out_csv or args.run / "absolute_closure_windows.csv"
     out_json = args.out_json or args.run / "absolute_closure_diagnostics.json"
@@ -334,7 +597,12 @@ def main(argv: Iterable[str] | None = None) -> int:
         delimiter=",",
         header=("t0_TNR,t1_TNR,t0_Myr,t1_Myr,captures_weighted_number,"
                 "captures_raw_actual,captured_mass_Msun,Mdot_Msun_per_Myr,"
-                "boundary_exits_weighted,boundary_exits_raw_actual"),
+                "boundary_exits_weighted,boundary_exits_raw_actual,"
+                "boundary_supplied_raw_records,boundary_supplied_mass_Msun,"
+                "boundary_supplied_Mdot_Msun_per_Myr,"
+                "boundary_supplied_capture_binding_current_Msun_kms2_per_Myr,"
+                "boundary_advected_binding_current_Msun_kms2_per_Myr,"
+                "outward_released_binding_current_Msun_kms2_per_Myr"),
         comments="",
         fmt="%.12e",
     )
@@ -343,15 +611,17 @@ def main(argv: Iterable[str] | None = None) -> int:
         plunge,
         delimiter=",",
         header=("isnap,x_final,x_initial,j_final,j_initial,weight_real_per_task,"
-                "particle_mass_Msun,exit_time_GNC_native_Myr,rp_AU"),
+                "particle_mass_Msun,exit_time_GNC_native_Myr,rp_AU,"
+                "create_time_GNC_native"),
         comments="",
         fmt="%.16e",
     )
 
     diag = {
-        "schema": "gnc-absolute-closure-diagnostic-v2",
+        "schema": "gnc-direct-energy-current-diagnostic-v3",
         "status": status,
-        "failures": failures,
+        "failures": diagnostic_failures,
+        "acceptance_blockers": acceptance_blockers,
         "statistical_acceptance_pass": statistical_acceptance_pass,
         "physical_kernel_compatible": physical_kernel_compatible,
         "physical_blockers": physical_blockers,
@@ -390,7 +660,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         "plateau_tolerance": args.plateau_tolerance,
         "minimum_raw_captures": args.minimum_raw_captures,
         "minimum_effective_captures": args.minimum_effective_captures,
-        "plateau_pass": plateau_pass,
+        "plateau_pass": legacy_plateau_pass,
         "raw_count_pass": raw_count_pass,
         "effective_count_pass": effective_count_pass,
         "mass_consistency_pass": mass_consistency_pass,
@@ -412,30 +682,142 @@ def main(argv: Iterable[str] | None = None) -> int:
         "C_E_capture_inward": c_e_capture,
         "C_E_thermal_sink": c_e_sink,
         "C_E_returned_source_ceiling": c_e_source_ceiling,
+        "boundary_supplied_current": {
+            "selection": "post-burn-in plunge with abs(x_initial) < x_boundary",
+            "interpretation": (
+                "This excludes particles drawn from the initially populated "
+                "inner cusp. The selected current is supplied through the outer "
+                "FP reservoir rather than by transient cusp depletion."
+            ),
+            "raw_capture_count": int(supplied.shape[0]),
+            "effective_capture_count": supplied_final_stats["effective_count"],
+            "minimum_per_run_effective_capture_count": (
+                args.minimum_boundary_effective_captures
+            ),
+            "effective_count_pass": supplied_effective_pass,
+            "captured_mass_msun": supplied_mass,
+            "time_myr": supplied_time,
+            "mdot_msun_per_myr": supplied_mdot,
+            "mdot_standard_error_msun_per_myr": supplied_mdot_standard_error,
+            "mdot_fractional_error": supplied_mdot_fractional_error,
+            "mean_x_initial": supplied_initial_stats["mean"],
+            "mean_x_capture": supplied_final_stats["mean"],
+            "mean_delta_x_released": supplied_release_stats["mean"],
+            "boundary_x": x_boundary,
+            "boundary_binding_energy_kms2": boundary_binding_kms2,
+            "mean_capture_binding_energy_kms2": (
+                supplied_final_stats["mean"] * energy_unit_kms2
+            ),
+            "mean_released_binding_energy_kms2": (
+                supplied_release_stats["mean"] * energy_unit_kms2
+            ),
+            "capture_binding_current_msun_kms2_per_myr": supplied_capture_current,
+            "boundary_advected_binding_current_msun_kms2_per_myr": (
+                supplied_boundary_advective_current
+            ),
+            "outward_released_binding_current_msun_kms2_per_myr": (
+                supplied_outward_current
+            ),
+            "outward_released_binding_current_standard_error_msun_kms2_per_myr": (
+                supplied_outward_standard_error
+            ),
+            "current_identity": (
+                "capture binding current = boundary advected binding current "
+                "+ outward released binding current"
+            ),
+            "current_identity_residual_msun_kms2_per_myr": (
+                supplied_identity_residual
+            ),
+            "current_identity_relative_residual": supplied_identity_relative,
+            "nonnegative_released_energy_pass": supplied_energy_physical,
+            "mass_current_plateau": supplied_mass_plateau,
+            "released_energy_current_plateau": supplied_energy_plateau,
+            "plateau_tolerance": args.plateau_tolerance,
+            "plateau_pass": supplied_plateau_pass,
+            "C_M": supplied_mdot / mass_flux_scale,
+            "C_E_capture_binding": supplied_capture_current / energy_flux_scale,
+            "C_E_boundary_advected_binding": (
+                supplied_boundary_advective_current / energy_flux_scale
+            ),
+            "C_E_outward_released_binding": (
+                supplied_outward_current / energy_flux_scale
+            ),
+            "sufficient_statistics": {
+                "physical_mass_weight_sum_msun": supplied_final_stats["weight_sum"],
+                "physical_mass_weight_squared_sum_msun2": supplied_final_stats[
+                    "weight_squared_sum"
+                ],
+                "weighted_x_capture_sum_msun": supplied_final_stats[
+                    "weighted_value_sum"
+                ],
+                "weighted_x_capture_squared_sum_msun": supplied_final_stats[
+                    "weighted_value_squared_sum"
+                ],
+                "weighted_x_initial_sum_msun": supplied_initial_stats[
+                    "weighted_value_sum"
+                ],
+                "weighted_delta_x_sum_msun": supplied_release_stats[
+                    "weighted_value_sum"
+                ],
+                "weighted_delta_x_squared_sum_msun": supplied_release_stats[
+                    "weighted_value_squared_sum"
+                ],
+            },
+        },
+        "inner_reservoir_stationarity": {
+            "source": "direct per-snapshot FP mass and binding-energy inventory",
+            "records_found": int(inventory.shape[0]),
+            "records_expected": expected_inventory_snapshots,
+            "completeness_fraction": inventory_completeness,
+            "mass_inventory_plateau": inventory_mass_plateau,
+            "binding_energy_inventory_plateau": inventory_energy_plateau,
+            "tolerance": args.inventory_tolerance,
+            "stationary": inventory_stationary,
+            "event_table_post_burn_weighted_inner_number_mean": float(
+                np.mean(inner_inventory_event_w[burn_snapshot:nuse])
+            ),
+            "event_table_post_burn_raw_inner_number_mean_actual": float(
+                np.mean(inner_inventory_event_n_average[burn_snapshot:nuse]) * ranks
+            ),
+        },
+        "run_provenance": {
+            "gnc_seed": manifest.get("gnc_seed"),
+            "same_initialization_seed": manifest.get("same_initialization_seed"),
+            "same_evolution_seed": manifest.get("same_evolution_seed"),
+            "gx_bins": manifest.get("gx_bins"),
+            "dc_bins": manifest.get("dc_bins"),
+            "ranks": ranks,
+            "common_reservoir_fingerprint": manifest.get(
+                "common_reservoir_fingerprint"
+            ),
+            "physical_configuration_fingerprint": manifest.get(
+                "physical_configuration_fingerprint"
+            ),
+            "sidm_kernel": manifest.get("sidm_kernel"),
+            "sigma0_over_m_cm2_g": manifest.get("sigma0_over_m_cm2_g"),
+            "yukawa_w_kms": manifest.get("yukawa_w_kms"),
+        },
         "r_in_pc": rb,
         "rho_boundary_msun_pc3": rho_b,
         "sigma_boundary_kms": sigma_b,
         "mbh_msun": mbh,
         "rh_pc": rh,
         "kernel_scope": (
-            "This GNC build uses its forward-peaked, small-angle SIDM diffusion "
-            "kernel, including the energy-dependent effective Coulomb logarithm "
-            "and SIDM normalization. It is not an isotropic hard-scattering "
-            "operator and therefore is not automatically compatible with the "
-            "constant-cross-section fluid calculation."
+            "The production current uses the fixed t-channel Born/Yukawa kernel. "
+            "The --kernel-compatible assertion records that the physical time "
+            "mapping and the coupled halo use that same kernel."
         ),
         "window_csv": out_csv.name,
         "plunge_csv": str(out_plunge.resolve()),
         "sign_convention": (
-            "capture current is a positive inward magnitude; the fluid sink is "
-            "negative and the hypothetical fully returned source is positive"
+            "Mass and binding-energy capture currents are positive inward "
+            "magnitudes. Released binding energy is positive outward. Signed "
+            "orbital energies at the interface and capture surface are negative."
         ),
     }
     out_json.write_text(json.dumps(diag, indent=2, sort_keys=True) + "\n")
     print(json.dumps(diag, indent=2, sort_keys=True))
-    if status == "ABSOLUTE_CLOSURE_MEASURED":
-        return 0
-    return 5 if status == "STATISTICALLY_MEASURED_KERNEL_NOT_VALIDATED" else 4
+    return 0 if status == "DIRECT_FP_ENERGY_DIAGNOSTIC_COMPLETE" else 4
 
 
 if __name__ == "__main__":

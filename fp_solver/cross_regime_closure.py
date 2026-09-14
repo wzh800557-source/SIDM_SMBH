@@ -146,11 +146,15 @@ class ConductiveSpikeCalibration:
     A: float = 0.056
     B: float = 0.27
     baseline_msun_per_yr: float = 1.7
+    knudsen_turnover: float = 1.0
+    shape_exponent_p: float = 1.0
     source: str = "Sabarish et al. 2025, arXiv:2505.14779"
 
     def __post_init__(self) -> None:
         _positive_finite("A", self.A)
         _positive_finite("B", self.B)
+        _positive_finite("knudsen_turnover", self.knudsen_turnover)
+        _positive_finite("shape_exponent_p", self.shape_exponent_p)
         if not math.isfinite(float(self.baseline_msun_per_yr)) or self.baseline_msun_per_yr < 0:
             raise ValueError("baseline_msun_per_yr must be non-negative and finite")
 
@@ -175,11 +179,47 @@ class ConductiveSpikeCalibration:
         )
 
     def normalized_excess(self, sigma_over_m_cm2_g: float | np.ndarray):
-        """Return ``2*x/(1+x^2)`` with ``x=s/s_transition``."""
+        """Return the adopted harmonic turnover as a function of cross-section."""
 
         s = np.asarray(sigma_over_m_cm2_g, dtype=float)
+        if np.any(~np.isfinite(s)) or np.any(s <= 0.0):
+            raise ValueError("sigma_over_m_cm2_g must be positive and finite")
         x = s / self.sigma_transition_cm2_g
-        out = 2.0 * x / (1.0 + x * x)
+        p = self.shape_exponent_p
+        out = 2.0 * x**p / (1.0 + x ** (2.0 * p))
+        return float(out) if out.ndim == 0 else out
+
+    def normalized_excess_knudsen(
+        self,
+        knudsen_number: float | np.ndarray,
+        *,
+        shape_exponent_p: float | None = None,
+        knudsen_turnover: float | None = None,
+    ):
+        """Return the conductive excess in dimensionless Knudsen form.
+
+        At fixed halo structure, ``sigma/m`` is inversely proportional to the
+        mean free path and hence to ``Kn``.  The harmonic turnover is symmetric
+        under inversion, so it can be written
+
+        ``2 (Kn/Kn_*)^p / [1 + (Kn/Kn_*)^(2p)]``.
+
+        ``Kn_*=1`` identifies the mean-free-path/scale-height crossing.  The
+        adopted ``p=1`` follows from the LMFP and SMFP conductivity asymptotes;
+        neither number is a universal FP-to-Bondi interpolation parameter.
+        """
+
+        kn = np.asarray(knudsen_number, dtype=float)
+        if np.any(~np.isfinite(kn)) or np.any(kn <= 0.0):
+            raise ValueError("knudsen_number must be positive and finite")
+        p = self.shape_exponent_p if shape_exponent_p is None else _positive_finite(
+            "shape_exponent_p", shape_exponent_p
+        )
+        kn_star = self.knudsen_turnover if knudsen_turnover is None else _positive_finite(
+            "knudsen_turnover", knudsen_turnover
+        )
+        x = kn / kn_star
+        out = 2.0 * x**p / (1.0 + x ** (2.0 * p))
         return float(out) if out.ndim == 0 else out
 
     def as_dict(self) -> dict:
@@ -188,8 +228,13 @@ class ConductiveSpikeCalibration:
             {
                 "sigma_transition_cm2_g": self.sigma_transition_cm2_g,
                 "maximum_excess_msun_per_yr": self.maximum_excess_msun_per_yr,
+                "knudsen_turnover": self.knudsen_turnover,
+                "shape_exponent_p": self.shape_exponent_p,
                 "lmfp_scaling": "excess rate proportional to sigma/m",
                 "smfp_scaling": "excess rate proportional to (sigma/m)^-1",
+                "dimensionless_turnover": (
+                    "2*(Kn/Kn_*)^p/[1+(Kn/Kn_*)^(2p)]"
+                ),
             }
         )
         return out

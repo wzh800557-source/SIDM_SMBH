@@ -92,6 +92,8 @@ def main() -> int:
                 0.1,
                 "--total-tnr",
                 0.2,
+                "--gnc-seed",
+                7300 + len(manifests),
             )
             diagnostics[name] = json.loads((norm / "df_normalization.json").read_text())
             manifests[name] = json.loads((rundir / "run_manifest.json").read_text())
@@ -112,6 +114,12 @@ def main() -> int:
             == manifests["inner"]["common_reservoir_fingerprint"]
             == manifests["outer_repeat"]["common_reservoir_fingerprint"]
         )
+        assert manifests["outer"]["gnc_seed"] != manifests["inner"]["gnc_seed"]
+        for name, manifest in manifests.items():
+            model = (root / f"run_{name}" / "model.in").read_text()
+            assert f"SEED_VALUE\t\t\t\t\t\t= {manifest['gnc_seed']}" in model
+            assert "SAME_INI_SEED\t\t\t\t\t= 1" in model
+            assert "SAME_EVL_SEED\t\t\t\t\t= 1" in model
         assert (
             diagnostics["outer"]["df_table_sha256"]
             == diagnostics["outer_repeat"]["df_table_sha256"]

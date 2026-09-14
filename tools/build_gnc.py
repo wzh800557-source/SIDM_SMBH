@@ -46,6 +46,8 @@ def main() -> int:
     subprocess.run([sys.executable, str(ROOT / "fp_solver" / "install_sidm_born_kernel.py"), str(build)], check=True)
     state = {"status": "PREPARED", "compiled": False,
              "absolute_normalization_patch": True, "plunge_records_patch": True,
+             "inner_inventory_patch": True,
+             "snapshot_terminal_coefficients_only": True,
              "weighted_xj_loader": True, "born_kernel": True}
     if not args.prepare_only:
         opts = [f"FC={args.fc}", f"hdf5dirlib={Path(args.hdf5_libdir).resolve()}",

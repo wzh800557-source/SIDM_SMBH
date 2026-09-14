@@ -13,45 +13,55 @@
     "adopted_shape_exponent_p": 1.0,
     "adoption_reason": "The harmonic-conductivity asymptotes fix p=1. The free-p fit is retained only as a diagnostic of the measured turnover shape.",
     "digitized_generalized_shape_check": {
-      "baseline_msun_per_yr": 1.5691964046322684,
-      "maximum_excess_msun_per_yr": 4.084931649552909,
+      "baseline_msun_per_yr": 1.5691964102692701,
+      "maximum_excess_msun_per_yr": 4.084931648018759,
       "optimizer_success": true,
-      "rms_msun_per_yr": 0.08083366344330498,
-      "shape_exponent_p": 0.8982106218466936,
-      "sigma_transition_cm2_g": 2.1971346119012574
+      "rms_msun_per_yr": 0.08083366344330493,
+      "shape_exponent_p": 0.89821062464303,
+      "sigma_transition_cm2_g": 2.197134612888759
     },
     "digitized_same_form_refit": {
-      "A": 0.05705389255926939,
-      "B": 0.2755432650420915,
-      "baseline_msun_per_yr": 1.7819027820912625,
-      "maximum_absolute_residual_msun_per_yr": 0.2175323926893329,
-      "maximum_excess_msun_per_yr": 3.987791691950335,
+      "A": 0.057053892543220214,
+      "B": 0.27554326603932106,
+      "baseline_msun_per_yr": 1.7819027871379343,
+      "maximum_absolute_residual_msun_per_yr": 0.21753239575075511,
+      "maximum_excess_msun_per_yr": 3.9877916852950266,
       "optimizer_success": true,
-      "rms_msun_per_yr": 0.11784586173688016,
-      "sigma_transition_cm2_g": 2.1976182862154428
+      "rms_msun_per_yr": 0.11784586173688053,
+      "sigma_transition_cm2_g": 2.19761829050128
+    },
+    "dimensionless_turnover_calibration": {
+      "Kn_star": 1.0,
+      "adopted_shape_exponent_p": 1.0,
+      "empirical_shape_exponent_p": 0.89821062464303,
+      "empirical_sigma_transition_cm2_g": 2.197134612888759,
+      "formula": "2*(Kn/Kn_*)^p/[1+(Kn/Kn_*)^(2p)]",
+      "interpretation": "Kn_*=1 is the LMFP/SMFP crossing. The adopted p=1 is fixed by the opposite linear conductivity asymptotes. The free-p fit is a diagnostic of the digitized turnover shape.",
+      "not_an_fp_to_bondi_bridge": true,
+      "scope": "Hydrostatic, constant, isotropic cross-section conductive SIDM spike. Kn is the local mean free path divided by the transport scale height used by that calculation."
     },
     "leave_one_out_refit_range": {
       "interpretation": "Sensitivity to omission of one vector point; not a statistical confidence interval.",
       "number_of_refits": 10,
       "ranges": {
         "A": {
-          "maximum": 0.058623856338678455,
+          "maximum": 0.05862385646161433,
           "minimum": 0.05527841672790699
         },
         "B": {
-          "maximum": 0.2855424167671642,
+          "maximum": 0.285542416965776,
           "minimum": 0.2643112670915345
         },
         "baseline_msun_per_yr": {
-          "maximum": 1.8710488902212037,
+          "maximum": 1.8710488967352241,
           "minimum": 1.72734881021939
         },
         "maximum_excess_msun_per_yr": {
           "maximum": 4.1365127586820885,
-          "minimum": 3.8655413629785884
+          "minimum": 3.8655413539886
         },
         "sigma_transition_cm2_g": {
-          "maximum": 2.2556278633598854,
+          "maximum": 2.255627864428685,
           "minimum": 2.148531311615471
         }
       }
@@ -82,16 +92,19 @@
       "A": 0.056,
       "B": 0.27,
       "baseline_msun_per_yr": 1.7,
+      "dimensionless_turnover": "2*(Kn/Kn_*)^p/[1+(Kn/Kn_*)^(2p)]",
+      "knudsen_turnover": 1.0,
       "lmfp_scaling": "excess rate proportional to sigma/m",
       "maximum_excess_msun_per_yr": 4.066250303952222,
+      "shape_exponent_p": 1.0,
       "sigma_transition_cm2_g": 2.1957751641342,
       "smfp_scaling": "excess rate proportional to (sigma/m)^-1",
       "source": "Sabarish et al. 2025, arXiv:2505.14779"
     }
   },
-  "created_at": "2026-09-13T20:32:15.477517+00:00",
+  "created_at": "2026-09-14T01:03:06.398919+00:00",
   "fiducial_yukawa_halo": {
-    "N_orb_at_r_B": 1.1986241644563402,
+    "N_orb_at_r_B": 1.19862416445634,
     "N_orb_at_r_in": 0.9999999999997036,
     "black_hole_mass_msun": 4000000.0,
     "bondi_reservoir_identification": "Diagnostic substitution rho_infinity=rho(r_in) and sigma_infinity=sigma_1d(r_in); the saved hydrostatic snapshot does not provide an asymptotic radial-flow reservoir.",
@@ -131,6 +144,6 @@
     "sigma0_over_m_for_continuum_sentinel_at_ISCO_fixed_profile_cm2_g": 321444489032.6845,
     "sound_speed_infinity_kms": 102.76989983168043
   },
-  "schema": "sidm-smbh-cross-regime-calibration-v2",
+  "schema": "sidm-smbh-cross-regime-calibration-v3",
   "status": "AVAILABLE_BRANCHES_CALIBRATED"
 }

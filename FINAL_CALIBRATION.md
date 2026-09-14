@@ -20,6 +20,14 @@ Leave-one-out refits place the turnover between 2.1485 and 2.2556 cm2/g. The
 constant-cross-section spike is an external conductivity benchmark, not a
 calibration of the velocity-dependent production halo.
 
+In dimensionless form, the conductive excess is
+`2 (Kn/Kn_*)^p / [1 + (Kn/Kn_*)^(2p)]`. We adopt `Kn_* = 1`, the crossing at
+which the mean free path equals the transport scale height, and `p = 1`, fixed
+by the linear LMFP and inverse-linear SMFP conductivity limits. A free-shape
+fit gives `p = 0.8982` and is retained as a diagnostic. This calibration applies
+to a hydrostatic, constant, isotropic cross-section spike. It is not an
+interpolation between an orbit-resolved loss cone and Bondi accretion.
+
 For the fiducial Yukawa profile, the orbital transport depth is 1.20 at the
 nominal Bondi radius but only `1.95e-8` at the ISCO. The inflow path therefore
 retains orbital memory. Its selected solver is the orbit-resolved FP branch. A
@@ -42,11 +50,22 @@ provenance checks for a prescribed local kinetic sink, reaching 0.0593 initial
 relaxation times with a final inner-density ratio of 1.00108 relative to its
 control. This response is not used as a physical heating or cooling claim.
 
-The production capture-energy moment has not passed its energy-resolution gate.
-An absolute two-way evolution therefore remains unauthorized. It requires a
-converged capture-weighted energy exchange, a radial kinetic treatment of any
-transition layer, and production use of the moving-interface work and energy
-ledger.
+The energy-current gate now reads the FP solver's plunge records directly. It
+keeps only trajectories with an inherited initial binding energy outside the
+reporting surface, so captures from the initially populated cusp cannot be
+mistaken for a steady boundary-fed current. The patched solver also records the
+live mass and binding-energy inventory inside the interface. Acceptance requires
+stationary mass and energy currents, stationary inner inventories, at least 50
+effective boundary-fed captures, agreement between two random seeds and two
+resolutions, event-to-plunge mass closure, and the exact identity between the
+capture, boundary-advection, and released binding-energy currents.
+
+The earlier production energy moment does not satisfy these conditions. The
+absolute two-way evolution stays locked until the new two-grid, two-seed FP
+ensemble passes the direct gate. A passing gate supplies three separate terms to
+the conservative interface ledger: the negative orbital energy advected inward
+at the boundary, the negative orbital energy carried into the black hole, and
+the positive binding energy released outward by relaxation.
 
 Run `make final-calibration` to regenerate the calibration JSON, figure,
 integrated acceptance ledger, tests, and repository audit.

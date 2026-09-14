@@ -95,6 +95,12 @@ def main(argv: Iterable[str] | None = None) -> int:
     p.add_argument("--total-tnr", type=float, default=6.0)
     p.add_argument("--updates-per-snapshot", type=int, default=10)
     p.add_argument(
+        "--gnc-seed",
+        type=int,
+        default=100,
+        help="deterministic initialization and evolution seed before the MPI-rank offset",
+    )
+    p.add_argument(
         "--sidm-kernel", choices=("yukawa-tchannel",),
         default="yukawa-tchannel",
     )
@@ -103,10 +109,18 @@ def main(argv: Iterable[str] | None = None) -> int:
         help="zero-velocity total cross section sigma0/m [cm^2/g]",
     )
     p.add_argument("--w-kms", type=float, default=80.0)
+    p.add_argument(
+        "--cfs-file",
+        type=Path,
+        default=None,
+        help="compiled GNC auxiliary-function table; its path is written into model.in",
+    )
     args = p.parse_args(argv)
 
     if args.sigma_over_m <= 0.0 or args.w_kms <= 0.0:
         raise ValueError("SIDM kernel parameters must be positive")
+    if args.gnc_seed < 0:
+        raise ValueError("gnc-seed must be non-negative")
 
     if args.dc_bins % args.ranks:
         raise ValueError("dc-bins must be divisible by MPI ranks")
@@ -165,6 +179,13 @@ def main(argv: Iterable[str] | None = None) -> int:
     model = replace_assignment(model, "emin_factor", f"{xmin:.16e}")
     model = replace_assignment(model, "emax_factor", f"{xmax:.16e}")
     model = replace_assignment(model, "eboundary", f"{xb:.16e}")
+    model = replace_assignment(model, "SEED_VALUE", str(args.gnc_seed))
+    model = replace_assignment(model, "SAME_INI_SEED", "1")
+    model = replace_assignment(model, "SAME_EVL_SEED", "1")
+    if args.cfs_file is not None:
+        if not args.cfs_file.is_file():
+            raise FileNotFoundError(args.cfs_file)
+        model = replace_assignment(model, "cfs dir", str(args.cfs_file))
     model = replace_assignment(
         model, "num of ge update per snap", str(args.updates_per_snapshot)
     )
@@ -250,6 +271,31 @@ def main(argv: Iterable[str] | None = None) -> int:
         )
     common_reservoir_fingerprint = common_reservoir_hash.hexdigest()
 
+    # This fingerprint deliberately excludes grid resolution, random seed, and
+    # the Monte-Carlo sample realization.  It is the compatibility key used by
+    # the independent-seed and resolution energy-current gate.
+    physical_configuration = {
+        "mbh_msun": float(dfdiag["mbh_msun"]),
+        "rh_pc": norm["rh"],
+        "r_in_pc": norm["rb"],
+        "rho_boundary_msun_pc3": norm["rhob"],
+        "sigma_boundary_kms": norm["sigb"],
+        "n0_pc3": norm["n0"],
+        "particle_mass_msun": norm["mpart"],
+        "capture_species": dfdiag["capture_species"],
+        "capture_radius_model": dfdiag["capture_radius_model"],
+        "sidm_kernel": args.sidm_kernel,
+        "sigma0_over_m_cm2_g": args.sigma_over_m,
+        "yukawa_w_kms": args.w_kms,
+        "xmin": xmin,
+        "xmax": xmax,
+    }
+    physical_configuration_fingerprint = hashlib.sha256(
+        json.dumps(
+            physical_configuration, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+    ).hexdigest()
+
     args.run_dir.mkdir(parents=True, exist_ok=True)
     (args.run_dir / "model.in").write_text(model)
     (args.run_dir / "sidm_kernel.in").write_text(
@@ -282,6 +328,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         ),
         "proposal_x_boundary": float(dfdiag.get("proposal_x_boundary", xb)),
         "common_reservoir_fingerprint": common_reservoir_fingerprint,
+        "physical_configuration": physical_configuration,
+        "physical_configuration_fingerprint": physical_configuration_fingerprint,
         "emin_factor": xmin,
         "emax_factor": xmax,
         "guard_cells_below_boundary": guard_cells,
@@ -304,6 +352,11 @@ def main(argv: Iterable[str] | None = None) -> int:
         "dt_tnr": args.dt_tnr,
         "snapshots": nsnap,
         "total_tnr": nsnap * args.dt_tnr,
+        "gnc_seed": args.gnc_seed,
+        "same_initialization_seed": True,
+        "same_evolution_seed": True,
+        "cfs_file": args.cfs_file.name if args.cfs_file is not None else None,
+        "cfs_sha256": sha256(args.cfs_file) if args.cfs_file is not None else None,
         "samples": sample_summary,
         "importance_weight_global_mean": global_weight_mean,
         "importance_weight_global_effective_size": global_effective_sample_size,

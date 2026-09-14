@@ -41,6 +41,18 @@ def main():
     transition = calibration.sigma_transition_cm2_g
     assert math.isclose(transition, math.sqrt(0.27 / 0.056), rel_tol=1e-14)
     assert math.isclose(calibration.normalized_excess(transition), 1.0, rel_tol=1e-14)
+    assert calibration.knudsen_turnover == 1.0
+    assert calibration.shape_exponent_p == 1.0
+    assert math.isclose(calibration.normalized_excess_knudsen(1.0), 1.0, rel_tol=1e-14)
+    assert math.isclose(
+        calibration.normalized_excess_knudsen(0.2),
+        calibration.normalized_excess_knudsen(5.0),
+        rel_tol=1e-14,
+    )
+    empirical = calibration.normalized_excess_knudsen(
+        np.array([0.1, 1.0, 10.0]), shape_exponent_p=0.8982106218466936
+    )
+    assert empirical[1] == 1.0 and math.isclose(empirical[0], empirical[2])
     low = calibration.excess_rate_msun_per_yr(1.0e-6)
     high = calibration.excess_rate_msun_per_yr(1.0e6)
     assert math.isclose(low / 1.0e-6, 1.0 / calibration.B, rel_tol=1e-5)

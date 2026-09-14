@@ -8,6 +8,13 @@
      do i=1, bksams_arr_ini%n
          if(bksams_arr_ini%sp(i)%exit_flag.ne.exit_normal)then
              print*, "i=",i,bksams_arr_ini%sp(i)%exit_flag
+--- a/main/main.f90
++++ b/main/main.f90
+@@ -98,1 +98,3 @@
+-		if(rid.eq.mpi_master_id)then
++		! Post-processing reads only the terminal diffusion model from each snapshot.
++		! Internal updates remain in memory and are not duplicated on disk.
++		if(rid.eq.mpi_master_id.and.j.eq.ctl%num_update_per_snap)then
 --- a/source/md_main_gw.f90
 +++ b/source/md_main_gw.f90
 @@ -888,29 +888,70 @@
@@ -127,7 +134,7 @@
  !        ctl%n_basic=min(ctl%n_basic, ctl%cc(i)%N_pre_in)
 --- a/source/pro_single.f90
 +++ b/source/pro_single.f90
-@@ -38,10 +38,11 @@
+@@ -38,10 +38,13 @@
  	type(particle_samples_arr_type)::bksma_sg_source_emri, bksma_plunge
  	type(event_sets_comp)::eve_sets
  	character*(*) str_comp
@@ -136,11 +143,13 @@
      !type(chain_type)::bksma_sel
      integer jsp, isnap
      character*(4) tmpspid
-+	character*(256) plunge_file
++	character*(256) plunge_file, inventory_file
++	real(8) inventory_number, inventory_mass, inventory_binding_x
++	real(8) inventory_binding_x2
  
      call sams_get_weight_clone_single(bksams_arr)
      call set_real_weight_arr_single(bksams_arr)
-@@ -59,6 +60,26 @@
+@@ -59,6 +62,61 @@
  	print*, "get_sams_events_single finshed!"
  	call print_events(eve_sets%etot,eve_sets%enorm,isnap)
  	print*, "print finished"
@@ -153,17 +162,52 @@
 +	plunge_file="output/pro/"//trim(adjustl(str_comp))// &
 +		"/plunge_records_"//trim(adjustl(tmpspid))//".txt"
 +	open(newunit=iu,file=trim(plunge_file),status="replace",action="write")
-+	write(iu,'(A)') "# isnap x_final x_initial j_final j_initial weight_real m_msun exit_time_myr rp_AU"
++	write(iu,'(A)') "# isnap x_final x_initial j_final j_initial weight_real m_msun exit_time_myr rp_AU create_time"
 +	do k=1,bksma_plunge%n
-+		write(iu,'(I8,1X,8(ES25.16E3,1X))') isnap, &
-+			abs(bksma_plunge%sp(k)%en)/ctl%energy0, &
-+			abs(bksma_plunge%sp(k)%en0)/ctl%energy0, &
++		write(iu,'(I8,1X,9(ES25.16E3,1X))') isnap, &
++			abs(bksma_plunge%sp(k)%en/ctl%energy0), &
++			abs(bksma_plunge%sp(k)%en0/ctl%energy0), &
 +			bksma_plunge%sp(k)%jm, bksma_plunge%sp(k)%jm0, &
 +			bksma_plunge%sp(k)%weight_real, bksma_plunge%sp(k)%m, &
-+			bksma_plunge%sp(k)%exit_time, bksma_plunge%sp(k)%rp
++			bksma_plunge%sp(k)%exit_time, bksma_plunge%sp(k)%rp, &
++			bksma_plunge%sp(k)%create_time
 +	end do
 +	close(iu)
 +	print*, "ABSOLUTE_CLOSURE_PLUNGE_RECORDS",isnap,bksma_plunge%n,trim(plunge_file)
++	! A steady boundary-fed energy current also requires the live mass and
++	! binding-energy inventory inside the reporting surface to be stationary.
++	! Use the same ntask_total normalization as the event tables.
++	inventory_number=0d0
++	inventory_mass=0d0
++	inventory_binding_x=0d0
++	inventory_binding_x2=0d0
++	do k=1,bksma_arr_sel_norm_bd%n
++		inventory_number=inventory_number+bksma_arr_sel_norm_bd%sp(k)%weight_real
++		inventory_mass=inventory_mass+bksma_arr_sel_norm_bd%sp(k)%weight_real* &
++			bksma_arr_sel_norm_bd%sp(k)%m
++		inventory_binding_x=inventory_binding_x+ &
++			bksma_arr_sel_norm_bd%sp(k)%weight_real* &
++			bksma_arr_sel_norm_bd%sp(k)%m* &
++			abs(bksma_arr_sel_norm_bd%sp(k)%en/ctl%energy0)
++		inventory_binding_x2=inventory_binding_x2+ &
++			bksma_arr_sel_norm_bd%sp(k)%weight_real* &
++			bksma_arr_sel_norm_bd%sp(k)%m* &
++			abs(bksma_arr_sel_norm_bd%sp(k)%en/ctl%energy0)**2
++	end do
++	inventory_number=inventory_number/dble(ctl%ntask_total)
++	inventory_mass=inventory_mass/dble(ctl%ntask_total)
++	inventory_binding_x=inventory_binding_x/dble(ctl%ntask_total)
++	inventory_binding_x2=inventory_binding_x2/dble(ctl%ntask_total)
++	inventory_file="output/pro/"//trim(adjustl(str_comp))// &
++		"/inner_inventory_"//trim(adjustl(tmpspid))//".txt"
++	open(newunit=iu,file=trim(inventory_file),status="replace",action="write")
++	write(iu,'(A)') "# isnap weighted_number weighted_mass_msun weighted_mass_x weighted_mass_x2 raw_count"
++	write(iu,'(I8,1X,4(ES25.16E3,1X),I12)') isnap,inventory_number, &
++		inventory_mass,inventory_binding_x,inventory_binding_x2, &
++		bksma_arr_sel_norm_bd%n
++	close(iu)
++	print*, "ABSOLUTE_CLOSURE_INNER_INVENTORY",isnap,inventory_mass, &
++		inventory_binding_x,trim(inventory_file)
  	!call get_ge_profile_of_sample_single(sma_arr,isnap, exit_normal, ge_profile(isnap))
  	!print*, "sma:chain:"
  	!call sma%sp(1)%output()
